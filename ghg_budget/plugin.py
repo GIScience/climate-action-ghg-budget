@@ -8,7 +8,7 @@ from climatoology.store.object_store import MinioStorage
 from climatoology.utility.api import LulcUtility
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from plugin_blueprint.operator_worker import OperatorBlueprint
+from ghg_budget.operator_worker import GHGBudget
 
 log_config = 'conf/logging.yaml'
 log = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ async def start_plugin(settings: Settings) -> None:
         port=settings.lulc_port,
         path=settings.lulc_path,
     )
-    operator = OperatorBlueprint(lulc_utility)
+    operator = GHGBudget(lulc_utility)
     log.info(f'Configuring plugin: {operator.info().name}')
 
     storage = MinioStorage(

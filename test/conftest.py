@@ -11,8 +11,8 @@ from climatoology.base.computation import ComputationScope
 from climatoology.base.operator import Concern, Info, PluginAuthor, _Artifact
 from semver import Version
 
-from plugin_blueprint.input import ComputeInput
-from plugin_blueprint.operator_worker import OperatorBlueprint
+from ghg_budget.input import ComputeInput
+from ghg_budget.operator_worker import GHGBudget
 
 
 @pytest.fixture
@@ -167,7 +167,7 @@ def compute_resources():
 
 @pytest.fixture
 def operator(lulc_utility):
-    return OperatorBlueprint(lulc_utility)
+    return GHGBudget(lulc_utility)
 
 
 @pytest.fixture

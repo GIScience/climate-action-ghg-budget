@@ -5,7 +5,7 @@ from climatoology.base.artifact import Chart2dData, ChartType
 from geopandas import testing
 from pydantic_extra_types.color import Color
 
-from plugin_blueprint.operator_worker import OperatorBlueprint
+from ghg_budget.operator_worker import GHGBudget
 
 
 def test_get_md_text(expected_compute_input):
@@ -67,7 +67,7 @@ In addition the following area of interest was sent:
 }
 ```
 """
-    received = OperatorBlueprint.get_md_text(expected_compute_input)
+    received = GHGBudget.get_md_text(expected_compute_input)
     assert received == expected
 
 
@@ -82,7 +82,7 @@ def test_get_table(expected_compute_input):
         {'character': 'n', 'count': 1},
     ]
     expected = pd.DataFrame.from_records(data, index='character')
-    received = OperatorBlueprint.get_table(expected_compute_input.string_blueprint)
+    received = GHGBudget.get_table(expected_compute_input.string_blueprint)
 
     pd.testing.assert_frame_equal(received, expected)
 
@@ -136,7 +136,7 @@ def test_get_chart_data():
             ],
         ),
     )
-    received = OperatorBlueprint.get_chart_data(1)
+    received = GHGBudget.get_chart_data(1)
     assert received == expected
 
 

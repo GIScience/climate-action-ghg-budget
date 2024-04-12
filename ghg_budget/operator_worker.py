@@ -22,7 +22,7 @@ from pandas import DataFrame
 from pydantic_extra_types.color import Color
 from semver import Version
 
-from plugin_blueprint.artifact import (
+from ghg_budget.artifact import (
     build_markdown_artifact,
     build_table_artifact,
     build_image_artifact,
@@ -30,12 +30,12 @@ from plugin_blueprint.artifact import (
     build_vector_artifacts,
     build_raster_artifact,
 )
-from plugin_blueprint.input import ComputeInput
+from ghg_budget.input import ComputeInput
 
 log = logging.getLogger(__name__)
 
 
-class OperatorBlueprint(Operator[ComputeInput]):
+class GHGBudget(Operator[ComputeInput]):
     # This is your working-class hero.
     # See all the details below.
 
@@ -84,16 +84,16 @@ class OperatorBlueprint(Operator[ComputeInput]):
 
         # ## _Artifact types ##
         # This function creates an example Markdown artifact
-        markdown_artifact = OperatorBlueprint.markdown_artifact(params, resources)
+        markdown_artifact = GHGBudget.markdown_artifact(params, resources)
 
         # This function creates an example table artifact
-        table_artifact = OperatorBlueprint.table_artifact(params, resources)
+        table_artifact = GHGBudget.table_artifact(params, resources)
 
         # This function creates an example image artifact
-        image_artifact = OperatorBlueprint.image_artifact(resources)
+        image_artifact = GHGBudget.image_artifact(resources)
 
         # This function creates example chart artifacts
-        chart_artifacts = OperatorBlueprint.chart_artifacts(params.float_blueprint, resources)
+        chart_artifacts = GHGBudget.chart_artifacts(params.float_blueprint, resources)
 
         # Further we have the geographic output types of raster and vector data.
         # We kill two birds with one stone and use the land-use and land-cover utility to demonstrate them.
@@ -136,7 +136,7 @@ class OperatorBlueprint(Operator[ComputeInput]):
         :return: A Markdown artifact.
         """
         log.debug('Creating dummy markdown artifact.')
-        text = OperatorBlueprint.get_md_text(params)
+        text = GHGBudget.get_md_text(params)
 
         return build_markdown_artifact(text, resources)
 
@@ -148,7 +148,7 @@ class OperatorBlueprint(Operator[ComputeInput]):
         :param resources: The plugin computation resources
         :return: A table artifact.
         """
-        table = OperatorBlueprint.get_table(params.string_blueprint)
+        table = GHGBudget.get_table(params.string_blueprint)
 
         return build_table_artifact(table, resources)
 
@@ -173,7 +173,7 @@ class OperatorBlueprint(Operator[ComputeInput]):
         :param resources: The plugin computation resources.
         :return: Four graph artifacts.
         """
-        scatter_chart_data, line_chart_data, bar_chart_data, pie_chart_data = OperatorBlueprint.get_chart_data(incline)
+        scatter_chart_data, line_chart_data, bar_chart_data, pie_chart_data = GHGBudget.get_chart_data(incline)
 
         return build_chart_artifacts(bar_chart_data, line_chart_data, pie_chart_data, scatter_chart_data, resources)
 
