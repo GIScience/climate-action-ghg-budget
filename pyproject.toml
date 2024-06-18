@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ghg-budget"
+name = "ghg_budget"
 version = "0.0.1"
 description = "Estimate the remaining GHG budget of an area to reach at least COP21."
 authors = ["Veit Ulrich <veit.ulrich@heigit.org>", "Niko Krasowski <niko.krasowski@posteo.de>", "Moritz Schott <moritz.schott@heigit.org>"]
@@ -7,13 +7,14 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "~3.11.5"
-climatoology = { git = "ssh://git@gitlab.gistools.geog.uni-heidelberg.de:2022/climate-action/climatoology.git", rev = "4.0.0" }
+climatoology = {git = "ssh://git@gitlab.gistools.geog.uni-heidelberg.de:2022/climate-action/climatoology.git", rev = "4.0.0"}
 pydantic = "^2.5.3"
 pydantic-settings = "^2.1.0"
 geojson-pydantic = "^1.0.1"
 shapely = "^2.0.2"
 pyyaml = "^6.0.1"
 ohsome = "^0.3.0"
+matplotlib = "^3.8.2"
 
 
 [tool.poetry.group.test.dependencies]

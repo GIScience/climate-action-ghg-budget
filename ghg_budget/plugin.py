@@ -5,7 +5,6 @@ import yaml
 from climatoology.app.plugin import PlatformPlugin
 from climatoology.broker.message_broker import AsyncRabbitMQ
 from climatoology.store.object_store import MinioStorage
-from climatoology.utility.api import LulcUtility
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from ghg_budget.operator_worker import GHGBudget
@@ -29,10 +28,6 @@ class Settings(BaseSettings):
     rabbitmq_user: str
     rabbitmq_password: str
 
-    lulc_host: str
-    lulc_port: int
-    lulc_path: str
-
     model_config = SettingsConfigDict(env_file='.env')
 
 
@@ -43,12 +38,7 @@ async def start_plugin(settings: Settings) -> None:
 
     :return:
     """
-    lulc_utility = LulcUtility(
-        host=settings.lulc_host,
-        port=settings.lulc_port,
-        path=settings.lulc_path,
-    )
-    operator = GHGBudget(lulc_utility)
+    operator = GHGBudget()
     log.info(f'Configuring plugin: {operator.info().name}')
 
     storage = MinioStorage(
