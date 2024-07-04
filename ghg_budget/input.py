@@ -48,6 +48,7 @@ class ComputeInput(BaseModel):
     @field_validator('aoi')
     def assert_aoi_properties_not_null(cls, aoi: geojson_pydantic.Feature) -> geojson_pydantic.Feature:
         assert aoi.properties, 'AOI properties are required.'
+        assert aoi.properties.name == 'Heidelberg', 'Only works for the AOI Heidelberg at the moment.'
         return aoi
 
     def get_aoi_geom(self) -> shapely.MultiPolygon:
