@@ -67,7 +67,6 @@ class GHGBudget(Operator[ComputeInput]):
 
     def compute(self, resources: ComputationResources, params: ComputeInput) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
-        assert params.get_aoi_properties().name == 'Heidelberg', 'Only works for the AOI Heidelberg at the moment.'
 
         budget_params = BudgetParams()
         aoi_bisko_budgets = calculate_bisko_budgets(
