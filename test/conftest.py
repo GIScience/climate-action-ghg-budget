@@ -77,26 +77,40 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         summary='Beschreibung der Methodik zur Berechnung des CO₂-Budgets',
     )
     table_artifact = _Artifact(
-        name='CO₂ Budget Heidelberg [kt]',
+        name='CO₂ Budget Heidelberg',
         modality=ArtifactModality.TABLE,
         file_path=Path(compute_resources.computation_dir / 'ghg_budget_heidelberg.csv'),
-        summary='Die Tabelle zeigt das verbleibende CO₂-Budget Heidelbergs in Kilotonnen (kt) für verschiedene Temperaturziele und'
+        summary='Die Tabelle zeigt das verbleibende CO₂-Budget Heidelbergs (in 1000 Tonnen) für verschiedene Temperaturziele und '
         'Wahrscheinlichkeiten, dass diese erreicht werden.',
-        description='Eine Tabelle mit drei Spalten',
+        description='Das CO₂-Budget bezeichnet die Menge an CO₂, welche emittiert werden darf, um die Begrenzung der '
+        'globalen Erwärmung auf eine bestimmte Temperatur noch zu erreichen.',
     )
-    chart_artifact = _Artifact(
+    comparison_chart_artifact = _Artifact(
         name='Vergleich der gesamten geplanten CO₂-Emissionen Heidelbergs mit den CO₂-Budgets',
         modality=ArtifactModality.CHART,
         primary=False,
         file_path=Path(compute_resources.computation_dir / 'comparison_emissions_budgets.json'),
         summary='Das Diagramm zeigt die Summe der ab 2016 gemessenen und geplanten CO₂-Emissionen Heidelbergs '
-        'im Vergleich mit den verbleibenden CO₂-Budgets für das Erreichen der verschiedenen Temperaturziele '
-        'mit einer Wahrscheinlichkeit von 83 %.',
+        '(in 1000 Tonnen) im Vergleich mit den verbleibenden CO₂-Budgets für das Erreichen der verschiedenen '
+        'Temperaturziele mit einer Wahrscheinlichkeit von 83 %.',
+    )
+    time_chart_artifact = _Artifact(
+        name='Entwicklung der CO₂-Emissionen in Heidelberg',
+        modality=ArtifactModality.CHART,
+        primary=False,
+        file_path=Path(compute_resources.computation_dir / 'time_chart.json'),
+        summary='Entwicklung der CO₂-Emissionen Heidelbergs ab 2016 (in 1000 Tonnen)',
+        description='Die Emissionswerte ab 2021 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
+        'Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. Anmerkung: Die Emissionswerte bilden nicht '
+        'die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
+        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Mehr Informationen zur BISKO-Systematik '
+        'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
     )
     return [
         markdown_artifact,
         table_artifact,
-        chart_artifact,
+        comparison_chart_artifact,
+        time_chart_artifact,
     ]
 
 
