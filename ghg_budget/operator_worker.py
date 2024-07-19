@@ -14,11 +14,13 @@ from ghg_budget.artifact import (
     build_methodology_description_artifact,
     build_budget_table_artifact,
     build_budget_comparison_chart_artifact,
+    build_time_chart_artifact,
 )
 from ghg_budget.calculate import (
     PROJECT_DIR,
     calculate_bisko_budgets,
     comparison_chart_data,
+    year_budget_spent,
 )
 from ghg_budget.data import GHG_DATA, BudgetParams
 from ghg_budget.input import ComputeInput
@@ -75,15 +77,15 @@ class GHGBudget(Operator[ComputeInput]):
         comparison_chart_df = comparison_chart_data(
             GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi, aoi_bisko_budgets
         )
+        aoi_year_budget_spent, emissions_df = year_budget_spent(
+            aoi_bisko_budgets, GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi
+        )
         markdown_artifact = GHGBudget.markdown_artifact(resources)
         table_artifact = GHGBudget.table_artifact(aoi_bisko_budgets, resources)
-        chart_artifact = GHGBudget.chart_artifact(comparison_chart_df, resources)
+        comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
+        time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, resources)
 
-        artifacts = [
-            markdown_artifact,
-            table_artifact,
-            chart_artifact,
-        ]
+        artifacts = [markdown_artifact, table_artifact, comparison_chart_artifact, time_chart_artifact]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 
         return artifacts
@@ -111,13 +113,15 @@ class GHGBudget(Operator[ComputeInput]):
         log.debug(
             'Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.'
         )
-        aoi_bisko_budgets['BISKO CO2-Budget (Kilotonnen)'] = aoi_bisko_budgets['BISKO CO2-Budget (Kilotonnen)'].round(1)
+        aoi_bisko_budgets['BISKO CO₂-Budget (1000 Tonnen)'] = aoi_bisko_budgets['BISKO CO₂-Budget (1000 Tonnen)'].round(
+            1
+        )
         aoi_bisko_budgets.set_index('Temperaturziel (Grad Celsius)', inplace=True)
 
         return build_budget_table_artifact(aoi_bisko_budgets, resources)
 
     @staticmethod
-    def chart_artifact(comparison_chart_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+    def comparison_chart_artifact(comparison_chart_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
         """
 
         :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
@@ -125,12 +129,12 @@ class GHGBudget(Operator[ComputeInput]):
         :return: Bar chart with different GHG budgets and planned GHG emissions as chart artifact
         """
         log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
-        bar_chart_data = GHGBudget.get_chart(comparison_chart_df)
+        comparison_chart_data = GHGBudget.get_comparison_chart(comparison_chart_df)
 
-        return build_budget_comparison_chart_artifact(bar_chart_data, resources)
+        return build_budget_comparison_chart_artifact(comparison_chart_data, resources)
 
     @staticmethod
-    def get_chart(comparison_chart_df: pd.DataFrame) -> Chart2dData:
+    def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Chart2dData:
         """
 
         :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
@@ -139,9 +143,38 @@ class GHGBudget(Operator[ComputeInput]):
         log.debug('Creating Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart.')
 
         x = comparison_chart_df['Temperaturziel (Grad Celsius)']
-        y = round(comparison_chart_df['BISKO CO2-Budget (Kilotonnen)'], 1)
+        y = round(comparison_chart_df['BISKO CO₂-Budget (1000 Tonnen)'], 1)
         colors = [Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#808080')]
 
-        bar_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
+        comparison_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
 
-        return bar_chart_data
+        return comparison_chart_data
+
+    @staticmethod
+    def time_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+        """
+
+        :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
+        :param resources: The plugin computation resources
+        :return: Line chart with development of the CO2 emissions in the AOI as chart artifact
+        """
+        log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
+        time_chart_data = GHGBudget.get_time_chart(emissions_df)
+
+        return build_time_chart_artifact(time_chart_data, resources)
+
+    @staticmethod
+    def get_time_chart(emissions_df: pd.DataFrame) -> Chart2dData:
+        """
+
+        :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
+        :return: Chart2dData object with CO2 emissions of the AOI by year for the line chart
+        """
+        log.debug('Creating Chart2dData object with development of the emissions in the AOI for the line chart.')
+
+        x = emissions_df['Jahr']
+        y = emissions_df['co2_kt_sum']
+
+        time_chart_data = Chart2dData(x=x, y=y, color=Color('#808080'), chart_type=ChartType.LINE)
+
+        return time_chart_data
