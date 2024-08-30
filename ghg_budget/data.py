@@ -16,7 +16,7 @@ class GHGData:
 GHG_DATA = GHGData(
     budget_glob=pd.DataFrame(
         {
-            'Temperaturziel (Grad Celsius)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
+            'Temperaturziel (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %', '67 %', '83 %'],
             'budget_glob': [400000000, 300000000, 700000000, 550000000, 1150000000, 900000000],
         },

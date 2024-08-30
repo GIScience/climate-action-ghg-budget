@@ -21,6 +21,8 @@ from ghg_budget.calculate import (
     calculate_bisko_budgets,
     comparison_chart_data,
     year_budget_spent,
+    current_budget,
+    cumulative_emissions,
 )
 from ghg_budget.data import GHG_DATA, BudgetParams
 from ghg_budget.input import ComputeInput
@@ -77,9 +79,9 @@ class GHGBudget(Operator[ComputeInput]):
         comparison_chart_df = comparison_chart_data(
             GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi, aoi_bisko_budgets
         )
-        aoi_year_budget_spent, emissions_df = year_budget_spent(
-            aoi_bisko_budgets, GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi
-        )
+        emissions_df = cumulative_emissions(GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi)
+        aoi_bisko_budgets = current_budget(emissions_df, aoi_bisko_budgets)
+        aoi_bisko_budgets, emissions_df = year_budget_spent(aoi_bisko_budgets, emissions_df)
         markdown_artifact = GHGBudget.markdown_artifact(resources)
         table_artifact = GHGBudget.table_artifact(aoi_bisko_budgets, resources)
         comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
@@ -106,17 +108,20 @@ class GHGBudget(Operator[ComputeInput]):
     def table_artifact(aoi_bisko_budgets: pd.DataFrame, resources: ComputationResources) -> _Artifact:
         """
 
-        :param aoi_bisko_budgets: Table with the BISKO CO2 budgets of the AOI from the pledge_year onwards
+        :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
         :param resources: The plugin computation resources
         :return: Table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact
         """
         log.debug(
             'Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.'
         )
-        aoi_bisko_budgets['BISKO CO₂-Budget (1000 Tonnen)'] = aoi_bisko_budgets['BISKO CO₂-Budget (1000 Tonnen)'].round(
-            1
-        )
-        aoi_bisko_budgets.set_index('Temperaturziel (Grad Celsius)', inplace=True)
+        aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+        ].round(1)
+        aoi_bisko_budgets['BISKO CO₂-Budget 2024 (1000 Tonnen)'] = aoi_bisko_budgets[
+            'BISKO CO₂-Budget 2024 (1000 Tonnen)'
+        ].round(1)
+        aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
 
         return build_budget_table_artifact(aoi_bisko_budgets, resources)
 
@@ -142,8 +147,8 @@ class GHGBudget(Operator[ComputeInput]):
         """
         log.debug('Creating Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart.')
 
-        x = comparison_chart_df['Temperaturziel (Grad Celsius)']
-        y = round(comparison_chart_df['BISKO CO₂-Budget (1000 Tonnen)'], 1)
+        x = comparison_chart_df['Temperaturziel (°C)']
+        y = round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1)
         colors = [Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#808080')]
 
         comparison_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
