@@ -7,8 +7,8 @@ from ghg_budget.operator_worker import GHGBudget
 
 def test_get_comparison_chart():
     comparison_chart_data = {
-        'BISKO CO₂-Budget (1000 Tonnen)': [1, 2, 3, 4],
-        'Temperaturziel (Grad Celsius)': ['1.5°C', '1.7°C', '2.0°C', 'geplant'],
+        'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 4],
+        'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'geplant'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     expected = Chart2dData(

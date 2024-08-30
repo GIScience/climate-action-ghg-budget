@@ -80,10 +80,39 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         name='CO₂ Budget Heidelberg',
         modality=ArtifactModality.TABLE,
         file_path=Path(compute_resources.computation_dir / 'ghg_budget_heidelberg.csv'),
-        summary='Die Tabelle zeigt das verbleibende CO₂-Budget Heidelbergs (in 1000 Tonnen) für verschiedene Temperaturziele und '
-        'Wahrscheinlichkeiten, dass diese erreicht werden.',
-        description='Das CO₂-Budget bezeichnet die Menge an CO₂, welche emittiert werden darf, um die Begrenzung der '
-        'globalen Erwärmung auf eine bestimmte Temperatur noch zu erreichen.',
+        summary='Um mit einer Wahrscheinlichkeit von 67 % bzw. 83 % die Temperaturerhöhung auf den jeweiligen '
+        'Maximalwert zu begrenzen, hat Heidelberg nur ein beschränktes CO₂-Budget zur Verfügung. Das heißt, '
+        'dass der Stadt Heidelberg für die Einhaltung des Paris-Ziels von 1,5 °C mit einer Wahrscheinlichkeit '
+        'von 83 % das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des Ziels '
+        'beizutragen. Nehmen wir gesellschaftlich ein größeres Risiko des Scheiterns in Kauf, also eine '
+        'Wahrscheinlichkeit von nur 67 %, um das Ziel zu erreichen, steht Heidelberg ein höheres Budget zur '
+        'Verfügung. Gleiches gilt für höhere Zieltemperaturen (1,7 °C bzw. 2 °C): Diese bedeuten ebenfalls, '
+        'dass noch mehr CO₂ emittiert werden darf.',
+        description='**Erläuterung der Spalten**\n\n'
+        '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
+        'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
+        '**Wahrscheinlichkeit:** Wie stark die globale Durchschnittstemperatur durch eine bestimmte Menge an '
+        'ausgestoßenem CO₂ steigt, kann nicht exakt vorhergesagt werden. Daher berechnet der Weltklimarat '
+        '(IPCC) die globalen CO₂-Budgets für verschiedene Wahrscheinlichkeiten, dass die Temperaturziele '
+        'eingehalten werden.\n\n'
+        '**BISKO CO₂-Budget 2016 (1000 Tonnen):** Jene CO₂-Budgets, die Heidelberg 2016 noch zur Verfügung standen, '
+        'als die Pariser Klimaziele beschlossen wurden. '
+        '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
+        'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
+        'viele Städte wie beispielsweise Heidelberg ihre Emissionen schätzen.\n\n'
+        '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur '
+        'Verfügung stehen. Ein negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten '
+        'ist.\n\n'
+        '**CO₂-Budget aufgebraucht (Jahr):** Wann die CO₂-Budgets aufgebraucht sind, hängt davon ab, '
+        'wie schnell wir unsere Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser '
+        'Spalte beruhen auf der Annahme, dass die Stadt Heidelberg die von ihr bereits beschlossenen '
+        'Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt.\n\n'
+        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturziele '
+        'automatisch erreicht werden, wenn Heidelberg die Budgets einhält. Damit die Klimaziele '
+        'erreicht werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
+        'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
+        'globalen Emissionen darstellen.\n\n'
+        'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
     )
     comparison_chart_artifact = _Artifact(
         name='Vergleich der gesamten geplanten CO₂-Emissionen Heidelbergs mit den CO₂-Budgets',
