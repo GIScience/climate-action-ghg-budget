@@ -58,6 +58,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='ghg_budget_heidelberg',
+        primary=False,
     )
 
 
@@ -87,5 +88,5 @@ def build_time_chart_artifact(line_chart_data: Chart2dData, resources: Computati
         'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='time_chart',
-        primary=False,
+        primary=True,
     )

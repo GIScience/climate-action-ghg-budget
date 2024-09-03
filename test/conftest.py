@@ -113,6 +113,7 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        primary=False,
     )
     comparison_chart_artifact = _Artifact(
         name='Vergleich der gesamten geplanten CO₂-Emissionen Heidelbergs mit den CO₂-Budgets',
@@ -126,7 +127,7 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
     time_chart_artifact = _Artifact(
         name='Entwicklung der CO₂-Emissionen in Heidelberg',
         modality=ArtifactModality.CHART,
-        primary=False,
+        primary=True,
         file_path=Path(compute_resources.computation_dir / 'time_chart.json'),
         summary='Entwicklung der CO₂-Emissionen Heidelbergs ab 2016 (in 1000 Tonnen)',
         description='Die Emissionswerte von 2016 bis 2020 sind Messwerte basierend auf dem BISKO-Standard, die Werte '
