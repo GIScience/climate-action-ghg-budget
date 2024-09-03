@@ -21,3 +21,8 @@ Da wir die nach BISKO-Systematik ermittelten Emissionswerte der Stadt Heidelberg
 Ein Teil des Budgets, nämlich genau die 64 %, kann für BISKO-Emissionen aufgewendet werden.
 Der Rest ist den Nicht-BISKO Emissionen vorbehalten.
 Entsprechend dieser Überlegung umfasst das dargestellte, finale CO₂-Budget nur 64 % des Gesamtbudgets der Heidelberger Bürger:innen.
+
+# Datengrundlage
+
+Auf Anfrage teilen wir sehr gerne die Daten, die wir zur Berechnung des CO₂-Budgets verwendet haben.
+Bitte kontaktieren Sie bei Interesse Assoc. Prof. Dr. Kirsten von Elverfeldt per E-Mail: [kirsten.vonelverfeldt@heigit.org](mailto:kirsten.vonelverfeldt@heigit.org)
