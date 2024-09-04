@@ -89,8 +89,8 @@ def comparison_chart_data(
     """
     Prepares data for bar chart comparing CO2 budgets depending on warming goals with planned emissions of the AOI.
 
-    :param emissions_aoi: pd.DataFrame with yearly CO2 emissions in the AOI from start_year until IPCC year
-    :param planned_emissions_aoi: pd.DataFrame with yearly planned CO2 emissions in the AOI
+    :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
+    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI depending on warming goals
     :return: pd.DataFrame with CO2 budgets depending on warming goals and total planned emissions of the AOI
     """

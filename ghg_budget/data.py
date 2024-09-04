@@ -24,14 +24,15 @@ GHG_DATA = GHGData(
     emissions_aoi=pd.DataFrame(
         {
             'co2_kt_sum': [
-                1080,
-                1093,
-                1098,
-                999,
-                897,
+                1085,
+                1091,
+                1089,
+                998,
+                891,
+                938,
             ],
         },
-        index=[2016, 2017, 2018, 2019, 2020],
+        index=[2016, 2017, 2018, 2019, 2020, 2021],
     ),
     emissions_glob=pd.DataFrame(
         {
@@ -50,7 +51,6 @@ GHG_DATA = GHGData(
     planned_emissions_aoi=pd.DataFrame(
         {
             'co2_kt_sum': [
-                848.8,
                 815.6,
                 782.4,
                 749.2,
@@ -100,7 +100,6 @@ GHG_DATA = GHGData(
             ]
         },
         index=[
-            2021,
             2022,
             2023,
             2024,
