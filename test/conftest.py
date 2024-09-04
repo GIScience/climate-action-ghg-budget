@@ -130,8 +130,8 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         primary=True,
         file_path=Path(compute_resources.computation_dir / 'time_chart.json'),
         summary='Entwicklung der CO₂-Emissionen Heidelbergs ab 2016 (in 1000 Tonnen)',
-        description='Die Emissionswerte von 2016 bis 2020 sind Messwerte basierend auf dem BISKO-Standard, die Werte '
-        'ab 2021 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
+        description='Die Emissionswerte von 2016 bis 2021 sind Messwerte basierend auf dem BISKO-Standard, die Werte '
+        'ab 2022 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
         'Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\nAnmerkung: Die Emissionswerte bilden '
         'nicht die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
         'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Mehr Informationen zur BISKO-Systematik '
