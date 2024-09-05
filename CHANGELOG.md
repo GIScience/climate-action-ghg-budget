@@ -1,0 +1,20 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/compare/dummy...main?from_project_id=854&straight=false)
+### Changed
+- Improved documentation and descriptions
+### Added
+- Chart with temporal development of emissions in Heidelberg, as well as dates when the CO2 budgets will be used up
+- Updated emission data for Heidelberg
+
+## [Dummy](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/releases/dummy)
+### Added
+- First version of CO2 budget calculation limited to city of Heidelberg, Germany
+- Calculation with real input data (global CO2 budget estimates by IPCC, emission data from city of Heidelberg)
+- Includes remaining CO2 budgets for 1.5, 1.7 and 2.0 °C warming
+- Created artifacts: Methodology description, CO2 budget table, bar chart comparing CO2 budgets to projected emissions of Heidelberg
