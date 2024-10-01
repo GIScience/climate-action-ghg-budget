@@ -102,3 +102,20 @@ def comparison_chart_data(
         lambda deg: 'real/geplant' if deg == 0 else f'{deg}°C'
     )
     return comparison_chart_df
+
+
+def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
+    """
+    Simplifies table with the BISKO CO2 budgets of the AOI from the pledge_year onwards.
+
+    :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
+    :return: pd.DataFrame with simplified table of the BISKO CO2 budgets of the AOI from the pledge_year onwards
+    """
+    aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %']
+    aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
+        ['BISKO CO₂-Budget 2024 (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
+    ]
+    aoi_bisko_budgets_simple['BISKO CO₂-Budget 2024 (1000 Tonnen)'] = aoi_bisko_budgets_simple[
+        'BISKO CO₂-Budget 2024 (1000 Tonnen)'
+    ].round(1)
+    return aoi_bisko_budgets_simple

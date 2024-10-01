@@ -34,6 +34,7 @@ def expected_compute_input() -> ComputeInput:
                 ],
             },
         },
+        level_of_detail='erweitert',
     )
 
 
@@ -60,7 +61,7 @@ def expected_info_output() -> Info:
                 website='https://heigit.org/heigit-team/',
             ),
         ],
-        version='dummy',
+        version='demo',
         concerns=[Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION],
         purpose=Path('resources/info/purpose.md').read_text(),
         methodology=Path('resources/info/methodology.md').read_text(),
@@ -141,6 +142,63 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         markdown_artifact,
         table_artifact,
         comparison_chart_artifact,
+        time_chart_artifact,
+    ]
+
+
+@pytest.fixture
+def expected_simple_compute_output(compute_resources) -> List[_Artifact]:
+    markdown_simple_artifact = _Artifact(
+        name='Berechnung des CO₂-Budgets',
+        modality=ArtifactModality.MARKDOWN,
+        file_path=Path(compute_resources.computation_dir / 'simple_methodology_description.md'),
+        summary='Beschreibung der Methodik zur Berechnung des CO₂-Budgets',
+    )
+    table_simple_artifact = _Artifact(
+        name='CO₂ Budget Heidelberg',
+        modality=ArtifactModality.TABLE,
+        file_path=Path(compute_resources.computation_dir / 'simple_ghg_budget_heidelberg.csv'),
+        summary='Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat Heidelberg nur ein '
+        'beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt Heidelberg für die Einhaltung des '
+        'Paris-Ziels von 1,5 °C das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des '
+        'Ziels beizutragen. Für höhere Zieltemperaturen (1,7 °C bzw. 2 °C) darf noch mehr CO₂ emittiert '
+        'werden.',
+        description='**Erläuterung der Spalten**\n\n'
+        '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale '
+        'Abkommen von Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
+        '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur Verfügung stehen. Ein '
+        'negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten ist. '
+        '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
+        'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
+        'viele Städte wie beispielsweise Heidelberg ihre Emissionen schätzen.\n\n'
+        '**CO₂-Budget aufgebraucht (Jahr):** Wann die CO₂-Budgets aufgebraucht sind, hängt davon ab, '
+        'wie schnell wir unsere Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser '
+        'Spalte beruhen auf der Annahme, dass die Stadt Heidelberg die von ihr bereits beschlossenen '
+        'Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt.\n\n'
+        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturziele '
+        'automatisch erreicht werden, wenn Heidelberg die Budgets einhält. Damit die Klimaziele '
+        'erreicht werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
+        'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
+        'globalen Emissionen darstellen.\n\n'
+        'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        primary=False,
+    )
+    time_chart_artifact = _Artifact(
+        name='Entwicklung der CO₂-Emissionen in Heidelberg',
+        modality=ArtifactModality.CHART,
+        primary=True,
+        file_path=Path(compute_resources.computation_dir / 'time_chart.json'),
+        summary='Entwicklung der CO₂-Emissionen Heidelbergs ab 2016 (in 1000 Tonnen)',
+        description='Die Emissionswerte von 2016 bis 2021 sind Messwerte basierend auf dem BISKO-Standard, die Werte '
+        'ab 2022 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
+        'Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\nAnmerkung: Die Emissionswerte bilden '
+        'nicht die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
+        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Mehr Informationen zur BISKO-Systematik '
+        'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+    )
+    return [
+        markdown_simple_artifact,
+        table_simple_artifact,
         time_chart_artifact,
     ]
 

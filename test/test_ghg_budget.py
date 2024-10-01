@@ -8,6 +8,7 @@ from ghg_budget.calculate import (
     year_budget_spent,
     cumulative_emissions,
     current_budget,
+    simplify_table,
 )
 from ghg_budget.data import BudgetParams
 
@@ -136,3 +137,24 @@ def test_year_budget_spent():
     )
     received = year_budget_spent(aoi_bisko_budgets, emissions_df)
     pd.testing.assert_frame_equal(received[0], expected)
+
+
+def test_simplify_table():
+    aoi_bisko_budgets = pd.DataFrame(
+        {
+            'Wahrscheinlichkeit': ['67 %', '83 %'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250, 1000],
+            'BISKO CO₂-Budget 2024 (1000 Tonnen)': [200, -50],
+            'CO₂-Budget aufgebraucht (Jahr)': [2026, 2023],
+        },
+        index=[1.5, 1.5],
+    )
+    expected = pd.DataFrame(
+        {
+            'BISKO CO₂-Budget 2024 (1000 Tonnen)': [-50],
+            'CO₂-Budget aufgebraucht (Jahr)': [2023],
+        },
+        index=[1.5],
+    )
+    received = simplify_table(aoi_bisko_budgets)
+    pd.testing.assert_frame_equal(received, expected)
