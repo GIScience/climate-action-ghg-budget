@@ -7,10 +7,14 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/compare/dummy...main?from_project_id=854&straight=false)
 ### Changed
-- Improved documentation and descriptions
+- Improved documentation and descriptions ([#14](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/14), [#17](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/17))
+### Fixed
+- an issue caused by the ohsome-py library that prevented setting the correct logging level
+- an issue induced by an update of pydantic that would break plugin representation in the front-end (see [climatoology#105](https://gitlab.heigit.org/climate-action/climatoology/-/issues/105))
 ### Added
-- Chart with temporal development of emissions in Heidelberg, as well as dates when the CO2 budgets will be used up
-- Updated emission data for Heidelberg
+- Chart with temporal development of emissions in Heidelberg, as well as dates when the CO2 budgets will be used up [#4](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/4)
+- Updated emission data for Heidelberg [#5](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/5)
+- Simple version of GHG budget plugin [#7](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/7)
 
 ## [Dummy](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/releases/dummy)
 ### Added

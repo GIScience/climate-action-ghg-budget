@@ -19,6 +19,16 @@ def build_methodology_description_artifact(text: str, resources: ComputationReso
     )
 
 
+def build_methodology_description_simple_artifact(text: str, resources: ComputationResources) -> _Artifact:
+    return create_markdown_artifact(
+        text=text,
+        name='Berechnung des CO₂-Budgets',
+        tl_dr='Beschreibung der Methodik zur Berechnung des CO₂-Budgets',
+        resources=resources,
+        filename='simple_methodology_description',
+    )
+
+
 def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResources) -> _Artifact:
     return create_table_artifact(
         data=table,
@@ -58,6 +68,39 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='ghg_budget_heidelberg',
+        primary=False,
+    )
+
+
+def build_budget_table_simple_artifact(table: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+    return create_table_artifact(
+        data=table,
+        title='CO₂ Budget Heidelberg',
+        caption='Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat Heidelberg nur ein '
+        'beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt Heidelberg für die Einhaltung des '
+        'Paris-Ziels von 1,5 °C das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des '
+        'Ziels beizutragen. Für höhere Zieltemperaturen (1,7 °C bzw. 2 °C) darf noch mehr CO₂ emittiert '
+        'werden.',
+        description='**Erläuterung der Spalten**\n\n'
+        '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
+        'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
+        '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur Verfügung stehen. Ein '
+        'negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten ist. '
+        '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
+        'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
+        'viele Städte wie beispielsweise Heidelberg ihre Emissionen schätzen.\n\n'
+        '**CO₂-Budget aufgebraucht (Jahr):** Wann die CO₂-Budgets aufgebraucht sind, hängt davon ab, '
+        'wie schnell wir unsere Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser '
+        'Spalte beruhen auf der Annahme, dass die Stadt Heidelberg die von ihr bereits beschlossenen '
+        'Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt.\n\n'
+        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturziele '
+        'automatisch erreicht werden, wenn Heidelberg die Budgets einhält. Damit die Klimaziele '
+        'erreicht werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
+        'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
+        'globalen Emissionen darstellen.\n\n'
+        'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        resources=resources,
+        filename='simple_ghg_budget_heidelberg',
         primary=False,
     )
 

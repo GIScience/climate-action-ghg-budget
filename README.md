@@ -59,7 +59,7 @@ You can think of the plugin methods (info method, input parameters and artifacts
 
 ## Docker (for admins and interested devs)
 
-If the infrastructure is reachable you can copy [.env_template](.env_template) to `.env` and then run
+If the [infrastructure](https://gitlab.heigit.org/climate-action/infrastructure) is reachable you can copy [.env_template](.env_template) to `.env` and then run
 
 ```shell
 DOCKER_BUILDKIT=1 docker build --secret id=CI_JOB_TOKEN . --tag heigit/ca-ghg-budget:devel

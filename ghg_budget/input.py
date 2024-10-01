@@ -1,8 +1,15 @@
 import uuid
+from enum import Enum
+from typing import Optional
 
 import geojson_pydantic
 import shapely
 from pydantic import BaseModel, Field, field_validator
+
+
+class DetailOption(Enum):
+    SIMPLE = 'einfach'
+    EXTENDED = 'erweitert'
 
 
 class AoiProperties(BaseModel):
@@ -43,6 +50,12 @@ class ComputeInput(BaseModel):
                 },
             }
         ],
+    )
+    level_of_detail: Optional[DetailOption] = Field(
+        title='Detailgrad',
+        description='Bitte wählen Sie, wie detailliert Sie die Ergebnisse haben möchten.',
+        examples=[DetailOption.EXTENDED],
+        default=DetailOption.EXTENDED,
     )
 
     @field_validator('aoi')

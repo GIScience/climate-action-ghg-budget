@@ -15,6 +15,8 @@ from ghg_budget.artifact import (
     build_budget_table_artifact,
     build_budget_comparison_chart_artifact,
     build_time_chart_artifact,
+    build_methodology_description_simple_artifact,
+    build_budget_table_simple_artifact,
 )
 from ghg_budget.calculate import (
     PROJECT_DIR,
@@ -23,9 +25,10 @@ from ghg_budget.calculate import (
     year_budget_spent,
     current_budget,
     cumulative_emissions,
+    simplify_table,
 )
 from ghg_budget.data import GHG_DATA, BudgetParams
-from ghg_budget.input import ComputeInput
+from ghg_budget.input import ComputeInput, DetailOption
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +62,7 @@ class GHGBudget(Operator[ComputeInput]):
                     website='https://heigit.org/heigit-team/',
                 ),
             ],
-            version='dummy',
+            version='demo',
             concerns=[Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION],
             purpose=Path('resources/info/purpose.md').read_text(),
             methodology=Path('resources/info/methodology.md').read_text(),
@@ -83,11 +86,25 @@ class GHGBudget(Operator[ComputeInput]):
         aoi_bisko_budgets = current_budget(emissions_df, aoi_bisko_budgets)
         aoi_bisko_budgets, emissions_df = year_budget_spent(aoi_bisko_budgets, emissions_df)
         markdown_artifact = GHGBudget.markdown_artifact(resources)
+        markdown_simple_artifact = GHGBudget.markdown_simple_artifact(resources)
         table_artifact = GHGBudget.table_artifact(aoi_bisko_budgets, resources)
+        table_simple_artifact = GHGBudget.table_simple_artifact(aoi_bisko_budgets, resources)
         comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
         time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, resources)
 
-        artifacts = [markdown_artifact, table_artifact, comparison_chart_artifact, time_chart_artifact]
+        if params.level_of_detail == DetailOption.SIMPLE:
+            artifacts = [
+                markdown_simple_artifact,
+                table_simple_artifact,
+                time_chart_artifact,
+            ]
+        else:
+            artifacts = [
+                markdown_artifact,
+                table_artifact,
+                comparison_chart_artifact,
+                time_chart_artifact,
+            ]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 
         return artifacts
@@ -103,6 +120,18 @@ class GHGBudget(Operator[ComputeInput]):
         text = (PROJECT_DIR / 'resources/info/methodology.md').read_text()
 
         return build_methodology_description_artifact(text, resources)
+
+    @staticmethod
+    def markdown_simple_artifact(resources: ComputationResources) -> _Artifact:
+        """
+
+        :param resources: The plugin computation resources
+        :return: Methodology description of the plugin in simple language as Markdown artifact
+        """
+        log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
+        text = (PROJECT_DIR / 'resources/info/methodology_simple.md').read_text()
+
+        return build_methodology_description_simple_artifact(text, resources)
 
     @staticmethod
     def table_artifact(aoi_bisko_budgets: pd.DataFrame, resources: ComputationResources) -> _Artifact:
@@ -124,6 +153,22 @@ class GHGBudget(Operator[ComputeInput]):
         aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
 
         return build_budget_table_artifact(aoi_bisko_budgets, resources)
+
+    @staticmethod
+    def table_simple_artifact(aoi_bisko_budgets: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+        """
+
+        :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
+        :param resources: The plugin computation resources
+        :return: Simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact
+        """
+        log.debug(
+            'Creating simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table '
+            'artifact.'
+        )
+        aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
+
+        return build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources)
 
     @staticmethod
     def comparison_chart_artifact(comparison_chart_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
