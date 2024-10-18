@@ -152,27 +152,27 @@ GHG_DATA = GHGData(
 
 
 class BudgetParams(BaseModel):
+    # Global population in 2020, the year of the most recent global CO2 budgets from the IPCC
     global_pop: int = 7840000000
-    'Global population in 2020, the year of the most recent global CO2 budgets from the IPCC'
+    # Population of Heidelberg in 2020, the year of the most recent global CO2 budgets from the IPCC
     aoi_pop_now: int = 158741
-    'Population of Heidelberg in 2020, the year of the most recent global CO2 budgets from the IPCC'
+    # Population of Heidelberg in 2018. For 2018, we have an estimate of the mean per capita CO2
+    # emissions for Heidelberg. We can use this to derive the share of the total emissions that is
+    # covered by the BISKO standard.
     aoi_pop_bisko_share_year: int = 156267
-    'Population of Heidelberg in 2018. For 2018, we have an estimate of the mean per capita CO2 '
-    'emissions for Heidelberg. We can use this to derive the share of the total emissions that is '
-    'covered by the BISKO standard.'
+    # BISKO emissions of Heidelberg in 2018. For 2018, we have an estimate of the total per capita CO2
+    # emissions for Heidelberg. We can use this to derive the share of the total emissions that is
+    # covered by the BISKO standard.
     aoi_bisko_emissions_bisko_share_year: int = 1117433
-    'BISKO emissions of Heidelberg in 2018. For 2018, we have an estimate of the total per capita CO2 '
-    'emissions for Heidelberg. We can use this to derive the share of the total emissions that is '
-    'covered by the BISKO standard.'
+    # Mean CO2 emissions per person in Heidelberg in 2018. For 2018, we have an estimate of the total
+    # per capita CO2 emissions for Heidelberg. We can use this to derive the share of the total
+    # emissions that is covered by the BISKO standard.
     aoi_mean_emissions_person_bisko_share_year: float = 11.2
-    'Mean CO2 emissions per person in Heidelberg in 2018. For 2018, we have an estimate of the total '
-    'per capita CO2 emissions for Heidelberg. We can use this to derive the share of the total '
-    'emissions that is covered by the BISKO standard.'
+    # In the Paris agreement, adopted in the end of 2015, the states pledged to limit global warming
+    # clearly below 2°C. Thus, we use 2016 as baseline year to calculate the CO2 budgets.
     pledge_year: int = 2016
-    'In the Paris agreement, adopted in the end of 2015, the states pledged to limit global warming '
-    'clearly below 2°C. Thus, we use 2016 as baseline year to calculate the CO2 budgets.'
+    # The most recent estimates of the global CO2 budgets to reach the climate goals by the IPCC are for 2020.
     ipcc_date: datetime.date = datetime.date(2020, 1, 1)
-    'The most recent estimates of the global CO2 budgets to reach the climate goals by the IPCC are for 2020.'
 
     @property
     def aoi_pop_share(self):
