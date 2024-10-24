@@ -83,27 +83,6 @@ def year_budget_spent(aoi_bisko_budgets: pd.DataFrame, emissions_df: pd.DataFram
     return aoi_bisko_budgets, emissions_df
 
 
-def comparison_chart_data(
-    emissions_aoi: pd.DataFrame, planned_emissions_aoi: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame
-) -> pd.DataFrame:
-    """
-    Prepares data for bar chart comparing CO2 budgets depending on warming goals with planned emissions of the AOI.
-
-    :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
-    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
-    :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI depending on warming goals
-    :return: pd.DataFrame with CO2 budgets depending on warming goals and total planned emissions of the AOI
-    """
-    cum_emissions = emissions_aoi['co2_kt_sum'].sum() + planned_emissions_aoi['co2_kt_sum'].sum()
-    aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %'].reset_index()
-    comparison_chart_df = aoi_bisko_budgets[['Temperaturziel (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
-    comparison_chart_df.loc[len(comparison_chart_df)] = [0, cum_emissions]
-    comparison_chart_df['Temperaturziel (°C)'] = comparison_chart_df['Temperaturziel (°C)'].apply(
-        lambda deg: 'real/geplant' if deg == 0 else f'{deg}°C'
-    )
-    return comparison_chart_df
-
-
 def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     """
     Simplifies table with the BISKO CO2 budgets of the AOI from the pledge_year onwards.

@@ -116,15 +116,6 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         primary=False,
     )
-    comparison_chart_artifact = _Artifact(
-        name='Vergleich der gesamten geplanten CO₂-Emissionen Heidelbergs mit den CO₂-Budgets',
-        modality=ArtifactModality.CHART,
-        primary=False,
-        file_path=Path(compute_resources.computation_dir / 'comparison_emissions_budgets.json'),
-        summary='Das Diagramm zeigt die Summe der ab 2016 gemessenen und geplanten CO₂-Emissionen Heidelbergs '
-        '(in 1000 Tonnen) im Vergleich mit den verbleibenden CO₂-Budgets für das Erreichen der verschiedenen '
-        'Temperaturziele mit einer Wahrscheinlichkeit von 83 %.',
-    )
     time_chart_artifact = _Artifact(
         name='Entwicklung der CO₂-Emissionen in Heidelberg',
         modality=ArtifactModality.CHART,
@@ -141,7 +132,6 @@ def expected_compute_output(compute_resources) -> List[_Artifact]:
     return [
         markdown_artifact,
         table_artifact,
-        comparison_chart_artifact,
         time_chart_artifact,
     ]
 
