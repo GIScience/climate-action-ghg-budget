@@ -105,19 +105,6 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
     )
 
 
-def build_budget_comparison_chart_artifact(bar_chart_data: Chart2dData, resources: ComputationResources) -> _Artifact:
-    return create_chart_artifact(
-        data=bar_chart_data,
-        title='Vergleich der gesamten geplanten CO₂-Emissionen Heidelbergs mit den CO₂-Budgets',
-        caption='Das Diagramm zeigt die Summe der ab 2016 gemessenen und geplanten CO₂-Emissionen Heidelbergs '
-        '(in 1000 Tonnen) im Vergleich mit den verbleibenden CO₂-Budgets für das Erreichen der verschiedenen '
-        'Temperaturziele mit einer Wahrscheinlichkeit von 83 %.',
-        resources=resources,
-        filename='comparison_emissions_budgets',
-        primary=False,
-    )
-
-
 def build_time_chart_artifact(line_chart_data: Chart2dData, resources: ComputationResources) -> _Artifact:
     return create_chart_artifact(
         data=line_chart_data,
