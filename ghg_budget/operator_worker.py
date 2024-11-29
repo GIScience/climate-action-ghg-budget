@@ -3,12 +3,16 @@
 
 import logging
 from pathlib import Path
+
+import shapely
+from climatoology.base.baseoperator import BaseOperator, AoiProperties
+from climatoology.base.computation import ComputationResources
+from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
 from pydantic_extra_types.color import Color
 from typing import List
 
 import pandas as pd
-from climatoology.base.artifact import Chart2dData, ChartType
-from climatoology.base.operator import ComputationResources, Concern, Info, Operator, PluginAuthor, _Artifact
+from climatoology.base.artifact import Chart2dData, ChartType, _Artifact
 
 from ghg_budget.artifact import (
     build_methodology_description_artifact,
@@ -31,16 +35,16 @@ from ghg_budget.input import ComputeInput, DetailOption
 log = logging.getLogger(__name__)
 
 
-class GHGBudget(Operator[ComputeInput]):
+class GHGBudget(BaseOperator[ComputeInput]):
     def __init__(self):
-        log.debug('Initialised GHG-Budget operator')
+        super().__init__()
 
-    def info(self) -> Info:
+    def info(self) -> _Info:
         """
 
         :return: Info object with information about the plugin.
         """
-        info = Info(
+        info = generate_plugin_info(
             name='GHG Budget',
             icon=Path('resources/info/hourglass.jpg'),
             authors=[
@@ -62,15 +66,21 @@ class GHGBudget(Operator[ComputeInput]):
             ],
             version='demo',
             concerns=[Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION],
-            purpose=Path('resources/info/purpose.md').read_text(),
-            methodology=Path('resources/info/methodology.md').read_text(),
+            purpose=Path('resources/info/purpose.md'),
+            methodology=Path('resources/info/methodology.md'),
             sources=Path('resources/info/sources.bib'),
         )
         log.info(f'Return info {info.model_dump()}')
 
         return info
 
-    def compute(self, resources: ComputationResources, params: ComputeInput) -> List[_Artifact]:
+    def compute(
+        self,
+        resources: ComputationResources,
+        aoi: shapely.MultiPolygon,
+        aoi_properties: AoiProperties,
+        params: ComputeInput,
+    ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
         budget_params = BudgetParams()

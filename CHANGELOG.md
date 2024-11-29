@@ -7,6 +7,12 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/compare/dummy...main?from_project_id=854&straight=false)
 ### Changed
+- update climatoology to version 6.0.2, now using the Celery library as the core task manager.
+This also means that a postgres server, that serves as the result backend for Celery, is now required to run the
+plugin.
+- use renamed BaseOperator instead of the old Operator class to inherit custom operators from
+- account for new explicit AOI input by moving it from the input parameters to the compute method input
+- simplify the plugin module with the new functionality in climatoology and now using the celery library
 - Improved documentation and descriptions ([#14](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/14), [#17](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/17))
 ### Removed
 - Bar chart comparing CO2 budgets to projected emissions of Heidelberg because it was deemed too confusing [#16](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/16)
