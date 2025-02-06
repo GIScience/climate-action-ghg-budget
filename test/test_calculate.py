@@ -4,6 +4,7 @@ import pandas as pd
 
 from ghg_budget.calculate import (
     calculate_bisko_budgets,
+    comparison_chart_data,
     year_budget_spent,
     cumulative_emissions,
     current_budget,
@@ -82,6 +83,32 @@ def test_current_budget():
         },
     )
     received = current_budget(emissions_df, aoi_bisko_budgets)
+    pd.testing.assert_frame_equal(received, expected)
+
+
+def test_comparison_chart():
+    emissions_aoi = pd.DataFrame(
+        {'co2_kt_sum': [1, 1]},
+        index=[1, 2],
+    )
+    planned_emissions_aoi = pd.DataFrame(
+        {'co2_kt_sum': [1, 1]},
+        index=[3, 4],
+    )
+    aoi_bisko_budgets = pd.DataFrame(
+        {
+            'Temperaturziel (°C)': [1.5, 1.7, 2.0],
+            'Wahrscheinlichkeit': ['83 %', '83 %', '83 %'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3],
+        },
+    )
+    expected = pd.DataFrame(
+        {
+            'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
+        },
+    )
+    received = comparison_chart_data(emissions_aoi, planned_emissions_aoi, aoi_bisko_budgets)
     pd.testing.assert_frame_equal(received, expected)
 
 

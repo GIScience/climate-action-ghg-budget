@@ -33,15 +33,16 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
     return create_table_artifact(
         data=table,
         title='CO₂ Budget Heidelberg',
-        caption='Um mit einer Wahrscheinlichkeit von 67 % bzw. 83 % die Temperaturerhöhung auf den jeweiligen '
+        caption='Wie viel des Heidelberg zustehenden CO₂-Budgets wurde bereits verbraucht?',
+        description='Um mit einer Wahrscheinlichkeit von 67 % bzw. 83 % die Temperaturerhöhung auf den jeweiligen '
         'Maximalwert zu begrenzen, hat Heidelberg nur ein beschränktes CO₂-Budget zur Verfügung. Das heißt, '
         'dass der Stadt Heidelberg für die Einhaltung des Paris-Ziels von 1,5 °C mit einer Wahrscheinlichkeit '
         'von 83 % das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des Ziels '
         'beizutragen. Nehmen wir gesellschaftlich ein größeres Risiko des Scheiterns in Kauf, also eine '
         'Wahrscheinlichkeit von nur 67 %, um das Ziel zu erreichen, steht Heidelberg ein höheres Budget zur '
         'Verfügung. Gleiches gilt für höhere Zieltemperaturen (1,7 °C bzw. 2 °C): Diese bedeuten ebenfalls, '
-        'dass noch mehr CO₂ emittiert werden darf.',
-        description='**Erläuterung der Spalten**\n\n'
+        'dass noch mehr CO₂ emittiert werden darf.\n\n'
+        '**Erläuterung der Spalten**\n\n'
         '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
         'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
         '**Wahrscheinlichkeit:** Wie stark die globale Durchschnittstemperatur durch eine bestimmte Menge an '
@@ -76,12 +77,13 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
     return create_table_artifact(
         data=table,
         title='CO₂ Budget Heidelberg',
-        caption='Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat Heidelberg nur ein '
+        caption='Wie viel des Heidelberg zustehenden CO₂-Budgets wurde bereits verbraucht?',
+        description='Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat Heidelberg nur ein '
         'beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt Heidelberg für die Einhaltung des '
         'Paris-Ziels von 1,5 °C das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des '
         'Ziels beizutragen. Für höhere Zieltemperaturen (1,7 °C bzw. 2 °C) darf noch mehr CO₂ emittiert '
-        'werden.',
-        description='**Erläuterung der Spalten**\n\n'
+        'werden.\n\n'
+        '**Erläuterung der Spalten**\n\n'
         '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
         'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
         '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur Verfügung stehen. Ein '
@@ -105,11 +107,31 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
     )
 
 
+def build_budget_comparison_chart_artifact(bar_chart_data: Chart2dData, resources: ComputationResources) -> _Artifact:
+    return create_chart_artifact(
+        data=bar_chart_data,
+        title='Wie viel vom CO₂-Budget ist bereits emittiert?',
+        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturziele mit einer Wahrscheinlichkeit von 83% zu '
+        'erreichen.',
+        description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2016 zur '
+        'Verfügung standen, um verschiedene Temperaturziele mit einer Wahrscheinlichkeit von 83 % zu erreichen. Die '
+        'dunkelgraue Säule daneben zeigt, wieviel CO₂ Heidelberg seit 2016 ausgestoßen hat, d.h. wieviel von '
+        'diesen Budgets bereits verbraucht ist. Die hellgraue Säule ganz rechts zeigt, wieviel CO₂ Heidelberg '
+        'voraussichtlich noch ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert '
+        'auf den aktuell beschlossenen Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass '
+        'selbst das CO₂-Budget für das 2°C-Ziel weit überschritten wird, wenn die Stadt Heidelberg keine '
+        'zusätzlichen Anstrengungen zur Verringerung der Emissionen unternimmt.',
+        resources=resources,
+        filename='comparison_emissions_budgets',
+        primary=False,
+    )
+
+
 def build_time_chart_artifact(line_chart_data: Chart2dData, resources: ComputationResources) -> _Artifact:
     return create_chart_artifact(
         data=line_chart_data,
         title='Entwicklung der CO₂-Emissionen in Heidelberg',
-        caption='Entwicklung der CO₂-Emissionen Heidelbergs ab 2016 (in 1000 Tonnen)',
+        caption='Entwicklung der CO₂-Emissionen Heidelbergs seit 2016 (in 1000 Tonnen)',
         description='Die Emissionswerte von 2016 bis 2021 sind Messwerte basierend auf dem BISKO-Standard, die Werte '
         'ab 2022 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
         'Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\nAnmerkung: Die Emissionswerte bilden '
