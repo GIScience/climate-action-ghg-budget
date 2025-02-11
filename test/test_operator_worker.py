@@ -35,3 +35,20 @@ def test_get_time_chart():
     )
     received = GHGBudget.get_time_chart(emissions_df)
     assert received == expected
+
+
+def test_get_cumulative_chart():
+    emissions_df_data = {
+        'Jahr': [2016],
+        'cumulative_emissions': [1000],
+    }
+    colors = [Color('#FF6347')]
+    emissions_df = pd.DataFrame(emissions_df_data)
+    expected = Chart2dData(
+        x=[2016],
+        y=[1000],
+        chart_type=ChartType.BAR,
+        color=[Color('#FF6347')],
+    )
+    received = GHGBudget.get_cumulative_chart(emissions_df, colors)
+    assert received == expected

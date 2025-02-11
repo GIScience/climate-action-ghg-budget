@@ -21,6 +21,7 @@ from ghg_budget.artifact import (
     build_methodology_description_simple_artifact,
     build_budget_table_simple_artifact,
     build_budget_comparison_chart_artifact,
+    build_cumulative_chart_artifact,
 )
 from ghg_budget.calculate import (
     PROJECT_DIR,
@@ -101,6 +102,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
         table_simple_artifact = GHGBudget.table_simple_artifact(aoi_bisko_budgets, resources)
         comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
         time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, resources)
+        cumulative_chart_artifact = GHGBudget.cumulative_chart_artifact(emissions_df, resources)
 
         if params.level_of_detail == DetailOption.SIMPLE:
             artifacts = [
@@ -114,6 +116,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
                 table_artifact,
                 comparison_chart_artifact,
                 time_chart_artifact,
+                cumulative_chart_artifact,
             ]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 
@@ -238,3 +241,24 @@ class GHGBudget(BaseOperator[ComputeInput]):
         time_chart_data = Chart2dData(x=x, y=y, color=Color('#808080'), chart_type=ChartType.LINE)
 
         return time_chart_data
+
+    @staticmethod
+    def cumulative_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+        log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
+
+        colors = [Color('#FF6347') if year <= 2021 else Color('#777777') for year in emissions_df['Jahr']]
+
+        cumulative_chart_data = GHGBudget.get_cumulative_chart(emissions_df, colors)
+
+        return build_cumulative_chart_artifact(cumulative_chart_data, resources)
+
+    @staticmethod
+    def get_cumulative_chart(emissions_df: pd.DataFrame, colors: list) -> Chart2dData:
+        log.debug('Creating Chart2dData object with cumulative emissions in the AOI for the line chart.')
+
+        x = emissions_df['Jahr']
+        y = emissions_df['cumulative_emissions']
+
+        cumulative_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
+
+        return cumulative_chart_data
