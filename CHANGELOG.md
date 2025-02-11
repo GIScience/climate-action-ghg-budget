@@ -21,6 +21,7 @@ plugin.
 - Chart with temporal development of emissions in Heidelberg, as well as dates when the CO2 budgets will be used up [#4](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/4)
 - Updated emission data for Heidelberg [#5](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/5)
 - Simple version of GHG budget plugin [#7](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/7)
+- Chart showing cumulative emissions of Heidelberg [#27](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/27)
 
 ## [Dummy](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/releases/dummy)
 ### Added

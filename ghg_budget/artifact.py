@@ -136,9 +136,36 @@ def build_time_chart_artifact(line_chart_data: Chart2dData, resources: Computati
         'ab 2022 sind Prognosen unter der Annahme, dass die zurzeit beschlossenen '
         'Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\nAnmerkung: Die Emissionswerte bilden '
         'nicht die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
-        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Mehr Informationen zur BISKO-Systematik '
-        'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Der BISKO-Standard erfasst vereinfacht '
+        'gesagt nur die Emissionen, die von Heidelberger:innen in Heidelberg ausgestoßen werden, nicht aber jene, die '
+        'beispielsweise von Heidelberger:innen außerhalb Heidelbergs verursacht werden. Mehr Informationen zur '
+        'BISKO-Systematik finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='time_chart',
         primary=True,
+    )
+
+
+def build_cumulative_chart_artifact(line_chart_data: Chart2dData, resources: ComputationResources) -> _Artifact:
+    return create_chart_artifact(
+        data=line_chart_data,
+        title='Kumulative CO₂-Emissionen in Heidelberg',
+        caption='Aufsummierte CO₂-Emissionen Heidelbergs pro Jahr seit 2016 (in 1000 Tonnen)',
+        description='Ein Rückgang der CO₂-Emissionen bedeutet nicht, dass die CO₂-Konzentration in der Atmosphäre '
+        'sinkt, sondern lediglich, dass sie langsamer steigt. Die CO₂-Konzentration in der Atmosphäre steigt so lange, '
+        'wie mehr CO₂ in die Atmosphäre gelangt als aus ihr entweicht. Man kann sich das wie eine Badewanne '
+        'vorstellen, in die Wasser eingelassen wird. Wenn ich den Wasserhahn ein Stück zudrehe, läuft zwar weniger '
+        'Wasser in die Wanne, aber solange der Stöpsel zu ist, steigt der Wasserstand trotzdem weiter an, wenn auch '
+        'langsamer. Dies wird in diesem Diagramm gezeigt. Die Emissionswerte von 2016 bis 2021 sind Messwerte '
+        'basierend auf dem BISKO-Standard, die Werte ab 2022 sind Prognosen unter der Annahme, dass die zurzeit '
+        'beschlossenen Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\n'
+        'Anmerkung: Die Emissionswerte bilden '
+        'nicht die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
+        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Der BISKO-Standard erfasst vereinfacht '
+        'gesagt nur die Emissionen, die von Heidelberger:innen in Heidelberg ausgestoßen werden, nicht aber jene, die '
+        'beispielsweise von Heidelberger:innen außerhalb Heidelbergs verursacht werden. Mehr Informationen zur '
+        'BISKO-Systematik finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        resources=resources,
+        filename='cumulative_chart',
+        primary=False,
     )
