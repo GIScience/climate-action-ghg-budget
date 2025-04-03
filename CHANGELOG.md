@@ -14,6 +14,7 @@ plugin.
 - account for new explicit AOI input by moving it from the input parameters to the compute method input
 - simplify the plugin module with the new functionality in climatoology and now using the celery library
 - Improved documentation and descriptions ([#14](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/14), [#17](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/17))
+- - Update climatoology to 6.2.0
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
 - An issue induced by an update of pydantic that would break plugin representation in the front-end (see [climatoology#105](https://gitlab.heigit.org/climate-action/climatoology/-/issues/105))
