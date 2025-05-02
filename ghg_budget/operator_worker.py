@@ -8,6 +8,7 @@ import shapely
 from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
 from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
+from climatoology.utility.exception import ClimatoologyUserError
 from pydantic_extra_types.color import Color
 from typing import List
 
@@ -86,6 +87,10 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
+        if not aoi_properties.name == 'Heidelberg':
+            raise ClimatoologyUserError(
+                'Das CO₂-Budget-Tool funktioniert momentan nur für Heidelberg. Bitte wählen Sie die Stadt Heidelberg als Untersuchungsgebiet aus'
+            )
         budget_params = BudgetParams()
         aoi_bisko_budgets = calculate_bisko_budgets(
             GHG_DATA.budget_glob, GHG_DATA.emissions_glob, budget_params=budget_params
