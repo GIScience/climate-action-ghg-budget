@@ -23,6 +23,7 @@ plugin.
 - Updated emission data for Heidelberg [#5](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/5)
 - Simple version of GHG budget plugin [#7](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/7)
 - Chart showing cumulative emissions of Heidelberg [#27](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/27)
+- Geoblocker for Heidelberg [#33](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/33)
 
 ## [Dummy](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/releases/dummy)
 ### Added
