@@ -14,6 +14,7 @@ from typing import List
 
 import pandas as pd
 from climatoology.base.artifact import Chart2dData, ChartType, _Artifact
+from semver import Version
 
 from ghg_budget.artifact import (
     build_methodology_description_artifact,
@@ -68,8 +69,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
                     website='https://heigit.org/heigit-team/',
                 ),
             ],
-            version='demo',
-            concerns=[Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION],
+            version=Version(0, 0, 1, build='demo'),
+            concerns={Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION},
             purpose=Path('resources/info/purpose.md'),
             methodology=Path('resources/info/methodology.md'),
             sources=Path('resources/info/sources.bib'),
