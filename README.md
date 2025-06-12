@@ -57,27 +57,47 @@ To release a new plugin version
 Please adhere to the [Semantic Versioning](https://semver.org/) scheme.
 You can think of the plugin methods (info method, input parameters and artifacts) as the public API of your plugin.
 
-## Docker (for admins and interested devs)
+## Docker
 
-If the [infrastructure](https://gitlab.heigit.org/climate-action/infrastructure) is reachable you can copy [.env_template](.env_template) to `.env` and then run
+To build docker images, you need to give the engine access to the climatoology repository.
+Create a file `CI_JOB_TOKEN` that contains your personal access token to the climatoology repository.
 
-```shell
-DOCKER_BUILDKIT=1 docker build --secret id=CI_JOB_TOKEN . --tag heigit/ca-ghg-budget:devel
-docker run --env-file .env --network=host heigit/ca-ghg-budget:devel
-```
+### Build
 
-Make sure the cone-token is copied to the text-file named `CI_JOB_TOKEN` that is mounted to the container build process as secret.
-
-To deploy this plugin to the central docker repository run
+The following command can be used to build the showcase plugin.
+Note that this will overwrite any existing image with the same tag (i.e. the one you previously pulled from the Climate
+Action docker registry).
 
 ```shell
-DOCKER_BUILDKIT=1 docker build --secret id=CI_JOB_TOKEN . --tag heigit/ca-ghg-budget:devel
-docker image push heigit/ca-ghg-budget:devel
+DOCKER_BUILDKIT=1 docker build --secret id=CI_JOB_TOKEN . --tag repo.heigit.org/climate-action/ghg-budget:devel
 ```
 
-## Kaniko
+To mimic the build behaviour of the CI you have to add `--build-arg CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD)`
+to the above command.
 
-To test the docker build from Kaniko run
+### Run
+
+If you have the Climate Infrastructure running (see [Development Setup](#development-setup)) you can now run the
+container via
+
+```shell
+docker run --rm --network=host --env-file .env.base --env-file .env repo.heigit.org/climate-action/ghg-budget:devel
+```
+
+### Deploy
+
+Deployment is handled by the GitLab CI automatically.
+If for any reason you want to deploy manually (and have the required rights), after building the image, run
+
+```shell
+docker image push repo.heigit.org/climate-action/ghg-budget:devel
+```
+
+### Kaniko
+
+The gitlab-ci will build and deploy the plugin docker image using [Dockerfile.Kaniko](Dockerfile.Kaniko).
+If the build pipeline fails, you will have to test the Kaniko build, not the above Docker build.
+To test the build from Kaniko run
 
 ```shell
 docker run -v ./:/workspace \
