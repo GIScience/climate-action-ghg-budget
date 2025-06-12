@@ -9,6 +9,7 @@ from ghg_budget.calculate import (
     cumulative_emissions,
     current_budget,
     simplify_table,
+    emission_paths,
 )
 from ghg_budget.data import BudgetParams
 
@@ -158,3 +159,27 @@ def test_simplify_table():
     )
     received = simplify_table(aoi_bisko_budgets)
     pd.testing.assert_frame_equal(received, expected)
+
+
+def test_emission_paths():
+    bisko_budget_table = pd.DataFrame(
+        {
+            'Temperaturziel (°C)': [1.7, 2.0],
+            'Wahrscheinlichkeit': ['83 %', '83 %'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [10000, 15000],
+        }
+    )
+    emissions_table = pd.DataFrame(
+        {
+            'co2_kt_sum': [1000],
+        },
+        index=[2016],
+    )
+    budget_params = BudgetParams()
+    reduction_paths = emission_paths(bisko_budget_table, emissions_table, budget_params)
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C Temperaturziel'].iloc[0] == 1000.0
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '2.0 °C Temperaturziel'].iloc[0] == 1000.0
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '1.7 °C Temperaturziel'].iloc[0], 2) == 938.37
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '2.0 °C Temperaturziel'].iloc[0], 2) == 988.28
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '1.7 °C Temperaturziel'].iloc[0] == 0.0
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '2.0 °C Temperaturziel'].iloc[0] == 0.0
