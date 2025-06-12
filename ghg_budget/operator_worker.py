@@ -9,10 +9,12 @@ from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
 from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
 from climatoology.utility.exception import ClimatoologyUserError
+from plotly.graph_objects import Figure
 from pydantic_extra_types.color import Color
 from typing import List
 
 import pandas as pd
+import plotly.graph_objects as go
 from climatoology.base.artifact import Chart2dData, ChartType, _Artifact
 from semver import Version
 
@@ -33,6 +35,7 @@ from ghg_budget.calculate import (
     cumulative_emissions,
     simplify_table,
     comparison_chart_data,
+    emission_paths,
 )
 from ghg_budget.data import GHG_DATA, BudgetParams
 from ghg_budget.input import ComputeInput, DetailOption
@@ -50,7 +53,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
         :return: Info object with information about the plugin.
         """
         info = generate_plugin_info(
-            name='GHG Budget',
+            name='CO₂ Budget',
             icon=Path('resources/info/hourglass.jpg'),
             authors=[
                 PluginAuthor(
@@ -107,7 +110,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
         table_artifact = GHGBudget.table_artifact(aoi_bisko_budgets, resources)
         table_simple_artifact = GHGBudget.table_simple_artifact(aoi_bisko_budgets, resources)
         comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
-        time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, resources)
+        reduction_paths = emission_paths(aoi_bisko_budgets, GHG_DATA.emissions_aoi, budget_params)
+        time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, reduction_paths, resources)
         cumulative_chart_artifact = GHGBudget.cumulative_chart_artifact(emissions_df, resources)
 
         if params.level_of_detail == DetailOption.SIMPLE:
@@ -220,7 +224,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
         return comparison_chart_data
 
     @staticmethod
-    def time_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
+    def time_chart_artifact(
+        emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, resources: ComputationResources
+    ) -> _Artifact:
         """
 
         :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
@@ -228,25 +234,60 @@ class GHGBudget(BaseOperator[ComputeInput]):
         :return: Line chart with development of the CO2 emissions in the AOI as chart artifact
         """
         log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
-        time_chart_data = GHGBudget.get_time_chart(emissions_df)
+        time_chart_figure = GHGBudget.get_time_chart(emissions_df, reduction_paths)
 
-        return build_time_chart_artifact(time_chart_data, resources)
+        return build_time_chart_artifact(time_chart_figure, resources)
 
     @staticmethod
-    def get_time_chart(emissions_df: pd.DataFrame) -> Chart2dData:
+    def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) -> Figure:
         """
 
         :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
         :return: Chart2dData object with CO2 emissions of the AOI by year for the line chart
         """
-        log.debug('Creating Chart2dData object with development of the emissions in the AOI for the line chart.')
+        log.debug('Creating line chart with development of the emissions in the AOI.')
 
-        x = emissions_df['Jahr']
-        y = emissions_df['co2_kt_sum']
+        fig = go.Figure()
 
-        time_chart_data = Chart2dData(x=x, y=y, color=Color('#808080'), chart_type=ChartType.LINE)
+        fig.add_trace(
+            go.Scatter(
+                x=emissions_df['Jahr'],
+                y=emissions_df['co2_kt_sum'],
+                mode='lines+markers',
+                name='Prognose',
+                line=dict(color='blue'),
+            )
+        )
 
-        return time_chart_data
+        fig.add_trace(
+            go.Scatter(
+                x=reduction_paths['Jahr'],
+                y=round(reduction_paths['1.7 °C Temperaturziel'], 1),
+                mode='lines',
+                name='1.7 °C Temperaturziel',
+                line=dict(dash='dash', color='green'),
+            )
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=reduction_paths['Jahr'],
+                y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
+                mode='lines',
+                name='2.0 °C Temperaturziel',
+                line=dict(dash='dot', color='red'),
+            )
+        )
+
+        fig.update_layout(
+            title='Entwicklung der CO₂-Emissionen und alternative Reduktionspfade in Heidelberg',
+            xaxis_title='Jahr',
+            yaxis_title='CO₂-Emissionen (1000 Tonnen)',
+            legend_title='Szenarien',
+            template='plotly_white',
+        )
+
+        return fig
 
     @staticmethod
     def cumulative_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:

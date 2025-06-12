@@ -2,7 +2,9 @@ from datetime import date
 from pathlib import Path
 from typing import Tuple
 
+import numpy as np
 import pandas as pd
+import sympy as sp
 
 PROJECT_DIR = Path(__file__).parent.parent
 
@@ -121,3 +123,47 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
         'BISKO CO₂-Budget 2024 (1000 Tonnen)'
     ].round(1)
     return aoi_bisko_budgets_simple
+
+
+def emission_paths(bisko_budget_table, emission_table, budget_params) -> pd.DataFrame:
+    bisko_budget_table.reset_index(inplace=True)
+    budget_1point7 = bisko_budget_table.loc[
+        (bisko_budget_table['Temperaturziel (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
+        'BISKO CO₂-Budget 2016 (1000 Tonnen)',
+    ].values[0]
+    budget_2point0 = bisko_budget_table.loc[
+        (bisko_budget_table['Temperaturziel (°C)'] == 2.0) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
+        'BISKO CO₂-Budget 2016 (1000 Tonnen)',
+    ].values[0]
+    emissions_pledge_year = emission_table.loc[budget_params.pledge_year, 'co2_kt_sum']
+
+    x = sp.symbols('x')
+    a, b, c = sp.symbols('a b c')
+
+    f = a * x**2 + b * x + c
+
+    eq1 = f.subs(x, budget_params.pledge_year) - emissions_pledge_year
+
+    eq2 = f.subs(x, budget_params.zero_year)
+
+    integral = sp.integrate(f, (x, budget_params.pledge_year, budget_params.zero_year))
+    eq3_1point7 = integral - budget_1point7
+    eq3_2point0 = integral - budget_2point0
+
+    solution_1point7 = sp.solve([eq1, eq2, eq3_1point7], (a, b, c))
+    solution_2point0 = sp.solve([eq1, eq2, eq3_2point0], (a, b, c))
+
+    f_solved_1point7 = f.subs(solution_1point7)
+    f_solved_2point0 = f.subs(solution_2point0)
+
+    f_numeric_1point7 = sp.lambdify(x, f_solved_1point7, modules='numpy')
+    f_numeric_2point0 = sp.lambdify(x, f_solved_2point0, modules='numpy')
+
+    x_vals = np.arange(budget_params.pledge_year, 2041)
+    y_1point7 = f_numeric_1point7(x_vals)
+    y_2point0 = f_numeric_2point0(x_vals)
+
+    reduction_paths = pd.DataFrame(
+        {'Jahr': x_vals, '1.7 °C Temperaturziel': y_1point7, '2.0 °C Temperaturziel': y_2point0}
+    )
+    return reduction_paths

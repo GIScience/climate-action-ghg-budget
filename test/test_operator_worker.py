@@ -1,5 +1,7 @@
+import numpy as np
 import pandas as pd
 from climatoology.base.artifact import Chart2dData, ChartType
+from plotly.graph_objects import Figure
 from pydantic_extra_types.color import Color
 
 from ghg_budget.operator_worker import GHGBudget
@@ -26,15 +28,16 @@ def test_get_time_chart():
         'Jahr': [2016],
         'co2_kt_sum': [1000],
     }
+    reduction_df_data = {
+        'Jahr': [2016],
+        '1.7 °C Temperaturziel': [900],
+        '2.0 °C Temperaturziel': [800],
+    }
     emissions_df = pd.DataFrame(emissions_df_data)
-    expected = Chart2dData(
-        x=[2016],
-        y=[1000],
-        chart_type=ChartType.LINE,
-        color=Color('#808080'),
-    )
-    received = GHGBudget.get_time_chart(emissions_df)
-    assert received == expected
+    reduction_df = pd.DataFrame(reduction_df_data)
+    received = GHGBudget.get_time_chart(emissions_df, reduction_df)
+    assert isinstance(received, Figure)
+    np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
 
 
 def test_get_cumulative_chart():

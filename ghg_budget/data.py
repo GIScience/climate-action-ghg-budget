@@ -173,6 +173,8 @@ class BudgetParams(BaseModel):
     pledge_year: int = 2016
     # The most recent estimates of the global CO2 budgets to reach the climate goals by the IPCC are for 2020.
     ipcc_date: datetime.date = datetime.date(2020, 1, 1)
+    # Year when net-zero carbon should be reached
+    zero_year: int = 2040
 
     @property
     def aoi_pop_share(self):
