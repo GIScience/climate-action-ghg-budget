@@ -15,6 +15,6 @@ def test_plugin_compute_request(
         aoi=default_aoi,
         aoi_properties=default_aoi_properties,
     )
-    assert len(computed_artifacts) == 5
+    assert len(computed_artifacts) == 6
     for artifact in computed_artifacts:
         assert isinstance(artifact, _Artifact)

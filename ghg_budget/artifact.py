@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.graph_objects as go
 from plotly.graph_objects import Figure
 from climatoology.base.artifact import (
     create_markdown_artifact,
@@ -9,6 +10,8 @@ from climatoology.base.artifact import (
     create_plotly_chart_artifact,
 )
 from climatoology.base.computation import ComputationResources
+
+from ghg_budget.data import now_year
 
 
 def build_methodology_description_artifact(text: str, resources: ComputationResources) -> _Artifact:
@@ -56,7 +59,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
         'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
         'viele Städte wie beispielsweise Heidelberg ihre Emissionen schätzen.\n\n'
-        '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur '
+        f'**BISKO CO₂-Budget {now_year} (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur '
         'Verfügung stehen. Ein negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten '
         'ist.\n\n'
         '**CO₂-Budget aufgebraucht (Jahr):** Wann die CO₂-Budgets aufgebraucht sind, hängt davon ab, '
@@ -88,7 +91,7 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
         '**Erläuterung der Spalten**\n\n'
         '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
         'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor.\n\n'
-        '**BISKO CO₂-Budget 2024 (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur Verfügung stehen. Ein '
+        f'**BISKO CO₂-Budget {now_year} (1000 Tonnen):** CO₂-Budgets, die Heidelberg aktuell noch zur Verfügung stehen. Ein '
         'negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten ist. '
         '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
         'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
@@ -173,5 +176,26 @@ def build_cumulative_chart_artifact(line_chart_data: Chart2dData, resources: Com
         'BISKO-Systematik finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='cumulative_chart',
+        primary=False,
+    )
+
+
+def build_emission_reduction_chart_artifact(fig: go.Figure, resources: ComputationResources) -> _Artifact:
+    return create_plotly_chart_artifact(
+        figure=fig,
+        title='CO₂-Emissionsminderungspfade für Heidelberg',
+        caption='Auswahl möglicher CO₂-Reduktionspfade für Heidelberg unter Einhaltung des Temperaturgrenzwerts von '
+        '+2°C mit 83% Wahrscheinlichkeit',
+        description='Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4358 Kilotonnen zur Verfügung, '
+        'um den Temperaturgrenzwert von +2°C mit einer Wahrscheinlihckeit von 83 % einzuhalten. Dieses '
+        'Diagramm zeigt mögliche Emissionsminderungspfade. Die Summe der Werte in jeder Kurve entspricht '
+        'etwa dem CO₂-Budget von 4358 Kilotonnen. Das Diagramm zeigt, dass wir mehr Zeit haben, '
+        'CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um 17 % reduzieren, als wenn wir die '
+        'Emissionen linear verringern. Besonders schnell ist das Budget aufgebraucht, wenn wir die '
+        'Emissionen gar nicht reduzieren. Dieses Diagramm zeigt lediglich fiktive Szenarien. Eine Prognose '
+        'der tatsächlichen Emissionen Heidelbergs finden Sie links im Reiter "Entwicklung der '
+        'CO₂-Emissionen in Heidelberg".',
+        resources=resources,
+        filename='emission_reduction_chart',
         primary=False,
     )
