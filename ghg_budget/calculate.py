@@ -1,15 +1,26 @@
-from datetime import date
 from pathlib import Path
-from typing import Tuple
+from plotly.graph_objects import Figure
+from pydantic_extra_types.color import Color
+from typing import Tuple, List
 
+import logging
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 import sympy as sp
+
+from climatoology.base.artifact import Chart2dData, ChartType
+
+from ghg_budget.data import BudgetParams, now_year
 
 PROJECT_DIR = Path(__file__).parent.parent
 
+log = logging.getLogger(__name__)
 
-def calculate_bisko_budgets(budget_glob: pd.DataFrame, emissions_glob: pd.DataFrame, budget_params) -> pd.DataFrame:
+
+def calculate_bisko_budgets(
+    budget_glob: pd.DataFrame, emissions_glob: pd.DataFrame, budget_params: BudgetParams
+) -> pd.DataFrame:
     """
     Calculates CO2 budgets of the AOI according to BISKO standard.
 
@@ -52,9 +63,8 @@ def current_budget(emissions_df: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame) 
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI in the pledge_year
     :return: pd:DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
     """
-    current_year = date.today().year
-    current_cumulative_emissions = emissions_df.at[current_year, 'cumulative_emissions']
-    aoi_bisko_budgets['BISKO CO₂-Budget 2024 (1000 Tonnen)'] = (
+    current_cumulative_emissions = emissions_df.at[now_year, 'cumulative_emissions']
+    aoi_bisko_budgets[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = (
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] - current_cumulative_emissions
     )
     return aoi_bisko_budgets
@@ -117,15 +127,25 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     """
     aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %']
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
-        ['BISKO CO₂-Budget 2024 (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
+        [f'BISKO CO₂-Budget {now_year} (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
     ]
-    aoi_bisko_budgets_simple['BISKO CO₂-Budget 2024 (1000 Tonnen)'] = aoi_bisko_budgets_simple[
-        'BISKO CO₂-Budget 2024 (1000 Tonnen)'
+    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = aoi_bisko_budgets_simple[
+        f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'
     ].round(1)
     return aoi_bisko_budgets_simple
 
 
-def emission_paths(bisko_budget_table, emission_table, budget_params) -> pd.DataFrame:
+def emission_paths(
+    bisko_budget_table: pd.DataFrame, emission_table: pd.DataFrame, budget_params: BudgetParams
+) -> pd.DataFrame:
+    """
+    Creates a dataframe with projected yearly emissions of the AOI and alternative reduction paths.
+
+    :param bisko_budget_table: pd.DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
+    :param emission_table: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
+    :param budget_params: Class for holding the parameters for CO2 budget calculation that might change
+    :return: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
+    """
     bisko_budget_table.reset_index(inplace=True)
     budget_1point7 = bisko_budget_table.loc[
         (bisko_budget_table['Temperaturziel (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
@@ -167,3 +187,177 @@ def emission_paths(bisko_budget_table, emission_table, budget_params) -> pd.Data
         {'Jahr': x_vals, '1.7 °C Temperaturziel': y_1point7, '2.0 °C Temperaturziel': y_2point0}
     )
     return reduction_paths
+
+
+def emission_reduction(year_range: Tuple[int, int], planned_emissions_aoi: pd.DataFrame) -> pd.DataFrame:
+    """
+    Creates a dataframe with three different emission reduction scenarios to meet the goal of 2°C warming.
+
+    :param year_range: Tuple with start year and end year for emission reduction dataframe
+    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
+    :return: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
+    """
+    start_year, end_year = year_range
+    year_list = list(range(start_year, end_year + 1))
+    current_emission = planned_emissions_aoi.loc[start_year, 'co2_kt_sum']
+    decrease_scenario = current_emission
+    percentage_scenario = current_emission
+    bisko_budget_2025_2c_83p = 4357.7  # BISKO budget 2025 to reach 2°C at 83% probability
+    emission_sum = current_emission
+    threshold_exceeded = False
+    emission_reduction_df = pd.DataFrame({'Jahr': year_list})
+    emission_reduction_df.loc[0, 'decrease_65kton_per_year'] = current_emission
+    emission_reduction_df.loc[0, 'decrease_17%_per_year'] = current_emission
+    emission_reduction_df.loc[0, 'business_as_usual'] = current_emission
+
+    for year in year_list[1:]:
+        # Linear emission decrease scenario
+        decrease_scenario -= 65
+        if decrease_scenario > 0:
+            emission_reduction_df.loc[
+                emission_reduction_df['Jahr'] == year, 'decrease_65kton_per_year'
+            ] = decrease_scenario
+        else:
+            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_65kton_per_year'] = None
+
+        # Percentage emission decrease scenario
+        percentage_scenario *= 0.83
+        emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_17%_per_year'] = round(
+            percentage_scenario, 1
+        )
+
+        # Business as usual scenario
+        emission_sum += current_emission
+        if not threshold_exceeded:
+            if emission_sum < bisko_budget_2025_2c_83p:
+                emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = current_emission
+            else:
+                emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = 0
+                threshold_exceeded = True
+        else:
+            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = None
+
+    return emission_reduction_df
+
+
+def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Chart2dData:
+    """
+    :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
+    :return: Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart
+    """
+    log.debug('Creating Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart.')
+
+    x = comparison_chart_df['Temperaturziel (°C)']
+    y = round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1)
+    colors = [Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#777777'), Color('#C0C0C0')]
+
+    comparison_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
+
+    return comparison_chart_data
+
+
+def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) -> Figure:
+    """
+    :param emissions_df: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
+    :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
+    :return: Plotly figure with projected yearly emissions of the AOI and alternative reduction paths
+    """
+    log.debug('Creating line chart with projected yearly emissions of the AOI and alternative reduction paths.')
+
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=emissions_df['Jahr'],
+            y=emissions_df['co2_kt_sum'],
+            mode='lines+markers',
+            name='Prognose',
+            line=dict(color='blue'),
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=reduction_paths['Jahr'],
+            y=round(reduction_paths['1.7 °C Temperaturziel'], 1),
+            mode='lines',
+            name='1.7 °C Temperaturziel',
+            line=dict(dash='dash', color='green'),
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=reduction_paths['Jahr'],
+            y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
+            mode='lines',
+            name='2.0 °C Temperaturziel',
+            line=dict(dash='dot', color='red'),
+        )
+    )
+
+    fig.update_layout(
+        xaxis_title='Jahr',
+        yaxis_title='CO₂-Emissionen (1000 Tonnen)',
+        template='plotly_white',
+        margin=dict(t=30, b=60, l=80, r=30),
+    )
+
+    return fig
+
+
+def get_cumulative_chart(emissions_df: pd.DataFrame, colors: List[Color]) -> Chart2dData:
+    """
+    :param emissions_df: pd.DataFrame with cumulative emissions in the AOI
+    :param colors: Colors for the bar chart
+    :return: Chart2dData object with cumulative emissions in the AOI for the bar chart
+    """
+    log.debug('Creating Chart2dData object with cumulative emissions in the AOI for the bar chart.')
+
+    x = emissions_df['Jahr']
+    y = emissions_df['cumulative_emissions']
+
+    cumulative_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
+
+    return cumulative_chart_data
+
+
+def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
+    """
+    :param emission_reduction_df: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
+    :return: Plotly figure with three different emission reduction scenarios to meet the goal of 2°C warming
+    """
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=emission_reduction_df['Jahr'],
+            y=emission_reduction_df['decrease_65kton_per_year'],
+            mode='lines+markers',
+            name='Emissionen sinken um<br>65000 Tonnen pro Jahr',
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=emission_reduction_df['Jahr'],
+            y=emission_reduction_df['decrease_17%_per_year'],
+            mode='lines+markers',
+            name='Emissionen sinken um<br>17 % pro Jahr',
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=emission_reduction_df['Jahr'],
+            y=emission_reduction_df['business_as_usual'],
+            mode='lines+markers',
+            name='Business as usual',
+        )
+    )
+
+    fig.update_layout(
+        xaxis_title='Jahr',
+        yaxis_title='CO₂-Emissionen (1000 Tonnen)',
+        margin=dict(t=30, b=60, l=80, r=30),
+    )
+    return fig

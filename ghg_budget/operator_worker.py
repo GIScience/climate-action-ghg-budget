@@ -9,13 +9,11 @@ from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
 from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
 from climatoology.utility.exception import ClimatoologyUserError
-from plotly.graph_objects import Figure
 from pydantic_extra_types.color import Color
 from typing import List
 
 import pandas as pd
-import plotly.graph_objects as go
-from climatoology.base.artifact import Chart2dData, ChartType, _Artifact
+from climatoology.base.artifact import _Artifact
 from semver import Version
 
 from ghg_budget.artifact import (
@@ -25,6 +23,7 @@ from ghg_budget.artifact import (
     build_methodology_description_simple_artifact,
     build_budget_table_simple_artifact,
     build_budget_comparison_chart_artifact,
+    build_emission_reduction_chart_artifact,
     build_cumulative_chart_artifact,
 )
 from ghg_budget.calculate import (
@@ -36,8 +35,13 @@ from ghg_budget.calculate import (
     simplify_table,
     comparison_chart_data,
     emission_paths,
+    emission_reduction,
+    get_comparison_chart,
+    get_time_chart,
+    get_cumulative_chart,
+    get_emission_reduction_chart,
 )
-from ghg_budget.data import GHG_DATA, BudgetParams
+from ghg_budget.data import GHG_DATA, BudgetParams, now_year
 from ghg_budget.input import ComputeInput, DetailOption
 
 log = logging.getLogger(__name__)
@@ -105,14 +109,18 @@ class GHGBudget(BaseOperator[ComputeInput]):
         emissions_df = cumulative_emissions(GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi)
         aoi_bisko_budgets = current_budget(emissions_df, aoi_bisko_budgets)
         aoi_bisko_budgets, emissions_df = year_budget_spent(aoi_bisko_budgets, emissions_df)
+        reduction_paths = emission_paths(aoi_bisko_budgets, GHG_DATA.emissions_aoi, budget_params)
+        emission_reduction_df = emission_reduction(GHG_DATA.emission_reduction_years, GHG_DATA.planned_emissions_aoi)
         markdown_artifact = GHGBudget.markdown_artifact(resources)
         markdown_simple_artifact = GHGBudget.markdown_simple_artifact(resources)
         table_artifact = GHGBudget.table_artifact(aoi_bisko_budgets, resources)
         table_simple_artifact = GHGBudget.table_simple_artifact(aoi_bisko_budgets, resources)
         comparison_chart_artifact = GHGBudget.comparison_chart_artifact(comparison_chart_df, resources)
-        reduction_paths = emission_paths(aoi_bisko_budgets, GHG_DATA.emissions_aoi, budget_params)
         time_chart_artifact = GHGBudget.time_chart_artifact(emissions_df, reduction_paths, resources)
         cumulative_chart_artifact = GHGBudget.cumulative_chart_artifact(emissions_df, resources)
+        emission_reduction_chart_artifact = GHGBudget.emission_reduction_chart_artifact(
+            emission_reduction_df, resources
+        )
 
         if params.level_of_detail == DetailOption.SIMPLE:
             artifacts = [
@@ -127,6 +135,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
                 comparison_chart_artifact,
                 time_chart_artifact,
                 cumulative_chart_artifact,
+                emission_reduction_chart_artifact,
             ]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 
@@ -170,8 +179,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
             'BISKO CO₂-Budget 2016 (1000 Tonnen)'
         ].round(1)
-        aoi_bisko_budgets['BISKO CO₂-Budget 2024 (1000 Tonnen)'] = aoi_bisko_budgets[
-            'BISKO CO₂-Budget 2024 (1000 Tonnen)'
+        aoi_bisko_budgets[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = aoi_bisko_budgets[
+            f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'
         ].round(1)
         aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
 
@@ -202,26 +211,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
         :return: Bar chart with different GHG budgets and planned GHG emissions as chart artifact
         """
         log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
-        comparison_chart_data = GHGBudget.get_comparison_chart(comparison_chart_df)
+        comparison_chart_data = get_comparison_chart(comparison_chart_df)
 
         return build_budget_comparison_chart_artifact(comparison_chart_data, resources)
-
-    @staticmethod
-    def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Chart2dData:
-        """
-
-        :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
-        :return: Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart
-        """
-        log.debug('Creating Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart.')
-
-        x = comparison_chart_df['Temperaturziel (°C)']
-        y = round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1)
-        colors = [Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#777777'), Color('#C0C0C0')]
-
-        comparison_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
-
-        return comparison_chart_data
 
     @staticmethod
     def time_chart_artifact(
@@ -230,64 +222,14 @@ class GHGBudget(BaseOperator[ComputeInput]):
         """
 
         :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
+        :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
         :param resources: The plugin computation resources
         :return: Line chart with development of the CO2 emissions in the AOI as chart artifact
         """
         log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
-        time_chart_figure = GHGBudget.get_time_chart(emissions_df, reduction_paths)
+        time_chart_figure = get_time_chart(emissions_df, reduction_paths)
 
         return build_time_chart_artifact(time_chart_figure, resources)
-
-    @staticmethod
-    def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) -> Figure:
-        """
-
-        :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
-        :return: Chart2dData object with CO2 emissions of the AOI by year for the line chart
-        """
-        log.debug('Creating line chart with development of the emissions in the AOI.')
-
-        fig = go.Figure()
-
-        fig.add_trace(
-            go.Scatter(
-                x=emissions_df['Jahr'],
-                y=emissions_df['co2_kt_sum'],
-                mode='lines+markers',
-                name='Prognose',
-                line=dict(color='blue'),
-            )
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=reduction_paths['Jahr'],
-                y=round(reduction_paths['1.7 °C Temperaturziel'], 1),
-                mode='lines',
-                name='1.7 °C Temperaturziel',
-                line=dict(dash='dash', color='green'),
-            )
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=reduction_paths['Jahr'],
-                y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
-                mode='lines',
-                name='2.0 °C Temperaturziel',
-                line=dict(dash='dot', color='red'),
-            )
-        )
-
-        fig.update_layout(
-            title='Entwicklung der CO₂-Emissionen und alternative Reduktionspfade in Heidelberg',
-            xaxis_title='Jahr',
-            yaxis_title='CO₂-Emissionen (1000 Tonnen)',
-            legend_title='Szenarien',
-            template='plotly_white',
-        )
-
-        return fig
 
     @staticmethod
     def cumulative_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
@@ -295,17 +237,14 @@ class GHGBudget(BaseOperator[ComputeInput]):
 
         colors = [Color('#FF6347') if year <= 2021 else Color('#777777') for year in emissions_df['Jahr']]
 
-        cumulative_chart_data = GHGBudget.get_cumulative_chart(emissions_df, colors)
+        cumulative_chart_data = get_cumulative_chart(emissions_df, colors)
 
         return build_cumulative_chart_artifact(cumulative_chart_data, resources)
 
     @staticmethod
-    def get_cumulative_chart(emissions_df: pd.DataFrame, colors: list) -> Chart2dData:
-        log.debug('Creating Chart2dData object with cumulative emissions in the AOI for the line chart.')
+    def emission_reduction_chart_artifact(
+        emission_reduction_df: pd.DataFrame, resources: ComputationResources
+    ) -> _Artifact:
+        emission_reduction_chart_data = get_emission_reduction_chart(emission_reduction_df)
 
-        x = emissions_df['Jahr']
-        y = emissions_df['cumulative_emissions']
-
-        cumulative_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
-
-        return cumulative_chart_data
+        return build_emission_reduction_chart_artifact(emission_reduction_chart_data, resources)

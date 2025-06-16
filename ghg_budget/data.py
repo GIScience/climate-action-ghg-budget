@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from typing import Tuple
 
 import pandas as pd
 from pydantic import BaseModel
@@ -11,6 +12,7 @@ class GHGData:
     emissions_aoi: pd.DataFrame
     emissions_glob: pd.DataFrame
     planned_emissions_aoi: pd.DataFrame
+    emission_reduction_years: Tuple[int, int]
 
 
 GHG_DATA = GHGData(
@@ -148,6 +150,7 @@ GHG_DATA = GHGData(
             2067,
         ],
     ),
+    emission_reduction_years=(2025, 2050),
 )
 
 
@@ -187,3 +190,6 @@ class BudgetParams(BaseModel):
             / self.aoi_pop_bisko_share_year
             / self.aoi_mean_emissions_person_bisko_share_year
         )
+
+
+now_year = datetime.date.today().year
