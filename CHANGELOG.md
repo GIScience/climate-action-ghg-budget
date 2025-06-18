@@ -12,6 +12,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Improved documentation and descriptions ([#14](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/14), [#17](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/17))
 - Update climatoology to 6.4.1
 - Rename plugin to "CO₂ Budget" ([#32](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/32))
+- Create bar chart comparing CO2 budgets to projected emissions of Heidelberg with Plotly ([#38](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/38))
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
 - An issue induced by an update of pydantic that would break plugin representation in the front-end (see [climatoology#105](https://gitlab.heigit.org/climate-action/climatoology/-/issues/105))
@@ -24,6 +25,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Geoblocker for Heidelberg ([#33](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/33))
 - Add commit hash to plugin version in dockerfile ([#37](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/37))
 - Add test coverage checks to CI pipeline ([#36](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/36))
+- Demo computation ([38](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/38))
 
 ## [Dummy](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/releases/dummy)
 ### Added

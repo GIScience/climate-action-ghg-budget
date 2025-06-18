@@ -1,7 +1,6 @@
 from pathlib import Path
 from plotly.graph_objects import Figure
-from pydantic_extra_types.color import Color
-from typing import Tuple, List
+from typing import Tuple
 
 import logging
 import numpy as np
@@ -9,9 +8,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import sympy as sp
 
-from climatoology.base.artifact import Chart2dData, ChartType
 
-from ghg_budget.data import BudgetParams, now_year
+from ghg_budget.data import BudgetParams, NOW_YEAR, AOI_EMISSION_END_YEAR
 
 PROJECT_DIR = Path(__file__).parent.parent
 
@@ -63,8 +61,8 @@ def current_budget(emissions_df: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame) 
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI in the pledge_year
     :return: pd:DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
     """
-    current_cumulative_emissions = emissions_df.at[now_year, 'cumulative_emissions']
-    aoi_bisko_budgets[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = (
+    current_cumulative_emissions = emissions_df.at[NOW_YEAR, 'cumulative_emissions']
+    aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = (
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] - current_cumulative_emissions
     )
     return aoi_bisko_budgets
@@ -113,7 +111,7 @@ def comparison_chart_data(
     comparison_chart_df.loc[len(comparison_chart_df)] = [0, cum_emissions]
     comparison_chart_df.loc[len(comparison_chart_df)] = [-1, planned_emissions]
     comparison_chart_df['Temperaturziel (°C)'] = comparison_chart_df['Temperaturziel (°C)'].apply(
-        lambda deg: 'bisher verbraucht' if deg == 0 else ('Prognose' if deg == -1 else f'{deg}°C')
+        lambda deg: 'Bisher verbraucht' if deg == 0 else ('Prognose' if deg == -1 else f'{deg}°C')
     )
     return comparison_chart_df
 
@@ -127,10 +125,10 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     """
     aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %']
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
-        [f'BISKO CO₂-Budget {now_year} (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
+        [f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
     ]
-    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = aoi_bisko_budgets_simple[
-        f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'
+    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets_simple[
+        f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
     ].round(1)
     return aoi_bisko_budgets_simple
 
@@ -240,20 +238,29 @@ def emission_reduction(year_range: Tuple[int, int], planned_emissions_aoi: pd.Da
     return emission_reduction_df
 
 
-def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Chart2dData:
+def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     """
-    :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
-    :return: Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart
+    :param comparison_chart_df: Dataframe with different CO2 budgets and planned CO2 emissions
+    :return: Bar chart with different CO2 budgets and planned CO2 emissions
     """
-    log.debug('Creating Chart2dData object with different GHG budgets and planned GHG emissions for the bar chart.')
+    log.debug('Creating bar chart with different CO2 budgets and planned CO2 emissions.')
 
-    x = comparison_chart_df['Temperaturziel (°C)']
-    y = round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1)
-    colors = [Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#777777'), Color('#C0C0C0')]
+    colors = ['gold', 'orange', 'tomato', 'gray', 'lightgray']
+    fig = go.Figure()
+    fig.add_trace(
+        go.Bar(
+            x=comparison_chart_df['Temperaturziel (°C)'],
+            y=round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1),
+            marker_color=colors,
+        )
+    )
+    fig.update_layout(
+        yaxis=dict(title='CO₂-Emissionen (1000 Tonnen)', tickformat=',d'),
+        showlegend=False,
+        margin=dict(t=30, b=60, l=80, r=30),
+    )
 
-    comparison_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
-
-    return comparison_chart_data
+    return fig
 
 
 def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) -> Figure:
@@ -306,20 +313,39 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     return fig
 
 
-def get_cumulative_chart(emissions_df: pd.DataFrame, colors: List[Color]) -> Chart2dData:
+def get_cumulative_chart(emissions_df: pd.DataFrame) -> Figure:
     """
     :param emissions_df: pd.DataFrame with cumulative emissions in the AOI
-    :param colors: Colors for the bar chart
-    :return: Chart2dData object with cumulative emissions in the AOI for the bar chart
+    :return: Bar chart with cumulative emissions in the AOI
     """
-    log.debug('Creating Chart2dData object with cumulative emissions in the AOI for the bar chart.')
+    log.debug('Creating bar chart with cumulative emissions in the AOI.')
 
-    x = emissions_df['Jahr']
-    y = emissions_df['cumulative_emissions']
+    emissions_df['Category'] = emissions_df['Jahr'].apply(
+        lambda x: 'Messwerte' if x <= AOI_EMISSION_END_YEAR else 'Prognose'
+    )
+    colors = {'Messwerte': 'tomato', 'Prognose': 'gray'}
 
-    cumulative_chart_data = Chart2dData(x=x, y=y, color=colors, chart_type=ChartType.BAR)
+    fig = go.Figure()
 
-    return cumulative_chart_data
+    for category in ['Messwerte', 'Prognose']:
+        filtered = emissions_df[emissions_df['Category'] == category]
+        fig.add_trace(
+            go.Bar(
+                x=filtered['Jahr'],
+                y=round(filtered['cumulative_emissions'], 0),
+                name=category,
+                marker_color=colors[category],
+            )
+        )
+
+    fig.update_layout(
+        barmode='group',
+        xaxis_title='Jahr',
+        yaxis=dict(title='Aufsummierte CO₂-Emissionen (1000 Tonnen)', tickformat=',d'),
+        margin=dict(t=30, b=60, l=80, r=30),
+    )
+
+    return fig
 
 
 def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
