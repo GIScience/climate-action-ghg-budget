@@ -32,9 +32,10 @@ GHG_DATA = GHGData(
                 998,
                 891,
                 938,
+                998,
             ],
         },
-        index=[2016, 2017, 2018, 2019, 2020, 2021],
+        index=[2016, 2017, 2018, 2019, 2020, 2021, 2022],
     ),
     emissions_glob=pd.DataFrame(
         {
@@ -53,7 +54,6 @@ GHG_DATA = GHGData(
     planned_emissions_aoi=pd.DataFrame(
         {
             'co2_kt_sum': [
-                815.6,
                 782.4,
                 749.2,
                 716,
@@ -102,7 +102,6 @@ GHG_DATA = GHGData(
             ]
         },
         index=[
-            2022,
             2023,
             2024,
             2025,
@@ -192,4 +191,5 @@ class BudgetParams(BaseModel):
         )
 
 
-now_year = datetime.date.today().year
+NOW_YEAR = datetime.date.today().year
+AOI_EMISSION_END_YEAR = 2022  # Most recent year for which we have emission estimates for Heidelberg

@@ -1,11 +1,9 @@
 from datetime import date
 from plotly.graph_objects import Figure
-from pydantic_extra_types.color import Color
 
 import numpy as np
 import pandas as pd
 
-from climatoology.base.artifact import Chart2dData, ChartType
 
 from ghg_budget.calculate import (
     calculate_bisko_budgets,
@@ -21,7 +19,7 @@ from ghg_budget.calculate import (
     get_emission_reduction_chart,
     get_comparison_chart,
 )
-from ghg_budget.data import BudgetParams, now_year
+from ghg_budget.data import BudgetParams, NOW_YEAR
 
 
 def test_calculate_bisko_budgets():
@@ -90,7 +88,7 @@ def test_current_budget():
             'Temperaturziel (°C)': [1, 1, 2, 2],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [2, 1, 4, 3],
-            f'BISKO CO₂-Budget {now_year} (1000 Tonnen)': [0, -1, 2, 1],
+            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [0, -1, 2, 1],
         },
     )
     received = current_budget(emissions_df, aoi_bisko_budgets)
@@ -115,7 +113,7 @@ def test_comparison_chart():
     )
     expected = pd.DataFrame(
         {
-            'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'],
+            'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
@@ -155,14 +153,14 @@ def test_simplify_table():
         {
             'Wahrscheinlichkeit': ['67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250, 1000],
-            f'BISKO CO₂-Budget {now_year} (1000 Tonnen)': [200, -50],
+            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [200, -50],
             'CO₂-Budget aufgebraucht (Jahr)': [2026, 2023],
         },
         index=[1.5, 1.5],
     )
     expected = pd.DataFrame(
         {
-            f'BISKO CO₂-Budget {now_year} (1000 Tonnen)': [-50],
+            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [-50],
             'CO₂-Budget aufgebraucht (Jahr)': [2023],
         },
         index=[1.5],
@@ -234,14 +232,11 @@ def test_get_comparison_chart():
         'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
-    expected = Chart2dData(
-        x=['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'],
-        y=[1, 2, 3, 2, 2],
-        chart_type=ChartType.BAR,
-        color=[Color('#FFD700'), Color('#FFA500'), Color('#FF6347'), Color('#777777'), Color('#C0C0C0')],
-    )
     received = get_comparison_chart(comparison_chart_df)
-    assert received == expected
+    np.testing.assert_array_equal(
+        received['data'][0]['x'], (['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'])
+    )
+    np.testing.assert_array_equal(received['data'][0]['y'], ([1, 2, 3, 2, 2]))
 
 
 def test_get_time_chart():
@@ -266,16 +261,10 @@ def test_get_cumulative_chart():
         'Jahr': [2016],
         'cumulative_emissions': [1000],
     }
-    colors = [Color('#FF6347')]
     emissions_df = pd.DataFrame(emissions_df_data)
-    expected = Chart2dData(
-        x=[2016],
-        y=[1000],
-        chart_type=ChartType.BAR,
-        color=[Color('#FF6347')],
-    )
-    received = get_cumulative_chart(emissions_df, colors)
-    assert received == expected
+    received = get_cumulative_chart(emissions_df)
+    np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
+    np.testing.assert_array_equal(received['data'][0]['y'], ([1000]))
 
 
 def test_get_emission_reduction_chart():

@@ -2,18 +2,18 @@
 # Well ... python imports: https://discuss.python.org/t/warning-when-importing-a-local-module-with-the-same-name-as-a-2nd-or-3rd-party-module/27799
 
 import logging
+from datetime import timedelta
 from pathlib import Path
 
 import shapely
 from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
 from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
-from climatoology.utility.exception import ClimatoologyUserError
-from pydantic_extra_types.color import Color
 from typing import List
 
 import pandas as pd
 from climatoology.base.artifact import _Artifact
+from climatoology.utility.exception import ClimatoologyUserError
 from semver import Version
 
 from ghg_budget.artifact import (
@@ -41,7 +41,7 @@ from ghg_budget.calculate import (
     get_cumulative_chart,
     get_emission_reduction_chart,
 )
-from ghg_budget.data import GHG_DATA, BudgetParams, now_year
+from ghg_budget.data import GHG_DATA, BudgetParams, NOW_YEAR
 from ghg_budget.input import ComputeInput, DetailOption
 
 log = logging.getLogger(__name__)
@@ -81,6 +81,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
             purpose=Path('resources/info/purpose.md'),
             methodology=Path('resources/info/methodology.md'),
             sources=Path('resources/info/sources.bib'),
+            demo_input_parameters=ComputeInput(),
+            computation_shelf_life=timedelta(weeks=52),
         )
         log.info(f'Return info {info.model_dump()}')
 
@@ -95,9 +97,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
-        if not aoi_properties.name == 'Heidelberg':
+        if aoi_properties.name not in ['Heidelberg', 'Demo']:
             raise ClimatoologyUserError(
-                'Das CO₂-Budget-Tool funktioniert momentan nur für Heidelberg. Bitte wählen Sie die Stadt Heidelberg als Untersuchungsgebiet aus'
+                'Das CO₂-Budget-Tool funktioniert momentan nur für Heidelberg oder die Demo-Ansicht. Bitte wählen Sie die Stadt Heidelberg oder Demo als Untersuchungsgebiet aus.'
             )
         budget_params = BudgetParams()
         aoi_bisko_budgets = calculate_bisko_budgets(
@@ -179,8 +181,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
             'BISKO CO₂-Budget 2016 (1000 Tonnen)'
         ].round(1)
-        aoi_bisko_budgets[f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'] = aoi_bisko_budgets[
-            f'BISKO CO₂-Budget {now_year} (1000 Tonnen)'
+        aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
+            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
         ].round(1)
         aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
 
@@ -211,9 +213,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
         :return: Bar chart with different GHG budgets and planned GHG emissions as chart artifact
         """
         log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
-        comparison_chart_data = get_comparison_chart(comparison_chart_df)
+        comparison_chart = get_comparison_chart(comparison_chart_df)
 
-        return build_budget_comparison_chart_artifact(comparison_chart_data, resources)
+        return build_budget_comparison_chart_artifact(comparison_chart, resources)
 
     @staticmethod
     def time_chart_artifact(
@@ -235,11 +237,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
     def cumulative_chart_artifact(emissions_df: pd.DataFrame, resources: ComputationResources) -> _Artifact:
         log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
 
-        colors = [Color('#FF6347') if year <= 2021 else Color('#777777') for year in emissions_df['Jahr']]
+        cumulative_chart = get_cumulative_chart(emissions_df)
 
-        cumulative_chart_data = get_cumulative_chart(emissions_df, colors)
-
-        return build_cumulative_chart_artifact(cumulative_chart_data, resources)
+        return build_cumulative_chart_artifact(cumulative_chart, resources)
 
     @staticmethod
     def emission_reduction_chart_artifact(
