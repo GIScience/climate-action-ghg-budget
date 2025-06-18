@@ -9,7 +9,7 @@ from climatoology.base.artifact import (
 )
 from climatoology.base.computation import ComputationResources
 
-from ghg_budget.data import NOW_YEAR, AOI_EMISSION_END_YEAR
+from ghg_budget.components.data import NOW_YEAR, AOI_EMISSION_END_YEAR
 
 
 def build_methodology_description_artifact(text: str, resources: ComputationResources) -> _Artifact:

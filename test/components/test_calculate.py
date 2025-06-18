@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-from ghg_budget.calculate import (
+from ghg_budget.components.calculate import (
     calculate_bisko_budgets,
     comparison_chart_data,
     year_budget_spent,
@@ -18,8 +18,18 @@ from ghg_budget.calculate import (
     get_time_chart,
     get_emission_reduction_chart,
     get_comparison_chart,
+    co2_budget_analysis,
 )
-from ghg_budget.data import BudgetParams, NOW_YEAR
+from ghg_budget.components.data import BudgetParams, NOW_YEAR
+
+
+def test_co2_budget_analysis():
+    aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df = co2_budget_analysis()
+    assert isinstance(aoi_bisko_budgets, pd.DataFrame)
+    assert isinstance(comparison_chart_df, pd.DataFrame)
+    assert isinstance(emissions_df, pd.DataFrame)
+    assert isinstance(reduction_paths, pd.DataFrame)
+    assert isinstance(emission_reduction_df, pd.DataFrame)
 
 
 def test_calculate_bisko_budgets():

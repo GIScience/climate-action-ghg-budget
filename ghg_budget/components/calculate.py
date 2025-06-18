@@ -8,12 +8,41 @@ import pandas as pd
 import plotly.graph_objects as go
 import sympy as sp
 
+from climatoology.base.computation import ComputationResources
 
-from ghg_budget.data import BudgetParams, NOW_YEAR, AOI_EMISSION_END_YEAR
+from ghg_budget.components.data import BudgetParams, GHG_DATA, NOW_YEAR, AOI_EMISSION_END_YEAR
 
-PROJECT_DIR = Path(__file__).parent.parent
+from ghg_budget.components.artifact import (
+    build_methodology_description_artifact,
+    build_budget_table_artifact,
+    build_time_chart_artifact,
+    build_methodology_description_simple_artifact,
+    build_budget_table_simple_artifact,
+    build_budget_comparison_chart_artifact,
+    build_emission_reduction_chart_artifact,
+    build_cumulative_chart_artifact,
+)
+
+PROJECT_DIR = Path(__file__).parent.parent.parent
 
 log = logging.getLogger(__name__)
+
+
+def co2_budget_analysis():
+    budget_params = BudgetParams()
+    aoi_bisko_budgets = calculate_bisko_budgets(
+        GHG_DATA.budget_glob, GHG_DATA.emissions_glob, budget_params=budget_params
+    )
+    comparison_chart_df = comparison_chart_data(
+        GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi, aoi_bisko_budgets
+    )
+    emissions_df = cumulative_emissions(GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi)
+    aoi_bisko_budgets = current_budget(emissions_df, aoi_bisko_budgets)
+    aoi_bisko_budgets, emissions_df = year_budget_spent(aoi_bisko_budgets, emissions_df)
+    reduction_paths = emission_paths(aoi_bisko_budgets, GHG_DATA.emissions_aoi, budget_params)
+    emission_reduction_df = emission_reduction(GHG_DATA.emission_reduction_years, GHG_DATA.planned_emissions_aoi)
+
+    return aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df
 
 
 def calculate_bisko_budgets(
@@ -387,3 +416,74 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
         margin=dict(t=30, b=60, l=80, r=30),
     )
     return fig
+
+
+def get_artifacts(
+    resources: ComputationResources,
+    aoi_bisko_budgets: pd.DataFrame,
+    comparison_chart_df: pd.DataFrame,
+    emissions_df: pd.DataFrame,
+    reduction_paths: pd.DataFrame,
+    emission_reduction_df: pd.DataFrame,
+):
+    """
+    :param resources: The plugin computation resources
+    :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
+    :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
+    :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
+    :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
+    :param emission_reduction_df: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
+    """
+
+    log.debug('Creating methodology description of the plugin as Markdown artifact.')
+    text = (PROJECT_DIR / 'resources/info/methodology.md').read_text()
+    markdown_artifact = build_methodology_description_artifact(text, resources)
+
+    log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
+    text = (PROJECT_DIR / 'resources/info/methodology_simple.md').read_text()
+    markdown_simple_artifact = build_methodology_description_simple_artifact(text, resources)
+
+    log.debug('Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.')
+    aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
+        'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+    ].round(1)
+    aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
+        f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
+    ].round(1)
+    aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
+    table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources)
+
+    log.debug(
+        'Creating simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table '
+        'artifact.'
+    )
+    aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
+    table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources)
+
+    log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
+    comparison_chart_data = get_comparison_chart(comparison_chart_df)
+    comparison_chart_artifact = build_budget_comparison_chart_artifact(comparison_chart_data, resources)
+
+    log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
+    time_chart_figure = get_time_chart(emissions_df, reduction_paths)
+    time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources)
+
+    log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
+    cumulative_chart_data = get_cumulative_chart(emissions_df)
+    cumulative_chart_artifact = build_cumulative_chart_artifact(cumulative_chart_data, resources)
+
+    emission_reduction_chart_data = get_emission_reduction_chart(emission_reduction_df)
+    emission_reduction_chart_artifact = build_emission_reduction_chart_artifact(
+        emission_reduction_chart_data, resources
+    )
+
+    return (
+        markdown_artifact,
+        markdown_simple_artifact,
+        table_artifact,
+        table_simple_artifact,
+        comparison_chart_artifact,
+        time_chart_artifact,
+        cumulative_chart_artifact,
+        emission_reduction_chart_artifact,
+    )

@@ -28,7 +28,7 @@ responses = "^0.24.1"
 pre-commit = "^3.6.0"
 
 [tool.coverage.run]
-omit = ["test/*" , "ghg_budget/plugin.py"]
+omit = ["test/*" , "ghg_budget/core/*"]
 
 [build-system]
 requires = ["poetry-core"]
