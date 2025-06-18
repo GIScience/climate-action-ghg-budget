@@ -5,8 +5,8 @@ import shapely
 from climatoology.base.computation import ComputationScope
 from climatoology.base.baseoperator import AoiProperties
 
-from ghg_budget.input import ComputeInput
-from ghg_budget.operator_worker import GHGBudget
+from ghg_budget.core.input import ComputeInput
+from ghg_budget.core.operator_worker import GHGBudget
 
 
 @pytest.fixture

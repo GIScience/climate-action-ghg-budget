@@ -2,7 +2,7 @@ import logging.config
 
 from climatoology.app.plugin import start_plugin
 
-from ghg_budget.operator_worker import GHGBudget
+from ghg_budget.core.operator_worker import GHGBudget
 
 log = logging.getLogger(__name__)
 
