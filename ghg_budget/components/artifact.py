@@ -118,13 +118,14 @@ def build_budget_comparison_chart_artifact(fig: Figure, resources: ComputationRe
         'erreichen.',
         description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2016 zur '
         'Verfügung standen, um verschiedene Temperaturziele mit einer Wahrscheinlichkeit von 83 % zu erreichen. Die '
-        f'dunkelgraue Säule daneben zeigt, wieviel CO₂ Heidelberg von 2016 bis {AOI_EMISSION_END_YEAR}, '
-        'dem aktuellsten Jahr, für das Daten vorliegen, ausgestoßen hat, d.h. wieviel von '
-        'diesen Budgets bereits verbraucht ist. Die hellgraue Säule ganz rechts zeigt, wieviel CO₂ Heidelberg '
-        'voraussichtlich noch ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert '
-        'auf den aktuell beschlossenen Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass '
-        'selbst das CO₂-Budget für das 2°C-Ziel weit überschritten wird, wenn die Stadt Heidelberg keine '
-        'zusätzlichen Anstrengungen zur Verringerung der Emissionen unternimmt.',
+        'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
+        'Heidelbergs. Der dunkelgraue Teil der Säule symbolisiert das CO₂, das Heidelberg von 2016 bis '
+        f' {AOI_EMISSION_END_YEAR}, dem aktuellsten Jahr, für das Daten vorliegen, ausgestoßen hat, d.h. wieviel von '
+        'diesen Budgets bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ Heidelberg voraussichtlich noch '
+        'ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert auf den aktuell beschlossenen '
+        'Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass selbst das CO₂-Budget für das 2°C-Ziel '
+        'weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur Verringerung der '
+        'Emissionen unternimmt.',
         resources=resources,
         filename='comparison_emissions_budgets',
         primary=False,

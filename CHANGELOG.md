@@ -14,6 +14,9 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Rename plugin to "CO₂ Budget" ([#32](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/32))
 - Create bar chart comparing CO2 budgets to projected emissions of Heidelberg with Plotly ([#38](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/38))
 - Restructure plugin into a core and a components module ([#41](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/41))
+- Changing the single bars in the comparison chart to the stacked bar ([#42](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/42))
+
+
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
 - An issue induced by an update of pydantic that would break plugin representation in the front-end (see [climatoology#105](https://gitlab.heigit.org/climate-action/climatoology/-/issues/105))
