@@ -337,15 +337,28 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     """
     log.debug('Creating line chart with projected yearly emissions of the AOI and alternative reduction paths.')
 
+    measured = emissions_df[emissions_df['Jahr'] <= AOI_EMISSION_END_YEAR]
+    projected = emissions_df[emissions_df['Jahr'] >= AOI_EMISSION_END_YEAR]
+
     fig = go.Figure()
 
     fig.add_trace(
         go.Scatter(
-            x=emissions_df['Jahr'],
-            y=emissions_df['co2_kt_sum'],
+            x=measured['Jahr'],
+            y=measured['co2_kt_sum'],
+            mode='lines+markers',
+            name='Messwerte',
+            line=dict(color='red'),
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=projected['Jahr'],
+            y=projected['co2_kt_sum'],
             mode='lines+markers',
             name='Prognose',
-            line=dict(color='blue'),
+            line=dict(color='gray'),
         )
     )
 
@@ -365,7 +378,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
             mode='lines',
             name='2.0 °C Temperaturziel',
-            line=dict(dash='dot', color='red'),
+            line=dict(dash='dot', color='blue'),
         )
     )
 
