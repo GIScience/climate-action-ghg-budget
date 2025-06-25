@@ -239,14 +239,15 @@ def test_emission_reduction():
 def test_get_comparison_chart():
     comparison_chart_data = {
         'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
-        'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'],
+        'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     received = get_comparison_chart(comparison_chart_df)
-    np.testing.assert_array_equal(
-        received['data'][0]['x'], (['1.5°C', '1.7°C', '2.0°C', 'bisher verbraucht', 'Prognose'])
-    )
-    np.testing.assert_array_equal(received['data'][0]['y'], ([1, 2, 3, 2, 2]))
+    assert received['data'][0]['x'] == ('1.5°C',)
+    assert received['data'][1]['x'] == ('1.7°C',)
+    assert received['data'][2]['x'] == ('2.0°C',)
+    assert received['data'][3]['name'] == 'Bisher verbraucht'
+    assert received['data'][4]['name'] == 'Prognose'
 
 
 def test_get_time_chart():

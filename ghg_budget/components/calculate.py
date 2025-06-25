@@ -274,18 +274,55 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     """
     log.debug('Creating bar chart with different CO2 budgets and planned CO2 emissions.')
 
-    colors = ['gold', 'orange', 'tomato', 'gray', 'lightgray']
+    stack_labels = ['Bisher verbraucht', 'Prognose']
+    temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
+    stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
+    colors = ['gold', 'orange', 'tomato']
+    names = ['1.5°C', '1.7°C', '2.0°C']
     fig = go.Figure()
+
+    for temperature, color in zip(names, colors):
+        subset = temperature_bar[temperature_bar['Temperaturziel (°C)'] == temperature]
+        fig.add_trace(
+            go.Bar(
+                x=subset['Temperaturziel (°C)'],
+                y=subset['BISKO CO₂-Budget 2016 (1000 Tonnen)'],
+                name=temperature,
+                marker_color=color,
+            )
+        )
+
     fig.add_trace(
         go.Bar(
-            x=comparison_chart_df['Temperaturziel (°C)'],
-            y=round(comparison_chart_df['BISKO CO₂-Budget 2016 (1000 Tonnen)'], 1),
-            marker_color=colors,
+            x=['Bisher verbraucht <br>+ Prognose'],
+            y=[
+                stacked_bar[stacked_bar['Temperaturziel (°C)'] == 'Bisher verbraucht'][
+                    'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+                ].values[0]
+            ],
+            name='Bisher verbraucht',
+            marker_color='gray',
         )
     )
+
+    fig.add_trace(
+        go.Bar(
+            x=['Bisher verbraucht <br>+ Prognose'],
+            y=[
+                stacked_bar[stacked_bar['Temperaturziel (°C)'] == 'Prognose'][
+                    'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+                ].values[0]
+            ],
+            name='Prognose',
+            marker_color='lightgray',
+        )
+    )
+
     fig.update_layout(
+        barmode='stack',
         yaxis=dict(title='CO₂-Emissionen (1000 Tonnen)', tickformat=',d'),
-        showlegend=False,
+        showlegend=True,
+        legend_traceorder='normal',
         margin=dict(t=30, b=60, l=80, r=30),
     )
 
