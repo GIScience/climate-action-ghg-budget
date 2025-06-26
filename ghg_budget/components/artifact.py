@@ -39,14 +39,14 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         caption='Wie viel des Heidelberg zustehenden CO₂-Budgets wurde bereits verbraucht?',
         description='Um mit einer Wahrscheinlichkeit von 67 % bzw. 83 % die Temperaturerhöhung auf den jeweiligen '
         'Maximalwert zu begrenzen, hat Heidelberg nur ein beschränktes CO₂-Budget zur Verfügung. Das heißt, '
-        'dass der Stadt Heidelberg für die Einhaltung des Paris-Ziels von 1,5 °C mit einer Wahrscheinlichkeit '
-        'von 83 % das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des Ziels '
+        'dass der Stadt Heidelberg für die Einhaltung des Grenzwerts von 1,5 °C mit einer Wahrscheinlichkeit '
+        'von 83 % das geringste Budget zur Verfügung steht, um ihren Anteil zur Unterschreitung der Grenze '
         'beizutragen. Nehmen wir gesellschaftlich ein größeres Risiko des Scheiterns in Kauf, also eine '
-        'Wahrscheinlichkeit von nur 67 %, um das Ziel zu erreichen, steht Heidelberg ein höheres Budget zur '
-        'Verfügung. Gleiches gilt für höhere Zieltemperaturen (1,7 °C bzw. 2 °C): Diese bedeuten ebenfalls, '
+        'Wahrscheinlichkeit von nur 67 %, um den Grenzwert einzuhalten, steht Heidelberg ein höheres Budget zur '
+        'Verfügung. Gleiches gilt für höhere Temperaturgrenzen (1,7 °C bzw. 2 °C): Diese bedeuten ebenfalls, '
         'dass noch mehr CO₂ emittiert werden darf.\n\n'
         '**Erläuterung der Spalten**\n\n'
-        '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
+        '**Temperaturgrenzwert (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
         'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor. Eine globale Erwärmung um 1,5 °C '
         'erhöht bereits das Risiko für extreme Wetterereignisse wie Hitzewellen und Starkregen. Bei einer Erwärmung '
         'um 2 °C werden diese Risiken noch deutlich höher ausfallen. Die konkreten Auswirkungen hängen jedoch vom '
@@ -55,7 +55,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         '[hier](https://www.ipcc.ch/site/assets/uploads/2020/07/SR1.5-FAQs_de_barrierefrei.pdf) unter FAQ 3.1.\n\n'
         '**Wahrscheinlichkeit:** Wie stark die globale Durchschnittstemperatur durch eine bestimmte Menge an '
         'ausgestoßenem CO₂ steigt, kann nicht exakt vorhergesagt werden. Daher berechnet der Weltklimarat '
-        '(IPCC) die globalen CO₂-Budgets für verschiedene Wahrscheinlichkeiten, dass die Temperaturziele '
+        '(IPCC) die globalen CO₂-Budgets für verschiedene Wahrscheinlichkeiten, dass die Temperaturgrenzwerte '
         'eingehalten werden.\n\n'
         '**BISKO CO₂-Budget 2016 (1000 Tonnen):** Jene CO₂-Budgets, die Heidelberg 2016 noch zur Verfügung standen, '
         'als die Pariser Klimaziele beschlossen wurden. '
@@ -69,9 +69,9 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         'wie schnell wir unsere Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser '
         'Spalte beruhen auf der Annahme, dass die Stadt Heidelberg die von ihr bereits beschlossenen '
         'Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt.\n\n'
-        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturziele '
-        'automatisch erreicht werden, wenn Heidelberg die Budgets einhält. Damit die Klimaziele '
-        'erreicht werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
+        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturgrenzwerte '
+        'automatisch eingehalten werden, wenn Heidelberg die Budgets einhält. Damit die Grenzen nicht überschritten '
+        'werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
         'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
@@ -88,11 +88,11 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
         caption='Wie viel des Heidelberg zustehenden CO₂-Budgets wurde bereits verbraucht?',
         description='Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat Heidelberg nur ein '
         'beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt Heidelberg für die Einhaltung des '
-        'Paris-Ziels von 1,5 °C das geringste Budget zur Verfügung steht, um ihren Anteil zur Erreichung des '
-        'Ziels beizutragen. Für höhere Zieltemperaturen (1,7 °C bzw. 2 °C) darf noch mehr CO₂ emittiert '
+        'Grenzwerts von 1,5 °C das geringste Budget zur Verfügung steht, um ihren Anteil zur Unterschreitung der '
+        'Grenze beizutragen. Für höhere Temperaturgrenzen (1,7 °C bzw. 2 °C) darf noch mehr CO₂ emittiert '
         'werden.\n\n'
         '**Erläuterung der Spalten**\n\n'
-        '**Temperaturziel (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
+        '**Temperaturgrenzwert (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von '
         'Paris gibt eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vor. Eine globale Erwärmung um 1,5 °C '
         'erhöht bereits das Risiko für extreme Wetterereignisse wie Hitzewellen und Starkregen. Bei einer Erwärmung '
         'um 2 °C werden diese Risiken noch deutlich höher ausfallen. Die konkreten Auswirkungen hängen jedoch vom '
@@ -108,9 +108,9 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
         'wie schnell wir unsere Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser '
         'Spalte beruhen auf der Annahme, dass die Stadt Heidelberg die von ihr bereits beschlossenen '
         'Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt.\n\n'
-        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturziele '
-        'automatisch erreicht werden, wenn Heidelberg die Budgets einhält. Damit die Klimaziele '
-        'erreicht werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
+        '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturgrenzwerte '
+        'automatisch eingehalten werden, wenn Heidelberg die Budgets einhält. Damit die Grenzen nicht überschritten '
+        'werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
         'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
@@ -124,18 +124,18 @@ def build_budget_comparison_chart_artifact(fig: Figure, resources: ComputationRe
     return create_plotly_chart_artifact(
         figure=fig,
         title='Wie viel vom CO₂-Budget ist bereits emittiert?',
-        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturziele mit einer Wahrscheinlichkeit von 83% zu '
-        'erreichen.',
+        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83% '
+        'einzuhalten.',
         description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2016 zur '
-        'Verfügung standen, um verschiedene Temperaturziele mit einer Wahrscheinlichkeit von 83 % zu erreichen. Die '
+        'Verfügung standen, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83 % einzuhalten. Die '
         'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
         'Heidelbergs. Der dunkelgraue Teil der Säule symbolisiert das CO₂, das Heidelberg von 2016 bis '
         f' {AOI_EMISSION_END_YEAR}, dem aktuellsten Jahr, für das Daten vorliegen, ausgestoßen hat, d.h. wieviel von '
         'diesen Budgets bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ Heidelberg voraussichtlich noch '
         'ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert auf den aktuell beschlossenen '
-        'Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass selbst das CO₂-Budget für das 2 °C-Ziel '
-        'weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur Verringerung der '
-        'Emissionen unternimmt.',
+        'Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass selbst das CO₂-Budget für den Grenzwert '
+        'von +2 °C weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur '
+        'Verringerung der Emissionen unternimmt.',
         resources=resources,
         filename='comparison_emissions_budgets',
         primary=False,
@@ -153,7 +153,7 @@ def build_time_chart_artifact(line_chart: Figure, resources: ComputationResource
         'beschlossenen Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. In dieser Prognose '
         'wird Heidelberg erst 2068 CO₂-neutral. Die alternativen '
         'Reduktionspfade stellen fiktive Szenarien dar, wie Heidelberg bis 2040 CO₂-Neutralität erreichen '
-        'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturziele '
+        'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
         'zu überschreiten.\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
         'Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt daran, dass die Emissionen nach '
         'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard erfasst vereinfacht gesagt nur die '

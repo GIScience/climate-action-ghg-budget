@@ -65,7 +65,7 @@ def calculate_bisko_budgets(
         0 < budget_params.bisko_factor < 1
     ), 'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
     budget_glob['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = budget_glob['budget_aoi'] * budget_params.bisko_factor
-    aoi_bisko = budget_glob[['Temperaturziel (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
+    aoi_bisko = budget_glob[['Temperaturgrenzwert (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
     return aoi_bisko
 
 
@@ -136,10 +136,10 @@ def comparison_chart_data(
     cum_emissions = emissions_aoi['co2_kt_sum'].sum()
     planned_emissions = planned_emissions_aoi['co2_kt_sum'].sum()
     aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %'].reset_index()
-    comparison_chart_df = aoi_bisko_budgets[['Temperaturziel (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
+    comparison_chart_df = aoi_bisko_budgets[['Temperaturgrenzwert (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
     comparison_chart_df.loc[len(comparison_chart_df)] = [0, cum_emissions]
     comparison_chart_df.loc[len(comparison_chart_df)] = [-1, planned_emissions]
-    comparison_chart_df['Temperaturziel (°C)'] = comparison_chart_df['Temperaturziel (°C)'].apply(
+    comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
         lambda deg: 'Bisher verbraucht' if deg == 0 else ('Prognose' if deg == -1 else f'{deg}°C')
     )
     return comparison_chart_df
@@ -173,13 +173,12 @@ def emission_paths(
     :param budget_params: Class for holding the parameters for CO2 budget calculation that might change
     :return: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     """
-    bisko_budget_table.reset_index(inplace=True)
     budget_1point7 = bisko_budget_table.loc[
-        (bisko_budget_table['Temperaturziel (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
+        (bisko_budget_table['Temperaturgrenzwert (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
         'BISKO CO₂-Budget 2016 (1000 Tonnen)',
     ].values[0]
     budget_2point0 = bisko_budget_table.loc[
-        (bisko_budget_table['Temperaturziel (°C)'] == 2.0) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
+        (bisko_budget_table['Temperaturgrenzwert (°C)'] == 2.0) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
         'BISKO CO₂-Budget 2016 (1000 Tonnen)',
     ].values[0]
     emissions_pledge_year = emission_table.loc[budget_params.pledge_year, 'co2_kt_sum']
@@ -210,9 +209,7 @@ def emission_paths(
     y_1point7 = f_numeric_1point7(x_vals)
     y_2point0 = f_numeric_2point0(x_vals)
 
-    reduction_paths = pd.DataFrame(
-        {'Jahr': x_vals, '1.7 °C Temperaturziel': y_1point7, '2.0 °C Temperaturziel': y_2point0}
-    )
+    reduction_paths = pd.DataFrame({'Jahr': x_vals, '1.7 °C': y_1point7, '2.0 °C': y_2point0})
     return reduction_paths
 
 
@@ -275,17 +272,17 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     log.debug('Creating bar chart with different CO2 budgets and planned CO2 emissions.')
 
     stack_labels = ['Bisher verbraucht', 'Prognose']
-    temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
-    stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
+    temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
+    stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
     colors = ['gold', '#FF9913', 'red']
     names = ['1.5°C', '1.7°C', '2.0°C']
     fig = go.Figure()
 
     for temperature, color in zip(names, colors):
-        subset = temperature_bar[temperature_bar['Temperaturziel (°C)'] == temperature]
+        subset = temperature_bar[temperature_bar['Temperaturgrenzwert (°C)'] == temperature]
         fig.add_trace(
             go.Bar(
-                x=subset['Temperaturziel (°C)'],
+                x=subset['Temperaturgrenzwert (°C)'],
                 y=subset['BISKO CO₂-Budget 2016 (1000 Tonnen)'],
                 name=temperature,
                 marker_color=color,
@@ -296,7 +293,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
         go.Bar(
             x=['Bisher verbraucht <br>+ Prognose'],
             y=[
-                stacked_bar[stacked_bar['Temperaturziel (°C)'] == 'Bisher verbraucht'][
+                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Bisher verbraucht'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
                 ].values[0]
             ],
@@ -309,7 +306,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
         go.Bar(
             x=['Bisher verbraucht <br>+ Prognose'],
             y=[
-                stacked_bar[stacked_bar['Temperaturziel (°C)'] == 'Prognose'][
+                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
                 ].values[0]
             ],
@@ -365,9 +362,9 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     fig.add_trace(
         go.Scatter(
             x=reduction_paths['Jahr'],
-            y=round(reduction_paths['1.7 °C Temperaturziel'], 1),
+            y=round(reduction_paths['1.7 °C'], 1),
             mode='lines',
-            name='1.7 °C Temperaturziel',
+            name='1.7 °C',
             line=dict(dash='dash', color='#FF9913'),
         )
     )
@@ -375,9 +372,9 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     fig.add_trace(
         go.Scatter(
             x=reduction_paths['Jahr'],
-            y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
+            y=round(reduction_paths['2.0 °C'], 1),
             mode='lines',
-            name='2.0 °C Temperaturziel',
+            name='2.0 °C',
             line=dict(dash='dot', color='red'),
         )
     )
@@ -502,7 +499,7 @@ def get_artifacts(
     aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
         f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
     ].round(1)
-    aoi_bisko_budgets.set_index('Temperaturziel (°C)', inplace=True)
+    aoi_bisko_budgets.set_index('Temperaturgrenzwert (°C)', inplace=True)
     table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources)
 
     log.debug(
