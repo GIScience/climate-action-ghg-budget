@@ -1,16 +1,16 @@
 # Berechnung des CO₂-Budgets
 
-Ein CO₂-Budget zeigt, wie viel Kohlendioxid (CO₂) eine Stadt oder ein Land noch ausstoßen darf, um die globale Erwärmung auf ein bestimmtes Ziel zu begrenzen.
+Ein CO₂-Budget zeigt, wie viel Kohlendioxid (CO₂) eine Stadt oder ein Land noch ausstoßen darf, um die globale Erwärmung auf eine bestimmte Temperatur zu begrenzen.
 Das Pariser Klimaabkommen, das 2015 beschlossen wurde, ist dabei besonders wichtig.
 In diesem Abkommen haben sich viele Länder dazu verpflichtet, die Erderwärmung auf deutlich unter 2°C zu beschränken, verglichen mit der Zeit vor der Industrialisierung.
 Wenn möglich, soll die Erwärmung sogar auf 1,5°C begrenzt werden.
 
-Damit diese Ziele erreicht werden können, trägt jedes Land und jede Stadt eine Verantwortung.
+Damit diese Grenzwerte eingehalten werden können, trägt jedes Land und jede Stadt eine Verantwortung.
 Deswegen muss auch Heidelberg seinen Ausstoß an CO₂ reduzieren.
 Dafür wird berechnet, wie viel CO₂ Heidelberg noch ausstoßen darf, ohne die Erderwärmung weiter zu verschlimmern.
 Diese Menge wird CO₂-Budget genannt.
 
-Das globale Budget gibt an, wie viel CO₂ weltweit noch ausgestoßen werden darf, um das Ziel von maximal 1,5°C oder 2°C Erderwärmung zu erreichen.
+Das globale Budget gibt an, wie viel CO₂ weltweit noch ausgestoßen werden darf, um die Grenzwerte von maximal 1,5°C oder 2°C Erderwärmung einzuhalten.
 Um das CO₂-Budget von Heidelberg zu berechnen, nehmen wir das globale CO₂-Budget und teilen es nach dem Anteil der Heidelberger Bevölkerung an der Weltbevölkerung auf.
 So erhalten wir das CO₂-Budget, das für Heidelberg gerecht wäre.
 

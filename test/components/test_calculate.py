@@ -35,7 +35,7 @@ def test_co2_budget_analysis():
 def test_calculate_bisko_budgets():
     budget = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
+            'Temperaturgrenzwert (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %', '67 %', '83 %'],
             'budget_glob': [400000000, 300000000, 700000000, 550000000, 1150000000, 900000000],
         },
@@ -48,7 +48,7 @@ def test_calculate_bisko_budgets():
     )
     expected = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
+            'Temperaturgrenzwert (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %', '67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [7049.2, 5756.4, 10927.4, 8988.3, 16744.7, 13512.9],
         },
@@ -88,14 +88,14 @@ def test_current_budget():
     )
     aoi_bisko_budgets = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1, 1, 2, 2],
+            'Temperaturgrenzwert (°C)': [1, 1, 2, 2],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [2, 1, 4, 3],
         },
     )
     expected = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1, 1, 2, 2],
+            'Temperaturgrenzwert (°C)': [1, 1, 2, 2],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [2, 1, 4, 3],
             f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [0, -1, 2, 1],
@@ -116,14 +116,14 @@ def test_comparison_chart():
     )
     aoi_bisko_budgets = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.5, 1.7, 2.0],
+            'Temperaturgrenzwert (°C)': [1.5, 1.7, 2.0],
             'Wahrscheinlichkeit': ['83 %', '83 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3],
         },
     )
     expected = pd.DataFrame(
         {
-            'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
+            'Temperaturgrenzwert (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
@@ -134,7 +134,7 @@ def test_comparison_chart():
 def test_year_budget_spent():
     aoi_bisko_budgets = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.5],
+            'Temperaturgrenzwert (°C)': [1.5],
             'Wahrscheinlichkeit': ['67 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250],
         }
@@ -148,7 +148,7 @@ def test_year_budget_spent():
     )
     expected = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.5],
+            'Temperaturgrenzwert (°C)': [1.5],
             'Wahrscheinlichkeit': ['67 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250],
             'CO₂-Budget aufgebraucht (Jahr)': [2018],
@@ -182,7 +182,7 @@ def test_simplify_table():
 def test_emission_paths():
     bisko_budget_table = pd.DataFrame(
         {
-            'Temperaturziel (°C)': [1.7, 2.0],
+            'Temperaturgrenzwert (°C)': [1.7, 2.0],
             'Wahrscheinlichkeit': ['83 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [10000, 15000],
         }
@@ -195,12 +195,12 @@ def test_emission_paths():
     )
     budget_params = BudgetParams()
     reduction_paths = emission_paths(bisko_budget_table, emissions_table, budget_params)
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C Temperaturziel'].iloc[0] == 1000.0
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '2.0 °C Temperaturziel'].iloc[0] == 1000.0
-    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '1.7 °C Temperaturziel'].iloc[0], 2) == 938.37
-    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '2.0 °C Temperaturziel'].iloc[0], 2) == 988.28
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '1.7 °C Temperaturziel'].iloc[0] == 0.0
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '2.0 °C Temperaturziel'].iloc[0] == 0.0
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C'].iloc[0] == 1000.0
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '2.0 °C'].iloc[0] == 1000.0
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '1.7 °C'].iloc[0], 2) == 938.37
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '2.0 °C'].iloc[0], 2) == 988.28
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '1.7 °C'].iloc[0] == 0.0
+    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '2.0 °C'].iloc[0] == 0.0
 
 
 def test_emission_reduction():
@@ -239,7 +239,7 @@ def test_emission_reduction():
 def test_get_comparison_chart():
     comparison_chart_data = {
         'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
-        'Temperaturziel (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
+        'Temperaturgrenzwert (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     received = get_comparison_chart(comparison_chart_df)
@@ -257,8 +257,8 @@ def test_get_time_chart():
     }
     reduction_df_data = {
         'Jahr': [2016],
-        '1.7 °C Temperaturziel': [900],
-        '2.0 °C Temperaturziel': [800],
+        '1.7 °C': [900],
+        '2.0 °C': [800],
     }
     emissions_df = pd.DataFrame(emissions_df_data)
     reduction_df = pd.DataFrame(reduction_df_data)
