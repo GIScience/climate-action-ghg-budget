@@ -433,14 +433,6 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
     :return: Plotly figure with three different emission reduction scenarios to meet the goal of 2°C warming
     """
     fig = go.Figure()
-    fig.add_trace(
-        go.Scatter(
-            x=emission_reduction_df['Jahr'],
-            y=emission_reduction_df['decrease_65kton_per_year'],
-            mode='lines+markers',
-            name='Emissionen sinken um<br>65000 Tonnen pro Jahr',
-        )
-    )
 
     fig.add_trace(
         go.Scatter(
@@ -450,7 +442,14 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
             name='Emissionen sinken um<br>17 % pro Jahr',
         )
     )
-
+    fig.add_trace(
+        go.Scatter(
+            x=emission_reduction_df['Jahr'],
+            y=emission_reduction_df['decrease_65kton_per_year'],
+            mode='lines+markers',
+            name='Emissionen sinken um<br>65000 Tonnen pro Jahr',
+        )
+    )
     fig.add_trace(
         go.Scatter(
             x=emission_reduction_df['Jahr'],

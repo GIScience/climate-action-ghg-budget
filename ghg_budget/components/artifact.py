@@ -188,15 +188,17 @@ def build_emission_reduction_chart_artifact(fig: go.Figure, resources: Computati
         title='CO₂-Emissionsminderungspfade für Heidelberg',
         caption='Auswahl möglicher CO₂-Reduktionspfade für Heidelberg unter Einhaltung des Temperaturgrenzwerts von '
         '+2°C mit 83% Wahrscheinlichkeit',
-        description='Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 Kilotonnen zur Verfügung, '
-        'um den Temperaturgrenzwert von +2°C mit einer Wahrscheinlihckeit von 83 % einzuhalten. Dieses '
-        'Diagramm zeigt mögliche Emissionsminderungspfade. Die Summe der Werte in jeder Kurve entspricht '
-        'etwa dem CO₂-Budget von 4175 Kilotonnen. Das Diagramm zeigt, dass wir mehr Zeit haben, '
-        'CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um 17 % reduzieren, als wenn wir die '
-        'Emissionen linear verringern. Besonders schnell ist das Budget aufgebraucht, wenn wir die '
-        'Emissionen gar nicht reduzieren. Dieses Diagramm zeigt lediglich fiktive Szenarien. Eine Prognose '
-        'der tatsächlichen Emissionen Heidelbergs finden Sie links im Reiter "Entwicklung der '
-        'CO₂-Emissionen in Heidelberg".',
+        description='Das CO₂-Budget Heidelbergs für die Einhaltung des Temperaturgrenzwerts von +1,5°C ist bereits '
+        'aufgebraucht, und auch das Budget für +1,7°C wird im Laufe des Jahres 2025 aufgebraucht sein. Daher zeigt '
+        'dieses Diagramm beispielhaft eine Auswahl möglicher CO₂-Reduktionspfade unter Einhaltung des '
+        'Temperaturgrenzwerts von +2°C. Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 '
+        'Kilotonnen zur Verfügung, um den Temperaturgrenzwert von +2°C mit einer Wahrscheinlichkeit von 83 % '
+        'einzuhalten. Die Summe der Werte in jeder Kurve entspricht etwa dem CO₂-Budget von 4175 Kilotonnen. Das '
+        'Diagramm zeigt, dass wir mehr Zeit haben, CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um 17 % '
+        'reduzieren, als wenn wir die Emissionen linear verringern. Besonders schnell ist das Budget aufgebraucht, '
+        'wenn wir die Emissionen gar nicht reduzieren. Dieses Diagramm zeigt lediglich fiktive Szenarien. Eine '
+        'Prognose der tatsächlichen Emissionen Heidelbergs finden Sie links im Reiter "Entwicklung der CO₂-Emissionen '
+        'in Heidelberg".',
         resources=resources,
         filename='emission_reduction_chart',
         primary=False,
