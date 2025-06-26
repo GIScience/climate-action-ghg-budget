@@ -277,7 +277,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     stack_labels = ['Bisher verbraucht', 'Prognose']
     temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
     stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturziel (°C)'].isin(stack_labels)]
-    colors = ['gold', 'orange', 'tomato']
+    colors = ['gold', '#FF9913', 'red']
     names = ['1.5°C', '1.7°C', '2.0°C']
     fig = go.Figure()
 
@@ -301,7 +301,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
                 ].values[0]
             ],
             name='Bisher verbraucht',
-            marker_color='gray',
+            marker_color='#696969',
         )
     )
 
@@ -314,7 +314,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
                 ].values[0]
             ],
             name='Prognose',
-            marker_color='lightgray',
+            marker_color='#B0B0B0',
         )
     )
 
@@ -348,7 +348,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             y=measured['co2_kt_sum'],
             mode='lines+markers',
             name='Messwerte',
-            line=dict(color='red'),
+            line=dict(color='#696969'),
         )
     )
 
@@ -358,7 +358,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             y=projected['co2_kt_sum'],
             mode='lines+markers',
             name='Prognose',
-            line=dict(color='gray'),
+            line=dict(color='#B0B0B0'),
         )
     )
 
@@ -368,7 +368,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             y=round(reduction_paths['1.7 °C Temperaturziel'], 1),
             mode='lines',
             name='1.7 °C Temperaturziel',
-            line=dict(dash='dash', color='green'),
+            line=dict(dash='dash', color='#FF9913'),
         )
     )
 
@@ -378,7 +378,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             y=round(reduction_paths['2.0 °C Temperaturziel'], 1),
             mode='lines',
             name='2.0 °C Temperaturziel',
-            line=dict(dash='dot', color='blue'),
+            line=dict(dash='dot', color='red'),
         )
     )
 
@@ -402,7 +402,7 @@ def get_cumulative_chart(emissions_df: pd.DataFrame) -> Figure:
     emissions_df['Category'] = emissions_df['Jahr'].apply(
         lambda x: 'Messwerte' if x <= AOI_EMISSION_END_YEAR else 'Prognose'
     )
-    colors = {'Messwerte': 'tomato', 'Prognose': 'gray'}
+    colors = {'Messwerte': '#696969', 'Prognose': '#B0B0B0'}
 
     fig = go.Figure()
 
@@ -440,6 +440,7 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
             y=emission_reduction_df['decrease_17%_per_year'],
             mode='lines+markers',
             name='Emissionen sinken um<br>17 % pro Jahr',
+            line=dict(color='blue'),
         )
     )
     fig.add_trace(
@@ -448,6 +449,7 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
             y=emission_reduction_df['decrease_65kton_per_year'],
             mode='lines+markers',
             name='Emissionen sinken um<br>65000 Tonnen pro Jahr',
+            line=dict(color='magenta'),
         )
     )
     fig.add_trace(
@@ -456,6 +458,7 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
             y=emission_reduction_df['business_as_usual'],
             mode='lines+markers',
             name='Business as usual',
+            line=dict(color='#2ca02c'),
         )
     )
 
