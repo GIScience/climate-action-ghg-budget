@@ -16,6 +16,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Restructure plugin into a core and a components module ([#41](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/41))
 - Changing the single bars in the comparison chart to the stacked bar ([#42](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/42))
 - Splitting the emission curve to measured and projected sections ([#44](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/44))
+- Modifying the colors in the charts to have uniform colors ([#47](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/47))
 
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
