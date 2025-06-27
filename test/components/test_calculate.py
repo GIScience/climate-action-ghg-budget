@@ -123,7 +123,7 @@ def test_comparison_chart():
     )
     expected = pd.DataFrame(
         {
-            'Temperaturgrenzwert (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
+            'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Bisher verbraucht', 'Prognose'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
@@ -239,13 +239,13 @@ def test_emission_reduction():
 def test_get_comparison_chart():
     comparison_chart_data = {
         'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
-        'Temperaturgrenzwert (°C)': ['1.5°C', '1.7°C', '2.0°C', 'Bisher verbraucht', 'Prognose'],
+        'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Bisher verbraucht', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     received = get_comparison_chart(comparison_chart_df)
-    assert received['data'][0]['x'] == ('1.5°C',)
-    assert received['data'][1]['x'] == ('1.7°C',)
-    assert received['data'][2]['x'] == ('2.0°C',)
+    assert received['data'][0]['x'] == ('1,5 °C',)
+    assert received['data'][1]['x'] == ('1,7 °C',)
+    assert received['data'][2]['x'] == ('2,0 °C',)
     assert received['data'][3]['name'] == 'Bisher verbraucht'
     assert received['data'][4]['name'] == 'Prognose'
 

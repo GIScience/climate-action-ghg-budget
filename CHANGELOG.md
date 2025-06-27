@@ -18,6 +18,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Splitting the emission curve to measured and projected sections ([#44](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/44))
 - Modifying the colors in the charts to have uniform colors ([#47](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/47))
 - Change wording throughout the plugin to "Grenzen/Grenzwerte" instead of "Temperaturziele" ([#46](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/46))
+- Use decimal comma consequently throughout all charts, refine texts
 
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
