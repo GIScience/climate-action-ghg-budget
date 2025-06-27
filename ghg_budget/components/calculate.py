@@ -140,7 +140,10 @@ def comparison_chart_data(
     comparison_chart_df.loc[len(comparison_chart_df)] = [0, cum_emissions]
     comparison_chart_df.loc[len(comparison_chart_df)] = [-1, planned_emissions]
     comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
-        lambda deg: 'Bisher verbraucht' if deg == 0 else ('Prognose' if deg == -1 else f'{deg}°C')
+        lambda x: f'{x:.1f}'.replace('.', ',')
+    )
+    comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
+        lambda deg: 'Bisher verbraucht' if deg == '0,0' else ('Prognose' if deg == '-1,0' else f'{deg} °C')
     )
     return comparison_chart_df
 
@@ -275,7 +278,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
     stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
     colors = ['gold', '#FF9913', 'red']
-    names = ['1.5°C', '1.7°C', '2.0°C']
+    names = ['1,5 °C', '1,7 °C', '2,0 °C']
     fig = go.Figure()
 
     for temperature, color in zip(names, colors):
@@ -291,7 +294,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
 
     fig.add_trace(
         go.Bar(
-            x=['Bisher verbraucht <br>+ Prognose'],
+            x=['Bisher verbraucht <br>& Prognose'],
             y=[
                 stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Bisher verbraucht'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
@@ -304,7 +307,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
 
     fig.add_trace(
         go.Bar(
-            x=['Bisher verbraucht <br>+ Prognose'],
+            x=['Bisher verbraucht <br>& Prognose'],
             y=[
                 stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
@@ -315,9 +318,23 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
         )
     )
 
+    all_y = (
+        stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Bisher verbraucht'][
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+        ].values[0]
+        + stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+        ].values[0]
+    )
+    y_min = 0
+    y_max = all_y.max()
+    tick_step = 5000
+    tickvals = list(range(y_min, int(y_max) + tick_step, tick_step))
+    ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
+
     fig.update_layout(
         barmode='stack',
-        yaxis=dict(title='CO₂-Emissionen (1000 Tonnen)', tickformat=',d'),
+        yaxis=dict(title='CO₂-Emissionen (1000 Tonnen)', tickvals=tickvals, ticktext=ticktext),
         showlegend=True,
         legend_traceorder='normal',
         margin=dict(t=30, b=60, l=80, r=30),
@@ -364,7 +381,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             x=reduction_paths['Jahr'],
             y=round(reduction_paths['1.7 °C'], 1),
             mode='lines',
-            name='1.7 °C',
+            name='1,7 °C',
             line=dict(dash='dash', color='#FF9913'),
         )
     )
@@ -374,7 +391,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
             x=reduction_paths['Jahr'],
             y=round(reduction_paths['2.0 °C'], 1),
             mode='lines',
-            name='2.0 °C',
+            name='2,0 °C',
             line=dict(dash='dot', color='red'),
         )
     )
@@ -414,10 +431,17 @@ def get_cumulative_chart(emissions_df: pd.DataFrame) -> Figure:
             )
         )
 
+    all_y = emissions_df['cumulative_emissions'].round(0)
+    y_min = 0
+    y_max = all_y.max()
+    tick_step = 5000
+    tickvals = list(range(y_min, int(y_max) + tick_step, tick_step))
+    ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
+
     fig.update_layout(
         barmode='group',
         xaxis_title='Jahr',
-        yaxis=dict(title='Aufsummierte CO₂-Emissionen (1000 Tonnen)', tickformat=',d'),
+        yaxis=dict(title='Aufsummierte CO₂-Emissionen (1000 Tonnen)', tickvals=tickvals, ticktext=ticktext),
         margin=dict(t=30, b=60, l=80, r=30),
     )
 
@@ -445,7 +469,7 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
             x=emission_reduction_df['Jahr'],
             y=emission_reduction_df['decrease_65kton_per_year'],
             mode='lines+markers',
-            name='Emissionen sinken um<br>65000 Tonnen pro Jahr',
+            name='Emissionen sinken um<br>65.000 Tonnen pro Jahr',
             line=dict(color='magenta'),
         )
     )
@@ -499,6 +523,9 @@ def get_artifacts(
     aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
         f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
     ].round(1)
+    aoi_bisko_budgets = aoi_bisko_budgets.applymap(
+        lambda x: f'{x:.1f}'.replace('.', ',') if isinstance(x, float) else x
+    )
     aoi_bisko_budgets.set_index('Temperaturgrenzwert (°C)', inplace=True)
     table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources)
 

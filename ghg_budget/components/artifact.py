@@ -51,7 +51,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         'erhöht bereits das Risiko für extreme Wetterereignisse wie Hitzewellen und Starkregen. Bei einer Erwärmung '
         'um 2 °C werden diese Risiken noch deutlich höher ausfallen. Die konkreten Auswirkungen hängen jedoch vom '
         'Verlauf der Treibhausgasemissionen ab – insbesondere davon, ob und wie stark die 1,5 °C-Marke vorübergehend '
-        'überschritten wird. Weitere Informationen zu den Auswirkungen einer Erwärmung um 1,5 °C bzw. 2 °C finden Sie '
+        'überschritten wird. Weitere Informationen zu den Auswirkungen einer Erwärmung um 1,5&nbsp;°C bzw. 2 °C finden Sie '
         '[hier](https://www.ipcc.ch/site/assets/uploads/2020/07/SR1.5-FAQs_de_barrierefrei.pdf) unter FAQ 3.1.\n\n'
         '**Wahrscheinlichkeit:** Wie stark die globale Durchschnittstemperatur durch eine bestimmte Menge an '
         'ausgestoßenem CO₂ steigt, kann nicht exakt vorhergesagt werden. Daher berechnet der Weltklimarat '
@@ -72,7 +72,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturgrenzwerte '
         'automatisch eingehalten werden, wenn Heidelberg die Budgets einhält. Damit die Grenzen nicht überschritten '
         'werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
-        'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
+        'die Verantwortung der Stadt Heidelberg sowie der Heidelberger Bevölkerung hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
@@ -111,7 +111,7 @@ def build_budget_table_simple_artifact(table: pd.DataFrame, resources: Computati
         '**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturgrenzwerte '
         'automatisch eingehalten werden, wenn Heidelberg die Budgets einhält. Damit die Grenzen nicht überschritten '
         'werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf '
-        'die Verantwortung der Stadt Heidelberg sowie aller Heidelberger:innen hinweisen, und ihren Anteil an den '
+        'die Verantwortung der Stadt Heidelberg sowie der Heidelberger Bevölkerung hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
@@ -124,17 +124,17 @@ def build_budget_comparison_chart_artifact(fig: Figure, resources: ComputationRe
     return create_plotly_chart_artifact(
         figure=fig,
         title='Wie viel vom CO₂-Budget ist bereits emittiert?',
-        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83% '
+        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83 % '
         'einzuhalten.',
-        description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2016 zur '
+        description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2015 zur '
         'Verfügung standen, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83 % einzuhalten. Die '
         'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
-        'Heidelbergs. Der dunkelgraue Teil der Säule symbolisiert das CO₂, das Heidelberg von 2016 bis '
-        f' {AOI_EMISSION_END_YEAR}, dem aktuellsten Jahr, für das Daten vorliegen, ausgestoßen hat, d.h. wieviel von '
-        'diesen Budgets bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ Heidelberg voraussichtlich noch '
+        'Heidelbergs. Der dunkelgraue Teil der Säule zeigt, wie viel CO₂ Heidelberg von 2016 bis einschließlich '
+        f'{AOI_EMISSION_END_YEAR} ausgestoßen hat, dem aktuellsten Jahr, für das Daten vorliegen. Er macht somit '
+        'sichtbar, wie viel vom CO₂-Budget bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ Heidelberg voraussichtlich noch '
         'ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert auf den aktuell beschlossenen '
         'Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass selbst das CO₂-Budget für den Grenzwert '
-        'von +2 °C weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur '
+        'von 2 °C weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur '
         'Verringerung der Emissionen unternimmt.',
         resources=resources,
         filename='comparison_emissions_budgets',
@@ -146,7 +146,8 @@ def build_time_chart_artifact(line_chart: Figure, resources: ComputationResource
     return create_plotly_chart_artifact(
         figure=line_chart,
         title='Entwicklung der CO₂-Emissionen in Heidelberg',
-        caption='Entwicklung der CO₂-Emissionen Heidelbergs und alternative Reduktionspfade seit 2016 (in 1000 Tonnen)',
+        caption='Entwicklung der CO₂-Emissionen Heidelbergs und alternative Reduktionspfade seit 2016 unter Einhaltung '
+        'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
         description=f'Die Emissionswerte von 2016 bis {AOI_EMISSION_END_YEAR} in der Datenreihe '
         '"Prognose" sind Messwerte basierend auf dem BISKO-Standard, die Werte ab '
         f'{AOI_EMISSION_END_YEAR + 1} sind Prognosen unter der Annahme, dass die zurzeit '
@@ -156,10 +157,10 @@ def build_time_chart_artifact(line_chart: Figure, resources: ComputationResource
         'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
         'zu überschreiten.\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
         'Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt daran, dass die Emissionen nach '
-        'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard erfasst vereinfacht gesagt nur die '
-        'Emissionen, die von Heidelberger:innen in Heidelberg ausgestoßen werden, nicht aber jene, die '
-        'beispielsweise von Heidelberger:innen außerhalb Heidelbergs verursacht werden. Mehr Informationen '
-        'zur BISKO-Systematik finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
+        'Emissionen, die innerhalb Heidelbergs entstehen, nicht jedoch jene, die von Heidelberger Personen außerhalb '
+        'der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik finden Sie links im Reiter '
+        '"Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='time_chart',
         primary=True,
@@ -182,10 +183,10 @@ def build_cumulative_chart_artifact(fig: Figure, resources: ComputationResources
         'beschlossenen Maßnahmen Heidelbergs zur Emissionsreduzierung umgesetzt werden. \n\n'
         'Anmerkung: Die Emissionswerte bilden '
         'nicht die gesamten Emissionen der Stadt Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt '
-        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Der BISKO-Standard erfasst vereinfacht '
-        'gesagt nur die Emissionen, die von Heidelberger:innen in Heidelberg ausgestoßen werden, nicht aber jene, die '
-        'beispielsweise von Heidelberger:innen außerhalb Heidelbergs verursacht werden. Mehr Informationen zur '
-        'BISKO-Systematik finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
+        'daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, '
+        'vereinfacht gesagt, nur die Emissionen, die innerhalb Heidelbergs entstehen, nicht jedoch jene, die von '
+        'Heidelberger Personen außerhalb der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik '
+        'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='cumulative_chart',
         primary=False,
@@ -197,12 +198,12 @@ def build_emission_reduction_chart_artifact(fig: go.Figure, resources: Computati
         figure=fig,
         title='CO₂-Emissionsminderungspfade für Heidelberg',
         caption='Auswahl möglicher CO₂-Reduktionspfade für Heidelberg unter Einhaltung des Temperaturgrenzwerts von '
-        '+2 °C mit 83% Wahrscheinlichkeit',
-        description='Das CO₂-Budget Heidelbergs für die Einhaltung des Temperaturgrenzwerts von +1,5 °C ist bereits '
-        'aufgebraucht, und auch das Budget für +1,7 °C wird im Laufe des Jahres 2025 aufgebraucht sein. Daher zeigt '
+        '2 °C mit 83 % Wahrscheinlichkeit',
+        description='Das CO₂-Budget Heidelbergs für die Einhaltung des Temperaturgrenzwerts von 1,5 °C ist bereits seit 2021 '
+        'aufgebraucht, und auch das Budget für 1,7 °C wird im Laufe des Jahres 2025 aufgebraucht sein. Daher zeigt '
         'dieses Diagramm beispielhaft eine Auswahl möglicher CO₂-Reduktionspfade unter Einhaltung des '
-        'Temperaturgrenzwerts von +2 °C. Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 '
-        'Kilotonnen zur Verfügung, um den Temperaturgrenzwert von +2 °C mit einer Wahrscheinlichkeit von 83 % '
+        'Temperaturgrenzwerts von 2 °C. Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 '
+        'Kilotonnen zur Verfügung, um den Temperaturgrenzwert von 2 °C mit einer Wahrscheinlichkeit von 83 % '
         'einzuhalten. Die Summe der Werte in jeder Kurve entspricht etwa dem CO₂-Budget von 4175 Kilotonnen. Das '
         'Diagramm zeigt, dass wir mehr Zeit haben, CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um 17 % '
         'reduzieren, als wenn wir die Emissionen linear verringern. Besonders schnell ist das Budget aufgebraucht, '
