@@ -1,6 +1,6 @@
 # You may ask yourself why this file has such a strange name.
 # Well ... python imports: https://discuss.python.org/t/warning-when-importing-a-local-module-with-the-same-name-as-a-2nd-or-3rd-party-module/27799
-
+import importlib
 import logging
 from datetime import timedelta
 from pathlib import Path
@@ -50,7 +50,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
                     website='https://heigit.org/heigit-team/',
                 ),
             ],
-            version=Version(0, 0, 1, build='demo'),
+            version=Version.parse(importlib.metadata.version('ghg_budget')),
             concerns={Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION},
             purpose=Path('resources/info/purpose.md'),
             methodology=Path('resources/info/methodology.md'),

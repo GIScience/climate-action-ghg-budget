@@ -5,12 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/plugins/ghg-budget/-/compare/dummy...main?from_project_id=854&straight=false)
+## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.0.0...main)
+
+## [1.0.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.0.0)
+
 ### Changed
 - account for new explicit AOI input by moving it from the input parameters to the compute method input
 - simplify the plugin module with the new functionality in climatoology and now using the celery library
 - Improved documentation and descriptions ([#14](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/14), [#17](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/17))
-- Update climatoology to 6.4.1
+- Update climatoology to 6.4.2
 - Rename plugin to "CO₂ Budget" ([#32](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/32))
 - Create bar chart comparing CO2 budgets to projected emissions of Heidelberg with Plotly ([#38](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/38))
 - Restructure plugin into a core and a components module ([#41](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/41))
@@ -23,6 +26,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
 - An issue induced by an update of pydantic that would break plugin representation in the front-end (see [climatoology#105](https://gitlab.heigit.org/climate-action/climatoology/-/issues/105))
+
 ### Added
 - Chart with temporal development of emissions in Heidelberg, as well as alternative emission reduction paths ([#6](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/6))
 - Updated emission data for Heidelberg ([#5](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/5))
