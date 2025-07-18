@@ -75,13 +75,18 @@ Create a file `CI_JOB_TOKEN` that contains your personal access token to the cli
 
 ### Build
 
-The following command can be used to build the showcase plugin.
-Note that this will overwrite any existing image with the same tag (i.e. the one you previously pulled from the Climate
-Action docker registry).
+The tool is also [Dockerised](Dockerfile).
+Images are automatically built and deployed in the [CI-pipeline](.gitlab-ci.yml).
+
+In case you want to manually build and run locally (e.g. to test a new feature in development), execute
+
 
 ```shell
-DOCKER_BUILDKIT=1 docker build --secret id=CI_JOB_TOKEN . --tag repo.heigit.org/climate-action/ghg-budget:devel
+docker build --secret id=CI_JOB_TOKEN . --tag repo.heigit.org/climate-action/ghg-budget:devel
 ```
+
+Note that this will overwrite any existing image with the same tag (i.e. the one you previously pulled from the Climate
+Action docker registry).
 
 To mimic the build behaviour of the CI you have to add `--build-arg CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD)`
 to the above command.
@@ -102,19 +107,4 @@ If for any reason you want to deploy manually (and have the required rights), af
 
 ```shell
 docker image push repo.heigit.org/climate-action/ghg-budget:devel
-```
-
-### Kaniko
-
-The gitlab-ci will build and deploy the plugin docker image using [Dockerfile.Kaniko](Dockerfile.Kaniko).
-If the build pipeline fails, you will have to test the Kaniko build, not the above Docker build.
-To test the build from Kaniko run
-
-```shell
-docker run -v ./:/workspace \
-    -v ./CI_JOB_TOKEN:/kaniko/CI_JOB_TOKEN \
-    gcr.io/kaniko-project/executor:v1.14.0-debug \
-    --dockerfile /workspace/Dockerfile.Kaniko \
-    --context dir:///workspace/ \
-    --no-push
 ```

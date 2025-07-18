@@ -22,6 +22,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 - Modifying the colors in the charts to have uniform colors ([#47](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/47))
 - Change wording throughout the plugin to "Grenzen/Grenzwerte" instead of "Temperaturziele" ([#46](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/46))
 - Use decimal comma consequently throughout all charts, refine texts
+- Changing the files to switch to the new docker build method
 
 ### Fixed
 - An issue caused by the ohsome-py library that prevented setting the correct logging level
