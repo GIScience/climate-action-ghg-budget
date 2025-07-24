@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ghg_budget"
-version = "1.0.0"
+version = "1.0.1"
 description = "Estimate the remaining GHG budget of an area to reach at least COP21."
 authors = ["Veit Ulrich <veit.ulrich@heigit.org>", "Niko Krasowski <niko.krasowski@posteo.de>", "Moritz Schott <moritz.schott@heigit.org>"]
 readme = "README.md"

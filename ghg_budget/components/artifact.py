@@ -124,8 +124,7 @@ def build_budget_comparison_chart_artifact(fig: Figure, resources: ComputationRe
     return create_plotly_chart_artifact(
         figure=fig,
         title='Wie viel vom CO₂-Budget ist bereits emittiert?',
-        caption='CO₂-Budgets für Heidelberg, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83 % '
-        'einzuhalten.',
+        caption='Heidelbergs Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
         description='Das Diagramm zeigt die CO₂-Budgets, die Heidelberg seit der Pariser Klimakonferenz 2015 zur '
         'Verfügung standen, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83 % einzuhalten. Die '
         'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
@@ -135,7 +134,8 @@ def build_budget_comparison_chart_artifact(fig: Figure, resources: ComputationRe
         'ausstoßen wird, bevor die Klimaneutralität erreicht wird. Diese Prognose basiert auf den aktuell beschlossenen '
         'Klimaschutzmaßnahmen der Stadt Heidelberg. Das Diagramm zeigt, dass selbst das CO₂-Budget für den Grenzwert '
         'von 2 °C weit überschritten wird, wenn die Stadt Heidelberg keine zusätzlichen Anstrengungen zur '
-        'Verringerung der Emissionen unternimmt.',
+        'Verringerung der Emissionen unternimmt. Dabei ist zu beachten, dass das internationale Abkommen von '
+        'Paris eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vorgibt.',
         resources=resources,
         filename='comparison_emissions_budgets',
         primary=False,
@@ -155,7 +155,9 @@ def build_time_chart_artifact(line_chart: Figure, resources: ComputationResource
         'wird Heidelberg erst 2068 CO₂-neutral. Die alternativen '
         'Reduktionspfade stellen fiktive Szenarien dar, wie Heidelberg bis 2040 CO₂-Neutralität erreichen '
         'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
-        'zu überschreiten.\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
+        'zu überschreiten. Dabei ist zu beachten, dass das internationale Abkommen von '
+        'Paris eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vorgibt.'
+        '\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
         'Heidelberg ab, sondern nur etwa 64 % der Emissionen. Dies liegt daran, dass die Emissionen nach '
         'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
         'Emissionen, die innerhalb Heidelbergs entstehen, nicht jedoch jene, die von Heidelberger Personen außerhalb '
@@ -202,7 +204,9 @@ def build_emission_reduction_chart_artifact(fig: go.Figure, resources: Computati
         description='Das CO₂-Budget Heidelbergs für die Einhaltung des Temperaturgrenzwerts von 1,5 °C ist bereits seit 2021 '
         'aufgebraucht, und auch das Budget für 1,7 °C wird im Laufe des Jahres 2025 aufgebraucht sein. Daher zeigt '
         'dieses Diagramm beispielhaft eine Auswahl möglicher CO₂-Reduktionspfade unter Einhaltung des '
-        'Temperaturgrenzwerts von 2 °C. Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 '
+        'Temperaturgrenzwerts von 2 °C. Dabei ist zu beachten, dass das internationale Abkommen von '
+        'Paris eine Begrenzung auf deutlich unter 2 °C Temperaturerhöhung vorgibt. \n\n'
+        'Im Jahr 2025 hat die Stadt Heidelberg noch ein CO₂-Budget von etwa 4175 '
         'Kilotonnen zur Verfügung, um den Temperaturgrenzwert von 2 °C mit einer Wahrscheinlichkeit von 83 % '
         'einzuhalten. Die Summe der Werte in jeder Kurve entspricht etwa dem CO₂-Budget von 4175 Kilotonnen. Das '
         'Diagramm zeigt, dass wir mehr Zeit haben, CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um 17 % '

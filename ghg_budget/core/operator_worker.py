@@ -32,7 +32,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
         """
         info = generate_plugin_info(
             name='CO₂ Budget',
-            icon=Path('resources/info/hourglass.jpg'),
+            icon=Path('resources/info/icon.jpg'),
             authors=[
                 PluginAuthor(
                     name='Veit Ulrich',

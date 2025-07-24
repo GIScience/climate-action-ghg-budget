@@ -27,5 +27,9 @@ Entsprechend dieser Überlegung umfasst das dargestellte, finale CO₂-Budget nu
 
 # Datengrundlage
 
+Die Berechnung des CO₂-Budgets basiert auf Daten zum globalen CO₂-Budget vom IPCC.
+Die jährlichen Emissionen der Stadt Heidelberg wurden vom Institut für Umweltforschung (ifeu) berechnet.
+Die Emissionsprognosen für Heidelberg auf Grundlage der bereits beschlossenen Maßnahmen kommen von der Stadt Heidelberg und sind auch [hier](https://stdhd.de/s/klimaschutzplan) einsehbar.
+
 Auf Anfrage teilen wir sehr gerne die Daten, die wir zur Berechnung des CO₂-Budgets verwendet haben.
 Bitte kontaktieren Sie bei Interesse Kirsten von Elverfeldt per E-Mail: [kirsten.vonelverfeldt@heigit.org](mailto:kirsten.vonelverfeldt@heigit.org)
