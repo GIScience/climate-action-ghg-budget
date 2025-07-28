@@ -62,8 +62,8 @@ test_coverage_threshold:
 docker_build_deploy_development:
   stage: deploy
   tags: [ k8s ]
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'push'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'push'
   image: docker.io/docker:cli
   before_script:
     - echo ${CI_DOCKER_TOKEN} | docker --config ~/ca_config login ${REGISTRY_URL} -u ${CI_DOCKER_USER} --password-stdin
