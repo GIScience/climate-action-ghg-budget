@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "~3.11.5"
 climatoology = {git = "ssh://git@gitlab.heigit.org:2022/climate-action/climatoology.git", tag = "6.4.3"}
-pydantic = "2.8.2" # see https://gitlab.heigit.org/climate-action/climatoology/-/issues/105
+pydantic = "2.11.7" # see https://gitlab.heigit.org/climate-action/climatoology/-/issues/105
 pydantic-settings = "^2.1.0"
 geojson-pydantic = "^1.0.1"
 shapely = "^2.0.2"
@@ -21,7 +21,7 @@ sympy = "^1.14.0"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.4"
 pytest-cov = "^6.1.1"
-responses = "^0.24.1"
+responses = "^0.25.0"
 
 
 [tool.poetry.group.dev.dependencies]
