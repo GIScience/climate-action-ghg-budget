@@ -53,6 +53,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
             version=Version.parse(importlib.metadata.version('ghg_budget')),
             concerns={Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION},
             purpose=Path('resources/info/purpose.md'),
+            teaser='Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.',
             methodology=Path('resources/info/methodology.md'),
             sources=Path('resources/info/sources.bib'),
             demo_input_parameters=ComputeInput(),
