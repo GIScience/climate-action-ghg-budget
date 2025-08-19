@@ -6,18 +6,18 @@ In diesem Abkommen haben sich viele Länder dazu verpflichtet, die Erderwärmung
 Wenn möglich, soll die Erwärmung sogar auf 1,5 °C begrenzt werden.
 
 Damit diese Grenzwerte eingehalten werden können, trägt jedes Land und jede Stadt eine Verantwortung.
-Deswegen muss auch Heidelberg seinen Ausstoß an CO₂ reduzieren.
-Dafür wird berechnet, wie viel CO₂ Heidelberg noch ausstoßen darf, ohne die Erderwärmung weiter zu verschlimmern.
+Deswegen muss auch die gewählte Stadt ihren Ausstoß an CO₂ reduzieren.
+Dafür wird berechnet, wie viel CO₂ die gewählte Stadt noch ausstoßen darf, ohne die Erderwärmung weiter zu verschlimmern.
 Diese Menge wird CO₂-Budget genannt.
 
 Das globale Budget gibt an, wie viel CO₂ weltweit noch ausgestoßen werden darf, um die Grenzwerte von maximal 1,5 °C oder 2 °C Erderwärmung einzuhalten.
-Um das CO₂-Budget von Heidelberg zu berechnen, nehmen wir das globale CO₂-Budget und teilen es nach dem Anteil der Heidelberger Bevölkerung an der Weltbevölkerung auf.
-So erhalten wir das CO₂-Budget, das für Heidelberg gerecht wäre.
+Um das CO₂-Budget der gewählten Stadt zu berechnen, nehmen wir das globale CO₂-Budget und teilen es nach dem Anteil der Stadtbevölkerung an der Weltbevölkerung auf.
+So erhalten wir das CO₂-Budget, das für die gewählte Stadt gerecht wäre.
 
-Heidelberg misst seine CO₂-Emissionen nach einem bestimmten Standard, der [BISKO Systematik](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf).
-Diese Schätzung zeigt, wie viel CO₂ in Heidelberg entsteht.
+Die Städte, für die das CO₂-Budget-Tool verfügbar ist, messen ihre Emissionen nach einem bestimmten Standard, der [BISKO Systematik](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf).
+Diese Schätzung zeigt, wie viel CO₂ in der gewählten Stadt entsteht.
 Aber BISKO erfasst nur die Emissionen, die direkt in der Stadt entstehen, also etwa durch Autos oder Heizungen.
-Es berücksichtigt jedoch nicht die Emissionen, die Heidelberger Personen außerhalb der Stadt verursachen, zum Beispiel durch Flugreisen oder Produkte, die aus anderen Regionen stammen.
-Daher decken die BISKO-Daten nur etwa 64 % der gesamten CO₂-Emissionen ab, die von Heidelberger Personen tatsächlich versursacht werden.
-Die restlichen 36 % betreffen die Emissionen, die außerhalb der Stadtgrenzen verursacht werden, aber der Heidelberger Bevölkerung zugerechnet werden müssen.
+Es berücksichtigt jedoch nicht die Emissionen, die Personen, die in dieser Stadt leben, außerhalb der Stadt verursachen, zum Beispiel durch Flugreisen oder Produkte, die aus anderen Regionen stammen.
+Daher decken die BISKO-Daten nur etwa 64 % der gesamten CO₂-Emissionen ab, die von Personen aus der gewählten Stadt tatsächlich versursacht werden.
+Die restlichen 36 % betreffen die Emissionen, die außerhalb der Stadtgrenzen verursacht werden, aber der Stadtbevölkerung zugerechnet werden müssen.
 Das dargestellte Budget zeigt nur die 64 % der Emissionen nach dem BISKO-Standard.

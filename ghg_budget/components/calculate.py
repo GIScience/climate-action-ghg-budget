@@ -9,8 +9,16 @@ import plotly.graph_objects as go
 import sympy as sp
 
 from climatoology.base.computation import ComputationResources
+from climatoology.base.baseoperator import AoiProperties
 
-from ghg_budget.components.data import BudgetParams, GHG_DATA, NOW_YEAR, AOI_EMISSION_END_YEAR
+from ghg_budget.components.data import (
+    BudgetParams,
+    GHG_DATA,
+    NOW_YEAR,
+    AOI_EMISSION_END_YEAR,
+    emissions_aoi,
+    city_pop_2020,
+)
 
 from ghg_budget.components.artifact import (
     build_methodology_description_artifact,
@@ -28,25 +36,34 @@ PROJECT_DIR = Path(__file__).parent.parent.parent
 log = logging.getLogger(__name__)
 
 
-def co2_budget_analysis():
+def co2_budget_analysis(aoi_properties: AoiProperties):
+    log.debug('Starting CO2 budget analysis...')
+    city_name = aoi_properties.name.lower()
+    aoi_pop = int(city_pop_2020.loc[city_pop_2020['city_name'] == city_name, 'pop_2020'].values[0])
+
     budget_params = BudgetParams()
+    aoi_pop_share = aoi_pop / budget_params.global_pop
+
     aoi_bisko_budgets = calculate_bisko_budgets(
-        GHG_DATA.budget_glob, GHG_DATA.emissions_glob, budget_params=budget_params
+        GHG_DATA.budget_glob, GHG_DATA.emissions_glob, budget_params=budget_params, aoi_pop_share=aoi_pop_share
     )
-    comparison_chart_df = comparison_chart_data(
-        GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi, aoi_bisko_budgets
-    )
-    emissions_df = cumulative_emissions(GHG_DATA.emissions_aoi, GHG_DATA.planned_emissions_aoi)
+    comparison_chart_df = comparison_chart_data(emissions_aoi, aoi_bisko_budgets, aoi_properties)
+    emissions_df = cumulative_emissions(emissions_aoi, aoi_properties)
     aoi_bisko_budgets = current_budget(emissions_df, aoi_bisko_budgets)
     aoi_bisko_budgets, emissions_df = year_budget_spent(aoi_bisko_budgets, emissions_df)
-    reduction_paths = emission_paths(aoi_bisko_budgets, GHG_DATA.emissions_aoi, budget_params)
-    emission_reduction_df = emission_reduction(GHG_DATA.emission_reduction_years, GHG_DATA.planned_emissions_aoi)
-
+    aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = (
+        aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)']
+        .replace([np.inf, -np.inf], np.nan)
+        .fillna('wird nicht aufgebraucht')
+    )
+    reduction_paths = emission_paths(aoi_bisko_budgets, emissions_aoi, budget_params, aoi_properties)
+    emission_reduction_df = emission_reduction(GHG_DATA.emission_reduction_years, emissions_aoi, aoi_properties)
+    log.debug('Finished CO2 budget analysis')
     return aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df
 
 
 def calculate_bisko_budgets(
-    budget_glob: pd.DataFrame, emissions_glob: pd.DataFrame, budget_params: BudgetParams
+    budget_glob: pd.DataFrame, emissions_glob: pd.DataFrame, budget_params: BudgetParams, aoi_pop_share: float
 ) -> pd.DataFrame:
     """
     Calculates CO2 budgets of the AOI according to BISKO standard.
@@ -54,13 +71,14 @@ def calculate_bisko_budgets(
     :param budget_glob: pd.DataFrame with global CO2 budgets depending on warming goals according to IPCC
     :param emissions_glob: pd.DataFrame with yearly global CO2 emissions [t] from start_year until now
     :param budget_params: Class for holding the parameters for CO2 budget calculation that might change
+    :param aoi_pop_share: Population of AOI divided by global population
     :return: pd.DataFrame with CO2 budgets of the AOI depending on warming goals and probabilities of reaching them
     """
     budget_glob['emission_sum'] = (
         emissions_glob.loc[budget_params.pledge_year : budget_params.ipcc_date.year - 1, 'emissions_t'].sum() / 1000
     )
     budget_glob['budget_emission_sum'] = budget_glob['budget_glob'] + budget_glob['emission_sum']
-    budget_glob['budget_aoi'] = budget_glob['budget_emission_sum'] * budget_params.aoi_pop_share
+    budget_glob['budget_aoi'] = budget_glob['budget_emission_sum'] * aoi_pop_share
     assert (
         0 < budget_params.bisko_factor < 1
     ), 'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
@@ -69,16 +87,21 @@ def calculate_bisko_budgets(
     return aoi_bisko
 
 
-def cumulative_emissions(emissions_aoi: pd.DataFrame, planned_emissions_aoi: pd.DataFrame) -> pd.DataFrame:
+def cumulative_emissions(emissions_aoi: pd.DataFrame, aoi_properties: AoiProperties) -> pd.DataFrame:
     """
     Concatenates dataframes with past and projected emissions in the AOI and calculates cumulative emissions per year.
 
     :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
-    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: pd.DataFrame with past and projected yearly CO2 emissions in the AOI and cumulative emissions per year
     """
-    emissions_df = pd.concat([emissions_aoi, planned_emissions_aoi])
-    emissions_df['cumulative_emissions'] = emissions_df['co2_kt_sum'].cumsum()
+    city_name = aoi_properties.name.lower()
+
+    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['year', city_name]].copy()
+    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['year', city_name]].copy()
+
+    emissions_df = pd.concat([estimation, projection])
+    emissions_df['cumulative_emissions'] = emissions_df[city_name].cumsum()
     return emissions_df
 
 
@@ -90,7 +113,8 @@ def current_budget(emissions_df: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame) 
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI in the pledge_year
     :return: pd:DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
     """
-    current_cumulative_emissions = emissions_df.at[NOW_YEAR, 'cumulative_emissions']
+    current_cumulative_emissions = emissions_df.loc[emissions_df['year'] == NOW_YEAR, 'cumulative_emissions'].values[0]
+
     aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = (
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] - current_cumulative_emissions
     )
@@ -110,34 +134,37 @@ def year_budget_spent(aoi_bisko_budgets: pd.DataFrame, emissions_df: pd.DataFram
     def find_year(budget):
         spent_years = emissions_df[emissions_df['cumulative_emissions'] > budget]
         if not spent_years.empty:
-            return spent_years.index[0]
+            return spent_years.iloc[0]['year']
         else:
             return None
 
     aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets[
         'BISKO CO₂-Budget 2016 (1000 Tonnen)'
     ].apply(find_year)
-    emissions_df.index.name = 'Jahr'
-    emissions_df = emissions_df.reset_index()
+    emissions_df = emissions_df.rename(columns={'year': 'Jahr'})
     return aoi_bisko_budgets, emissions_df
 
 
 def comparison_chart_data(
-    emissions_aoi: pd.DataFrame, planned_emissions_aoi: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame
+    emissions_aoi: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame, aoi_properties: AoiProperties
 ) -> pd.DataFrame:
     """
     Prepares data for bar chart comparing CO2 budgets depending on warming goals with planned emissions of the AOI.
 
     :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
-    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI depending on warming goals
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: pd.DataFrame with CO2 budgets depending on warming goals and total planned emissions of the AOI
     """
-    cum_emissions = emissions_aoi['co2_kt_sum'].sum()
-    planned_emissions = planned_emissions_aoi['co2_kt_sum'].sum()
+    city_name = aoi_properties.name.lower()
+
+    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['year', city_name]].copy()
+    estimate_emissions = estimation[city_name].sum()
+    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['year', city_name]].copy()
+    planned_emissions = projection[city_name].sum()
     aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %'].reset_index()
     comparison_chart_df = aoi_bisko_budgets[['Temperaturgrenzwert (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
-    comparison_chart_df.loc[len(comparison_chart_df)] = [0, cum_emissions]
+    comparison_chart_df.loc[len(comparison_chart_df)] = [0, estimate_emissions]
     comparison_chart_df.loc[len(comparison_chart_df)] = [-1, planned_emissions]
     comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
         lambda x: f'{x:.1f}'.replace('.', ',')
@@ -166,7 +193,10 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
 
 
 def emission_paths(
-    bisko_budget_table: pd.DataFrame, emission_table: pd.DataFrame, budget_params: BudgetParams
+    bisko_budget_table: pd.DataFrame,
+    emission_table: pd.DataFrame,
+    budget_params: BudgetParams,
+    aoi_properties: AoiProperties,
 ) -> pd.DataFrame:
     """
     Creates a dataframe with projected yearly emissions of the AOI and alternative reduction paths.
@@ -174,8 +204,12 @@ def emission_paths(
     :param bisko_budget_table: pd.DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
     :param emission_table: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
     :param budget_params: Class for holding the parameters for CO2 budget calculation that might change
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     """
+    city_name = aoi_properties.name.lower()
+
+    bisko_budget_table.reset_index(inplace=False)
     budget_1point7 = bisko_budget_table.loc[
         (bisko_budget_table['Temperaturgrenzwert (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
         'BISKO CO₂-Budget 2016 (1000 Tonnen)',
@@ -184,12 +218,13 @@ def emission_paths(
         (bisko_budget_table['Temperaturgrenzwert (°C)'] == 2.0) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
         'BISKO CO₂-Budget 2016 (1000 Tonnen)',
     ].values[0]
-    emissions_pledge_year = emission_table.loc[budget_params.pledge_year, 'co2_kt_sum']
+    emissions_pledge_year = emission_table.loc[emission_table['year'] == budget_params.pledge_year, city_name]
 
     x = sp.symbols('x')
-    a, b, c = sp.symbols('a b c')
+    a, b, c, d = sp.symbols('a b c d')
 
-    f = a * x**2 + b * x + c
+    f = a * x**3 + b * x**2 + c * x + d
+    df = sp.diff(f, x)
 
     eq1 = f.subs(x, budget_params.pledge_year) - emissions_pledge_year
 
@@ -199,8 +234,10 @@ def emission_paths(
     eq3_1point7 = integral - budget_1point7
     eq3_2point0 = integral - budget_2point0
 
-    solution_1point7 = sp.solve([eq1, eq2, eq3_1point7], (a, b, c))
-    solution_2point0 = sp.solve([eq1, eq2, eq3_2point0], (a, b, c))
+    eq4 = df.subs(x, budget_params.zero_year)
+
+    solution_1point7 = sp.solve([eq1, eq2, eq3_1point7, eq4], (a, b, c, d))
+    solution_2point0 = sp.solve([eq1, eq2, eq3_2point0, eq4], (a, b, c, d))
 
     f_solved_1point7 = f.subs(solution_1point7)
     f_solved_2point0 = f.subs(solution_2point0)
@@ -216,17 +253,20 @@ def emission_paths(
     return reduction_paths
 
 
-def emission_reduction(year_range: Tuple[int, int], planned_emissions_aoi: pd.DataFrame) -> pd.DataFrame:
+def emission_reduction(
+    year_range: Tuple[int, int], emissions_aoi: pd.DataFrame, aoi_properties: AoiProperties
+) -> pd.DataFrame:
     """
     Creates a dataframe with three different emission reduction scenarios to meet the goal of 2°C warming.
-
+    :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
     :param year_range: Tuple with start year and end year for emission reduction dataframe
-    :param planned_emissions_aoi: pd.DataFrame with projected yearly CO2 emissions in the AOI
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
     """
     start_year, end_year = year_range
     year_list = list(range(start_year, end_year + 1))
-    current_emission = planned_emissions_aoi.loc[start_year, 'co2_kt_sum']
+    city_name = aoi_properties.name.lower()
+    current_emission = emissions_aoi.loc[emissions_aoi['year'] == start_year, city_name].values[0]
     decrease_scenario = current_emission
     percentage_scenario = current_emission
     bisko_budget_2025_2c_83p = 4357.7  # BISKO budget 2025 to reach 2°C at 83% probability
@@ -343,23 +383,27 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     return fig
 
 
-def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) -> Figure:
+def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, aoi_properties: AoiProperties) -> Figure:
     """
     :param emissions_df: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: Plotly figure with projected yearly emissions of the AOI and alternative reduction paths
     """
     log.debug('Creating line chart with projected yearly emissions of the AOI and alternative reduction paths.')
+    city_name = aoi_properties.name.lower()
 
-    measured = emissions_df[emissions_df['Jahr'] <= AOI_EMISSION_END_YEAR]
-    projected = emissions_df[emissions_df['Jahr'] >= AOI_EMISSION_END_YEAR]
+    max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max() + 5
+
+    measured = emissions_df[(emissions_df['Jahr'] <= AOI_EMISSION_END_YEAR) & (emissions_df['Jahr'] <= max_year)]
+    projected = emissions_df[(emissions_df['Jahr'] >= AOI_EMISSION_END_YEAR) & (emissions_df['Jahr'] <= max_year)]
 
     fig = go.Figure()
 
     fig.add_trace(
         go.Scatter(
             x=measured['Jahr'],
-            y=measured['co2_kt_sum'],
+            y=measured[city_name],
             mode='lines+markers',
             name='Messwerte',
             line=dict(color='#696969'),
@@ -369,7 +413,7 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     fig.add_trace(
         go.Scatter(
             x=projected['Jahr'],
-            y=projected['co2_kt_sum'],
+            y=projected[city_name],
             mode='lines+markers',
             name='Prognose',
             line=dict(color='#B0B0B0'),
@@ -406,9 +450,10 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame) ->
     return fig
 
 
-def get_cumulative_chart(emissions_df: pd.DataFrame) -> Figure:
+def get_cumulative_chart(emissions_df: pd.DataFrame, aoi_properties: AoiProperties) -> Figure:
     """
     :param emissions_df: pd.DataFrame with cumulative emissions in the AOI
+    :param aoi_properties: Class for holding name and ID of the AOI
     :return: Bar chart with cumulative emissions in the AOI
     """
     log.debug('Creating bar chart with cumulative emissions in the AOI.')
@@ -417,11 +462,13 @@ def get_cumulative_chart(emissions_df: pd.DataFrame) -> Figure:
         lambda x: 'Messwerte' if x <= AOI_EMISSION_END_YEAR else 'Prognose'
     )
     colors = {'Messwerte': '#696969', 'Prognose': '#B0B0B0'}
+    city_name = aoi_properties.name.lower()
+    max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max()
 
     fig = go.Figure()
 
     for category in ['Messwerte', 'Prognose']:
-        filtered = emissions_df[emissions_df['Category'] == category]
+        filtered = emissions_df[(emissions_df['Category'] == category) & (emissions_df['Jahr'] <= max_year)]
         fig.add_trace(
             go.Bar(
                 x=filtered['Jahr'],
@@ -498,6 +545,7 @@ def get_artifacts(
     emissions_df: pd.DataFrame,
     reduction_paths: pd.DataFrame,
     emission_reduction_df: pd.DataFrame,
+    aoi_properties: AoiProperties,
 ):
     """
     :param resources: The plugin computation resources
@@ -506,6 +554,7 @@ def get_artifacts(
     :param emissions_df: pd.DataFrame with CO2 emissions of the AOI from pledge_year onwards
     :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     :param emission_reduction_df: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
+    :param aoi_properties: Class for holding name and ID of the AOI
     """
 
     log.debug('Creating methodology description of the plugin as Markdown artifact.')
@@ -523,34 +572,37 @@ def get_artifacts(
     aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
         f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
     ].round(1)
+    aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'].apply(
+        lambda x: int(x) if isinstance(x, (float, int)) else x
+    )
     aoi_bisko_budgets = aoi_bisko_budgets.applymap(
         lambda x: f'{x:.1f}'.replace('.', ',') if isinstance(x, float) else x
     )
     aoi_bisko_budgets.set_index('Temperaturgrenzwert (°C)', inplace=True)
-    table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources)
+    table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources, aoi_properties)
 
     log.debug(
         'Creating simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table '
         'artifact.'
     )
     aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
-    table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources)
+    table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, aoi_properties)
 
     log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
     comparison_chart_data = get_comparison_chart(comparison_chart_df)
-    comparison_chart_artifact = build_budget_comparison_chart_artifact(comparison_chart_data, resources)
+    comparison_chart_artifact = build_budget_comparison_chart_artifact(comparison_chart_data, resources, aoi_properties)
 
     log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
-    time_chart_figure = get_time_chart(emissions_df, reduction_paths)
-    time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources)
+    time_chart_figure = get_time_chart(emissions_df, reduction_paths, aoi_properties)
+    time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources, aoi_properties)
 
     log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
-    cumulative_chart_data = get_cumulative_chart(emissions_df)
-    cumulative_chart_artifact = build_cumulative_chart_artifact(cumulative_chart_data, resources)
+    cumulative_chart_data = get_cumulative_chart(emissions_df, aoi_properties)
+    cumulative_chart_artifact = build_cumulative_chart_artifact(cumulative_chart_data, resources, aoi_properties)
 
     emission_reduction_chart_data = get_emission_reduction_chart(emission_reduction_df)
     emission_reduction_chart_artifact = build_emission_reduction_chart_artifact(
-        emission_reduction_chart_data, resources
+        emission_reduction_chart_data, resources, aoi_properties, aoi_bisko_budgets
     )
 
     return (
