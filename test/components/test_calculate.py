@@ -1,5 +1,6 @@
 from datetime import date
 from plotly.graph_objects import Figure
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -20,11 +21,14 @@ from ghg_budget.components.calculate import (
     get_comparison_chart,
     co2_budget_analysis,
 )
-from ghg_budget.components.data import BudgetParams, NOW_YEAR
+from ghg_budget.components.data import BudgetParams, NOW_YEAR, city_pop_2020
 
 
 def test_co2_budget_analysis():
-    aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df = co2_budget_analysis()
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df = co2_budget_analysis(
+        aoi_properties
+    )
     assert isinstance(aoi_bisko_budgets, pd.DataFrame)
     assert isinstance(comparison_chart_df, pd.DataFrame)
     assert isinstance(emissions_df, pd.DataFrame)
@@ -33,6 +37,7 @@ def test_co2_budget_analysis():
 
 
 def test_calculate_bisko_budgets():
+    budget_params = BudgetParams()
     budget = pd.DataFrame(
         {
             'Temperaturgrenzwert (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
@@ -46,6 +51,8 @@ def test_calculate_bisko_budgets():
         },
         index=[2016, 2017, 2018, 2019, 2020, 2021, 2022],
     )
+    aoi_pop = int(city_pop_2020.loc[city_pop_2020['city_name'] == 'heidelberg', 'pop_2020'].values[0])
+    aoi_pop_share = aoi_pop / budget_params.global_pop
     expected = pd.DataFrame(
         {
             'Temperaturgrenzwert (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
@@ -53,38 +60,39 @@ def test_calculate_bisko_budgets():
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [7049.2, 5756.4, 10927.4, 8988.3, 16744.7, 13512.9],
         },
     )
-    budget_params = BudgetParams()
-    received = calculate_bisko_budgets(budget, emissions, budget_params)
+
+    received = calculate_bisko_budgets(budget, emissions, budget_params, aoi_pop_share)
     pd.testing.assert_frame_equal(received, expected)
 
 
 def test_cumulative_emissions():
     emissions_aoi = pd.DataFrame(
-        {'co2_kt_sum': [1, 1]},
-        index=[1, 2],
+        {
+            'year': [2016, 2017, 2018, 2019],
+            'category': ['estimation', 'estimation', 'projection', 'projection'],
+            'heidelberg': [1, 1, 1, 1],
+        },
     )
-    planned_emissions_aoi = pd.DataFrame(
-        {'co2_kt_sum': [1, 1]},
-        index=[3, 4],
-    )
+
     expected = pd.DataFrame(
         {
-            'co2_kt_sum': [1, 1, 1, 1],
+            'year': [2016, 2017, 2018, 2019],
+            'heidelberg': [1, 1, 1, 1],
             'cumulative_emissions': [1, 2, 3, 4],
         },
-        index=[1, 2, 3, 4],
     )
-    received = cumulative_emissions(emissions_aoi, planned_emissions_aoi)
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    received = cumulative_emissions(emissions_aoi, aoi_properties)
     pd.testing.assert_frame_equal(received, expected)
 
 
 def test_current_budget():
     emissions_df = pd.DataFrame(
         {
-            'co2_kt_sum': [1, 1],
+            'year': [2023, date.today().year],
+            'heidelberg': [1, 1],
             'cumulative_emissions': [1, 2],
         },
-        index=[2023, date.today().year],
     )
     aoi_bisko_budgets = pd.DataFrame(
         {
@@ -107,12 +115,11 @@ def test_current_budget():
 
 def test_comparison_chart():
     emissions_aoi = pd.DataFrame(
-        {'co2_kt_sum': [1, 1]},
-        index=[1, 2],
-    )
-    planned_emissions_aoi = pd.DataFrame(
-        {'co2_kt_sum': [1, 1]},
-        index=[3, 4],
+        {
+            'year': [2016, 2017, 2018, 2019],
+            'category': ['estimation', 'estimation', 'projection', 'projection'],
+            'heidelberg': [1, 1, 1, 1],
+        }
     )
     aoi_bisko_budgets = pd.DataFrame(
         {
@@ -127,7 +134,8 @@ def test_comparison_chart():
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
-    received = comparison_chart_data(emissions_aoi, planned_emissions_aoi, aoi_bisko_budgets)
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    received = comparison_chart_data(emissions_aoi, aoi_bisko_budgets, aoi_properties)
     pd.testing.assert_frame_equal(received, expected)
 
 
@@ -141,10 +149,10 @@ def test_year_budget_spent():
     )
     emissions_df = pd.DataFrame(
         {
-            'co2_kt_sum': [500, 500, 500, 500],
+            'year': [2016, 2017, 2018, 2019],
+            'heidelberg': [500, 500, 500, 500],
             'cumulative_emissions': [500, 1000, 1500, 2000],
         },
-        index=[2016, 2017, 2018, 2019],
     )
     expected = pd.DataFrame(
         {
@@ -189,27 +197,28 @@ def test_emission_paths():
     )
     emissions_table = pd.DataFrame(
         {
-            'co2_kt_sum': [1000],
+            'year': [2016],
+            'heidelberg': [1000],
         },
-        index=[2016],
     )
+    aoi_properties = SimpleNamespace(name='heidelberg')
     budget_params = BudgetParams()
-    reduction_paths = emission_paths(bisko_budget_table, emissions_table, budget_params)
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C'].iloc[0] == 1000.0
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2016, '2.0 °C'].iloc[0] == 1000.0
-    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '1.7 °C'].iloc[0], 2) == 938.37
-    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '2.0 °C'].iloc[0], 2) == 988.28
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '1.7 °C'].iloc[0] == 0.0
-    assert reduction_paths.loc[reduction_paths['Jahr'] == 2040, '2.0 °C'].iloc[0] == 0.0
+    reduction_paths = emission_paths(bisko_budget_table, emissions_table, budget_params, aoi_properties)
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C'].iloc[0]) == 1000.0
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2016, '2.0 °C'].iloc[0]) == 1000.0
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '1.7 °C'].iloc[0], 2) == 956.67
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2017, '2.0 °C'].iloc[0], 2) == 1052.34
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2040, '1.7 °C'].iloc[0]) == 0.0
+    assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2040, '2.0 °C'].iloc[0]) == 0.0
 
 
 def test_emission_reduction():
     emission_reduction_years = (2025, 2027)
     emissions_table = pd.DataFrame(
         {
-            'co2_kt_sum': [3000],
+            'year': [2025],
+            'heidelberg': [3000],
         },
-        index=[2025],
     )
     expected = pd.DataFrame(
         {
@@ -231,8 +240,8 @@ def test_emission_reduction():
             ],
         }
     )
-
-    received = emission_reduction(emission_reduction_years, emissions_table)
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    received = emission_reduction(emission_reduction_years, emissions_table, aoi_properties)
     pd.testing.assert_frame_equal(received, expected)
 
 
@@ -253,7 +262,7 @@ def test_get_comparison_chart():
 def test_get_time_chart():
     emissions_df_data = {
         'Jahr': [2016],
-        'co2_kt_sum': [1000],
+        'heidelberg': [1000],
     }
     reduction_df_data = {
         'Jahr': [2016],
@@ -262,7 +271,8 @@ def test_get_time_chart():
     }
     emissions_df = pd.DataFrame(emissions_df_data)
     reduction_df = pd.DataFrame(reduction_df_data)
-    received = get_time_chart(emissions_df, reduction_df)
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    received = get_time_chart(emissions_df, reduction_df, aoi_properties)
     assert isinstance(received, Figure)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
 
@@ -270,10 +280,12 @@ def test_get_time_chart():
 def test_get_cumulative_chart():
     emissions_df_data = {
         'Jahr': [2016],
+        'heidelberg': [1000],
         'cumulative_emissions': [1000],
     }
     emissions_df = pd.DataFrame(emissions_df_data)
-    received = get_cumulative_chart(emissions_df)
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    received = get_cumulative_chart(emissions_df, aoi_properties)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
     np.testing.assert_array_equal(received['data'][0]['y'], ([1000]))
 

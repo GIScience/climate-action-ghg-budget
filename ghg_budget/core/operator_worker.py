@@ -71,17 +71,19 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
-        if aoi_properties.name not in ['Heidelberg', 'Demo']:
+        if aoi_properties.name not in ['Heidelberg', 'Bonn', 'Demo']:
             raise ClimatoologyUserError(
-                'Das CO₂-Budget-Tool funktioniert momentan nur für Heidelberg. Bitte wählen Sie die Stadt Heidelberg als Untersuchungsgebiet aus'
+                'Das CO₂-Budget-Tool funktioniert momentan nur für Bonn und Heidelberg. Bitte wählen Sie Bonn oder Heidelberg als Untersuchungsgebiet aus'
             )
+        if aoi_properties.name == 'Demo':
+            aoi_properties.name = 'Heidelberg'
         (
             aoi_bisko_budgets,
             comparison_chart_df,
             emissions_df,
             reduction_paths,
             emission_reduction_df,
-        ) = co2_budget_analysis()
+        ) = co2_budget_analysis(aoi_properties)
 
         (
             markdown_artifact,
@@ -93,7 +95,13 @@ class GHGBudget(BaseOperator[ComputeInput]):
             cumulative_chart_artifact,
             emission_reduction_chart_artifact,
         ) = get_artifacts(
-            resources, aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df
+            resources,
+            aoi_bisko_budgets,
+            comparison_chart_df,
+            emissions_df,
+            reduction_paths,
+            emission_reduction_df,
+            aoi_properties,
         )
 
         if params.level_of_detail == DetailOption.SIMPLE:
