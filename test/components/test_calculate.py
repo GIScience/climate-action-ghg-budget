@@ -26,14 +26,22 @@ from ghg_budget.components.data import BudgetParams, NOW_YEAR, city_pop_2020
 
 def test_co2_budget_analysis():
     aoi_properties = SimpleNamespace(name='heidelberg')
-    aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df = co2_budget_analysis(
-        aoi_properties
-    )
+    (
+        aoi_bisko_budgets,
+        comparison_chart_df,
+        emissions_df,
+        reduction_paths,
+        emission_reduction_df,
+        linear_decrease,
+        percentage_decrease,
+    ) = co2_budget_analysis(aoi_properties)
     assert isinstance(aoi_bisko_budgets, pd.DataFrame)
     assert isinstance(comparison_chart_df, pd.DataFrame)
     assert isinstance(emissions_df, pd.DataFrame)
     assert isinstance(reduction_paths, pd.DataFrame)
     assert isinstance(emission_reduction_df, pd.DataFrame)
+    assert isinstance(linear_decrease, int)
+    assert isinstance(percentage_decrease, int)
 
 
 def test_calculate_bisko_budgets():
@@ -217,7 +225,13 @@ def test_emission_reduction():
     emissions_table = pd.DataFrame(
         {
             'year': [2025],
-            'heidelberg': [3000],
+            'heidelberg': [700],
+        },
+    )
+    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_bisko_budgets = pd.DataFrame(
+        {
+            'BISKO CO₂-Budget 2025 (1000 Tonnen)': [5000.0, 4000],
         },
     )
     expected = pd.DataFrame(
@@ -227,27 +241,28 @@ def test_emission_reduction():
                 2026,
                 2027,
             ],
-            'decrease_65kton_per_year': [3000.0, 2935.0, 2870.0],
-            'decrease_17%_per_year': [
-                3000.0,
-                2490.0,
-                2066.7,
+            'decrease_linear': [700.0, 633.0, 566.0],
+            'decrease_percentage': [
+                700,
+                577.5,
+                476.4,
             ],
             'business_as_usual': [
-                3000.0,
-                0.0,
-                np.nan,
+                700.0,
+                700.0,
+                700.0,
             ],
         }
     )
-    aoi_properties = SimpleNamespace(name='heidelberg')
-    received = emission_reduction(emission_reduction_years, emissions_table, aoi_properties)
-    pd.testing.assert_frame_equal(received, expected)
+    received = emission_reduction(emission_reduction_years, emissions_table, aoi_properties, aoi_bisko_budgets)
+    pd.testing.assert_frame_equal(received[0], expected)
+    assert received[1] == 67
+    assert received[2] == 17
 
 
 def test_get_comparison_chart():
     comparison_chart_data = {
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
+        'BISKO CO₂-Budget 2016 (1000 Tonnen)': [10, 20, 30, 20, 20],
         'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Bisher verbraucht', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
@@ -272,7 +287,8 @@ def test_get_time_chart():
     emissions_df = pd.DataFrame(emissions_df_data)
     reduction_df = pd.DataFrame(reduction_df_data)
     aoi_properties = SimpleNamespace(name='heidelberg')
-    received = get_time_chart(emissions_df, reduction_df, aoi_properties)
+    aoi_emission_end_year = 2022
+    received = get_time_chart(emissions_df, reduction_df, aoi_properties, aoi_emission_end_year)
     assert isinstance(received, Figure)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
 
@@ -285,7 +301,8 @@ def test_get_cumulative_chart():
     }
     emissions_df = pd.DataFrame(emissions_df_data)
     aoi_properties = SimpleNamespace(name='heidelberg')
-    received = get_cumulative_chart(emissions_df, aoi_properties)
+    aoi_emission_end_year = 2022
+    received = get_cumulative_chart(emissions_df, aoi_properties, aoi_emission_end_year)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))
     np.testing.assert_array_equal(received['data'][0]['y'], ([1000]))
 
@@ -293,11 +310,13 @@ def test_get_cumulative_chart():
 def test_get_emission_reduction_chart():
     emission_reduction_df_data = {
         'Jahr': [2025],
-        'decrease_65kton_per_year': [1000],
-        'decrease_17%_per_year': [1000],
+        'decrease_linear': [1000],
+        'decrease_percentage': [1000],
         'business_as_usual': [1000],
     }
+    linear_decrease = 67
+    percentage_decrease = 17
     emission_reduction_df = pd.DataFrame(emission_reduction_df_data)
-    received = get_emission_reduction_chart(emission_reduction_df)
+    received = get_emission_reduction_chart(emission_reduction_df, linear_decrease, percentage_decrease)
     assert isinstance(received, Figure)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2025]))

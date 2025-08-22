@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 from plotly.graph_objects import Figure
 from typing import Tuple
@@ -15,7 +16,7 @@ from ghg_budget.components.data import (
     BudgetParams,
     GHG_DATA,
     NOW_YEAR,
-    AOI_EMISSION_END_YEAR,
+    aoi_emission_end_years,
     emissions_aoi,
     city_pop_2020,
 )
@@ -40,7 +41,6 @@ def co2_budget_analysis(aoi_properties: AoiProperties):
     log.debug('Starting CO2 budget analysis...')
     city_name = aoi_properties.name.lower()
     aoi_pop = int(city_pop_2020.loc[city_pop_2020['city_name'] == city_name, 'pop_2020'].values[0])
-
     budget_params = BudgetParams()
     aoi_pop_share = aoi_pop / budget_params.global_pop
 
@@ -57,9 +57,19 @@ def co2_budget_analysis(aoi_properties: AoiProperties):
         .fillna('wird nicht aufgebraucht')
     )
     reduction_paths = emission_paths(aoi_bisko_budgets, emissions_aoi, budget_params, aoi_properties)
-    emission_reduction_df = emission_reduction(GHG_DATA.emission_reduction_years, emissions_aoi, aoi_properties)
+    emission_reduction_df, linear_decrease, percentage_decrease = emission_reduction(
+        GHG_DATA.emission_reduction_years, emissions_aoi, aoi_properties, aoi_bisko_budgets
+    )
     log.debug('Finished CO2 budget analysis')
-    return aoi_bisko_budgets, comparison_chart_df, emissions_df, reduction_paths, emission_reduction_df
+    return (
+        aoi_bisko_budgets,
+        comparison_chart_df,
+        emissions_df,
+        reduction_paths,
+        emission_reduction_df,
+        linear_decrease,
+        percentage_decrease,
+    )
 
 
 def calculate_bisko_budgets(
@@ -254,14 +264,20 @@ def emission_paths(
 
 
 def emission_reduction(
-    year_range: Tuple[int, int], emissions_aoi: pd.DataFrame, aoi_properties: AoiProperties
-) -> pd.DataFrame:
+    year_range: Tuple[int, int],
+    emissions_aoi: pd.DataFrame,
+    aoi_properties: AoiProperties,
+    aoi_bisko_budgets: pd.DataFrame,
+) -> tuple[pd.DataFrame, int, int]:
     """
     Creates a dataframe with three different emission reduction scenarios to meet the goal of 2°C warming.
+    :param aoi_bisko_budgets: pd.DataFrame with BISKO CO2 budgets of the AOI
     :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
     :param year_range: Tuple with start year and end year for emission reduction dataframe
     :param aoi_properties: Class for holding name and ID of the AOI
     :return: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
+    :return: Yearly decrease of CO2 emissions [kt] in the linear decrease scenario
+    :return: Yearly decrease of CO2 emissions [%] in the percentage decrease scenario
     """
     start_year, end_year = year_range
     year_list = list(range(start_year, end_year + 1))
@@ -269,27 +285,27 @@ def emission_reduction(
     current_emission = emissions_aoi.loc[emissions_aoi['year'] == start_year, city_name].values[0]
     decrease_scenario = current_emission
     percentage_scenario = current_emission
-    bisko_budget_2025_2c_83p = 4357.7  # BISKO budget 2025 to reach 2°C at 83% probability
+    bisko_budget_2025_2c_83p = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
     emission_sum = current_emission
+    linear_decrease = int(current_emission**2 / (2 * bisko_budget_2025_2c_83p - current_emission))
+    percentage_decrease = int(current_emission / bisko_budget_2025_2c_83p * 100)
     threshold_exceeded = False
     emission_reduction_df = pd.DataFrame({'Jahr': year_list})
-    emission_reduction_df.loc[0, 'decrease_65kton_per_year'] = current_emission
-    emission_reduction_df.loc[0, 'decrease_17%_per_year'] = current_emission
+    emission_reduction_df.loc[0, 'decrease_linear'] = current_emission
+    emission_reduction_df.loc[0, 'decrease_percentage'] = current_emission
     emission_reduction_df.loc[0, 'business_as_usual'] = current_emission
 
     for year in year_list[1:]:
         # Linear emission decrease scenario
-        decrease_scenario -= 65
+        decrease_scenario -= linear_decrease
         if decrease_scenario > 0:
-            emission_reduction_df.loc[
-                emission_reduction_df['Jahr'] == year, 'decrease_65kton_per_year'
-            ] = decrease_scenario
+            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = decrease_scenario
         else:
-            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_65kton_per_year'] = None
+            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = None
 
         # Percentage emission decrease scenario
-        percentage_scenario *= 0.83
-        emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_17%_per_year'] = round(
+        percentage_scenario *= 1 - current_emission / bisko_budget_2025_2c_83p
+        emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_percentage'] = round(
             percentage_scenario, 1
         )
 
@@ -304,7 +320,7 @@ def emission_reduction(
         else:
             emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = None
 
-    return emission_reduction_df
+    return emission_reduction_df, linear_decrease, percentage_decrease
 
 
 def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
@@ -367,9 +383,23 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
         ].values[0]
     )
     y_min = 0
-    y_max = all_y.max()
-    tick_step = 5000
-    tickvals = list(range(y_min, int(y_max) + tick_step, tick_step))
+    max_y = all_y.max()
+
+    def choose_step(y_max):
+        raw_step = y_max / 10
+        magnitude = 10 ** int(math.floor(math.log10(raw_step)))
+        norm = raw_step / magnitude
+        if norm < 2:
+            step = 1 * magnitude
+        elif norm < 5:
+            step = 2 * magnitude
+        else:
+            step = 5 * magnitude
+        return int(step)
+
+    tick_step = choose_step(max_y)
+
+    tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
     ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
 
     fig.update_layout(
@@ -383,8 +413,11 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     return fig
 
 
-def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, aoi_properties: AoiProperties) -> Figure:
+def get_time_chart(
+    emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, aoi_properties: AoiProperties, aoi_emission_end_year: int
+) -> Figure:
     """
+    :param aoi_emission_end_year: Last year for which emission data is available for the AOI
     :param emissions_df: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     :param reduction_paths: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     :param aoi_properties: Class for holding name and ID of the AOI
@@ -395,8 +428,8 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, ao
 
     max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max() + 5
 
-    measured = emissions_df[(emissions_df['Jahr'] <= AOI_EMISSION_END_YEAR) & (emissions_df['Jahr'] <= max_year)]
-    projected = emissions_df[(emissions_df['Jahr'] >= AOI_EMISSION_END_YEAR) & (emissions_df['Jahr'] <= max_year)]
+    measured = emissions_df[(emissions_df['Jahr'] <= aoi_emission_end_year) & (emissions_df['Jahr'] <= max_year)]
+    projected = emissions_df[(emissions_df['Jahr'] >= aoi_emission_end_year) & (emissions_df['Jahr'] <= max_year)]
 
     fig = go.Figure()
 
@@ -450,8 +483,11 @@ def get_time_chart(emissions_df: pd.DataFrame, reduction_paths: pd.DataFrame, ao
     return fig
 
 
-def get_cumulative_chart(emissions_df: pd.DataFrame, aoi_properties: AoiProperties) -> Figure:
+def get_cumulative_chart(
+    emissions_df: pd.DataFrame, aoi_properties: AoiProperties, aoi_emission_end_year: int
+) -> Figure:
     """
+    :param aoi_emission_end_year: Last year for which emission data is available for the AOI
     :param emissions_df: pd.DataFrame with cumulative emissions in the AOI
     :param aoi_properties: Class for holding name and ID of the AOI
     :return: Bar chart with cumulative emissions in the AOI
@@ -459,7 +495,7 @@ def get_cumulative_chart(emissions_df: pd.DataFrame, aoi_properties: AoiProperti
     log.debug('Creating bar chart with cumulative emissions in the AOI.')
 
     emissions_df['Category'] = emissions_df['Jahr'].apply(
-        lambda x: 'Messwerte' if x <= AOI_EMISSION_END_YEAR else 'Prognose'
+        lambda x: 'Messwerte' if x <= aoi_emission_end_year else 'Prognose'
     )
     colors = {'Messwerte': '#696969', 'Prognose': '#B0B0B0'}
     city_name = aoi_properties.name.lower()
@@ -480,9 +516,23 @@ def get_cumulative_chart(emissions_df: pd.DataFrame, aoi_properties: AoiProperti
 
     all_y = emissions_df['cumulative_emissions'].round(0)
     y_min = 0
-    y_max = all_y.max()
-    tick_step = 5000
-    tickvals = list(range(y_min, int(y_max) + tick_step, tick_step))
+    max_y = all_y.max()
+
+    def choose_step(y_max):
+        raw_step = y_max / 10
+        magnitude = 10 ** int(math.floor(math.log10(raw_step)))
+        norm = raw_step / magnitude
+        if norm < 2:
+            step = 1 * magnitude
+        elif norm < 5:
+            step = 2 * magnitude
+        else:
+            step = 5 * magnitude
+        return int(step)
+
+    tick_step = choose_step(max_y)
+
+    tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
     ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
 
     fig.update_layout(
@@ -495,8 +545,12 @@ def get_cumulative_chart(emissions_df: pd.DataFrame, aoi_properties: AoiProperti
     return fig
 
 
-def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
+def get_emission_reduction_chart(
+    emission_reduction_df: pd.DataFrame, linear_decrease: int, percentage_decrease: int
+) -> Figure:
     """
+    :param percentage_decrease: Yearly decrease of CO2 emissions [%] in the percentage decrease scenario
+    :param linear_decrease: Yearly decrease of CO2 emissions [kt] in the linear decrease scenario
     :param emission_reduction_df: pd.DataFrame with three different emission reduction scenarios to meet the goal of 2°C warming
     :return: Plotly figure with three different emission reduction scenarios to meet the goal of 2°C warming
     """
@@ -505,18 +559,18 @@ def get_emission_reduction_chart(emission_reduction_df: pd.DataFrame) -> Figure:
     fig.add_trace(
         go.Scatter(
             x=emission_reduction_df['Jahr'],
-            y=emission_reduction_df['decrease_17%_per_year'],
+            y=emission_reduction_df['decrease_percentage'],
             mode='lines+markers',
-            name='Emissionen sinken um<br>17 % pro Jahr',
+            name=f'Emissionen sinken um<br>{percentage_decrease} % pro Jahr',
             line=dict(color='blue'),
         )
     )
     fig.add_trace(
         go.Scatter(
             x=emission_reduction_df['Jahr'],
-            y=emission_reduction_df['decrease_65kton_per_year'],
+            y=emission_reduction_df['decrease_linear'],
             mode='lines+markers',
-            name='Emissionen sinken um<br>65.000 Tonnen pro Jahr',
+            name=f'Emissionen sinken um<br>{linear_decrease}.000 Tonnen pro Jahr',
             line=dict(color='magenta'),
         )
     )
@@ -546,8 +600,12 @@ def get_artifacts(
     reduction_paths: pd.DataFrame,
     emission_reduction_df: pd.DataFrame,
     aoi_properties: AoiProperties,
+    linear_decrease: int,
+    percentage_decrease: int,
 ):
     """
+    :param percentage_decrease: Yearly decrease of CO2 emissions [%] in the percentage decrease scenario
+    :param linear_decrease: Yearly decrease of CO2 emissions [kt] in the linear decrease scenario
     :param resources: The plugin computation resources
     :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
     :param comparison_chart_df: Dataframe with different GHG budgets and planned GHG emissions
@@ -557,6 +615,10 @@ def get_artifacts(
     :param aoi_properties: Class for holding name and ID of the AOI
     """
 
+    city_name = aoi_properties.name.lower()
+    aoi_emission_end_year = aoi_emission_end_years.loc[
+        aoi_emission_end_years['city_name'] == city_name, 'end_year'
+    ].values[0]
     log.debug('Creating methodology description of the plugin as Markdown artifact.')
     text = (PROJECT_DIR / 'resources/info/methodology.md').read_text()
     markdown_artifact = build_methodology_description_artifact(text, resources)
@@ -590,19 +652,26 @@ def get_artifacts(
 
     log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
     comparison_chart_data = get_comparison_chart(comparison_chart_df)
-    comparison_chart_artifact = build_budget_comparison_chart_artifact(comparison_chart_data, resources, aoi_properties)
+    comparison_chart_artifact = build_budget_comparison_chart_artifact(
+        comparison_chart_data, resources, aoi_properties, aoi_emission_end_year
+    )
 
     log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
-    time_chart_figure = get_time_chart(emissions_df, reduction_paths, aoi_properties)
-    time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources, aoi_properties)
+    time_chart_figure = get_time_chart(emissions_df, reduction_paths, aoi_properties, aoi_emission_end_year)
+    time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources, aoi_properties, aoi_emission_end_year)
 
     log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
-    cumulative_chart_data = get_cumulative_chart(emissions_df, aoi_properties)
-    cumulative_chart_artifact = build_cumulative_chart_artifact(cumulative_chart_data, resources, aoi_properties)
+    cumulative_chart_data = get_cumulative_chart(emissions_df, aoi_properties, aoi_emission_end_year)
+    cumulative_chart_artifact = build_cumulative_chart_artifact(
+        cumulative_chart_data, resources, aoi_properties, aoi_emission_end_year
+    )
 
-    emission_reduction_chart_data = get_emission_reduction_chart(emission_reduction_df)
+    log.debug('Creating line chart with possible emission reduction paths in the AOI as chart artifact.')
+    emission_reduction_chart_data = get_emission_reduction_chart(
+        emission_reduction_df, linear_decrease, percentage_decrease
+    )
     emission_reduction_chart_artifact = build_emission_reduction_chart_artifact(
-        emission_reduction_chart_data, resources, aoi_properties, aoi_bisko_budgets
+        emission_reduction_chart_data, resources, aoi_properties, aoi_bisko_budgets, percentage_decrease
     )
 
     return (

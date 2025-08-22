@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 emissions_aoi = pd.read_csv('./resources/min_co2_kt_sum.csv')
 city_pop_2020 = pd.read_csv('./resources/aoi_pop_now.csv')
+aoi_emission_end_years = pd.read_csv('./resources/aoi_emission_end_year.csv')
 
 
 @dataclass
@@ -75,4 +76,3 @@ class BudgetParams(BaseModel):
 
 
 NOW_YEAR = datetime.date.today().year
-AOI_EMISSION_END_YEAR = 2022  # Most recent year for which we have emission estimates for Heidelberg
