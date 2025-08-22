@@ -1,7 +1,7 @@
 # <img src="resources/info/icon.jpg" width="5%"> GHG Budget
 
 The GHG Budget Tool calculates the CO₂ budget for the selected city or municipality that may be emitted in order to achieve the climate targets that were agreed at the COP 21 in Paris at the end of 2015.
-The demo version of the tool is initially limited to Heidelberg.
+The tool is currently limited to the following cities: Berlin, Bonn, Heidelberg, Karlsruhe.
 However, it is to be extended to other cities in the future.
 
 ## Preparation

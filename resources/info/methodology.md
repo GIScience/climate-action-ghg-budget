@@ -28,11 +28,15 @@ Entsprechend dieser Überlegung sowie der Annahme, dass der Anteil der BISKO-Emi
 # Datengrundlage
 
 Die Berechnung des CO₂-Budgets basiert auf Daten zum globalen CO₂-Budget vom IPCC.
-Die jährlichen Emissionen der Stadt Heidelberg wurden vom Institut für Umweltforschung (ifeu) berechnet.
-Die Emissionsprognosen für Heidelberg auf Grundlage der bereits beschlossenen Maßnahmen kommen von der Stadt Heidelberg und sind auch [hier](https://stdhd.de/s/klimaschutzplan) einsehbar.
 
-Die jährlichen Emissionen der Stadt Bonn wurden von der Stadt Bonn berechnet und können [hier](https://opendata.bonn.de/dataset/treibhausgasbilanz) abgerufen werden.
-Die Emissionsprognosen für Bonn auf Grundlage der bereits beschlossenen Maßnahmen kommen ebenfalls von der Stadt Bonn und sind auch [hier](https://superset.udm-mvp.bonn.de/superset/dashboard/klimakompass/) einsehbar.
+## Emissionsdaten
+
+| Stadt      | Quelle für jährliche Emissionen                                   | Quelle für Emissionsprognosen |
+|------------|-------------------------------------------------------------------|-------------------|
+| Berlin     | [Stadt Berlin](https://dibek.berlin.de/?lang=de#caption_c2c268)   | eigene Berechnung |
+| Bonn       | [Stadt Bonn](https://opendata.bonn.de/dataset/treibhausgasbilanz) | [Stadt Bonn](https://superset.udm-mvp.bonn.de/superset/dashboard/klimakompass/) |
+| Heidelberg | [ifeu gGmbH](https://www.heidelberg.de/site/Heidelberg2021/get/documents_E621906288/heidelberg/Objektdatenbank/31/PDF/Energie%20und%20Klimaschutz/31_pdf_CO2-Bilanz_Heidelberg_2022-2023.pdf) | [Stadt Heidelberg](https://stdhd.de/s/klimaschutzplan) |
+| Karlsruhe  | [Stadt Karlsruhe](https://transparenz.karlsruhe.de/dataset/treibhausgasbilanz-karlsruhe) | eigene Berechnung |
 
 Auf Anfrage teilen wir sehr gerne die Daten, die wir zur Berechnung des CO₂-Budgets verwendet haben.
 Bitte kontaktieren Sie bei Interesse Kirsten von Elverfeldt per E-Mail: [kirsten.vonelverfeldt@heigit.org](mailto:kirsten.vonelverfeldt@heigit.org)

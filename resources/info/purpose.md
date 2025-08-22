@@ -1,3 +1,3 @@
 Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.
-In der Erstversion ist das Tool zunächst auf Bonn und Heidelberg beschränkt.
+Zurzeit ist das Tool auf die folgenden Städte beschränkt: Berlin, Bonn, Heidelberg, Karlsruhe.
 Bei Interesse kann es auf weitere Städte ausgeweitet werden.

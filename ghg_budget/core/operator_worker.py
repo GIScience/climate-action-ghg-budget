@@ -72,9 +72,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
-        if aoi_properties.name not in ['Heidelberg', 'Bonn', 'Demo']:
+        if aoi_properties.name not in ['Berlin', 'Bonn', 'Demo', 'Heidelberg', 'Karlsruhe']:
             raise ClimatoologyUserError(
-                'Das CO₂-Budget-Tool funktioniert momentan nur für Bonn und Heidelberg. Bitte wählen Sie Bonn oder Heidelberg als Untersuchungsgebiet aus'
+                'Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: Berlin, Bonn, Heidelberg, Karlsruhe. Bitte wählen Sie eine dieser Städte als Untersuchungsgebiet aus'
             )
         if aoi_properties.name == 'Demo':
             aoi_properties.name = 'Heidelberg'
@@ -84,6 +84,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
             emissions_df,
             reduction_paths,
             emission_reduction_df,
+            linear_decrease,
+            percentage_decrease,
         ) = co2_budget_analysis(aoi_properties)
 
         (
@@ -103,6 +105,8 @@ class GHGBudget(BaseOperator[ComputeInput]):
             reduction_paths,
             emission_reduction_df,
             aoi_properties,
+            linear_decrease,
+            percentage_decrease,
         )
 
         if params.level_of_detail == DetailOption.SIMPLE:

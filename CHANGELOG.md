@@ -12,7 +12,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 ### Changed
 - Change icon ([#49](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/49))
 - State data sources more clearly, highlight more clearly that Paris agreement aims to limit warming to well below 2°C ([#49](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/49))
-- Scale up the plugin for more cities, for now only Bonn was added ([#48](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/48))
+- Scale up the plugin for more cities: Berlin, Bonn, Karlsruhe ([#48](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/48))
 
 ## [1.0.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.0.0)
 
