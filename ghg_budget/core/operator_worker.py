@@ -63,7 +63,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
 
         return info
 
-    def compute(
+    def compute(  # dead: disable
         self,
         resources: ComputationResources,
         aoi: shapely.MultiPolygon,

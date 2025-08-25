@@ -89,9 +89,9 @@ def calculate_bisko_budgets(
     )
     budget_glob['budget_emission_sum'] = budget_glob['budget_glob'] + budget_glob['emission_sum']
     budget_glob['budget_aoi'] = budget_glob['budget_emission_sum'] * aoi_pop_share
-    assert (
-        0 < budget_params.bisko_factor < 1
-    ), 'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
+    assert 0 < budget_params.bisko_factor < 1, (
+        'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
+    )
     budget_glob['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = budget_glob['budget_aoi'] * budget_params.bisko_factor
     aoi_bisko = budget_glob[['Temperaturgrenzwert (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
     return aoi_bisko
