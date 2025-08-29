@@ -72,9 +72,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[_Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
-        if aoi_properties.name not in ['Berlin', 'Bonn', 'Demo', 'Heidelberg', 'Karlsruhe']:
+        if aoi_properties.name not in ['Berlin', 'Bonn', 'Demo', 'Hamburg', 'Heidelberg', 'Karlsruhe']:
             raise ClimatoologyUserError(
-                'Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: Berlin, Bonn, Heidelberg, Karlsruhe. Bitte wählen Sie eine dieser Städte als Untersuchungsgebiet aus'
+                'Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe. Bitte wählen Sie eine dieser Städte als Untersuchungsgebiet aus'
             )
         if aoi_properties.name == 'Demo':
             aoi_properties.name = 'Heidelberg'

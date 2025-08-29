@@ -35,6 +35,7 @@ Die Berechnung des CO₂-Budgets basiert auf Daten zum globalen CO₂-Budget vom
 |------------|-------------------------------------------------------------------|-------------------|
 | Berlin     | [Stadt Berlin](https://dibek.berlin.de/?lang=de#caption_c2c268)   | eigene Berechnung |
 | Bonn       | [Stadt Bonn](https://opendata.bonn.de/dataset/treibhausgasbilanz) | [Stadt Bonn](https://superset.udm-mvp.bonn.de/superset/dashboard/klimakompass/) |
+| Hamburg    | [Stadt Hamburg](https://www.hamburg.de/politik-und-verwaltung/behoerden/bukea/themen/klima/klimaschutz-klimaplan/co2-bilanz-hh-2023-169240) | eigene Berechnung |
 | Heidelberg | [ifeu gGmbH](https://www.heidelberg.de/site/Heidelberg2021/get/documents_E621906288/heidelberg/Objektdatenbank/31/PDF/Energie%20und%20Klimaschutz/31_pdf_CO2-Bilanz_Heidelberg_2022-2023.pdf) | [Stadt Heidelberg](https://stdhd.de/s/klimaschutzplan) |
 | Karlsruhe  | [Stadt Karlsruhe](https://transparenz.karlsruhe.de/dataset/treibhausgasbilanz-karlsruhe) | eigene Berechnung |
 
