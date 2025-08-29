@@ -93,7 +93,9 @@ def calculate_bisko_budgets(
         'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
     )
     budget_glob['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = budget_glob['budget_aoi'] * budget_params.bisko_factor
-    aoi_bisko = budget_glob[['Temperaturgrenzwert (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
+    aoi_bisko = budget_glob[
+        ['Temperaturgrenzwert (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']
+    ].copy()
     return aoi_bisko
 
 
@@ -173,7 +175,7 @@ def comparison_chart_data(
     projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['year', city_name]].copy()
     planned_emissions = projection[city_name].sum()
     aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %'].reset_index()
-    comparison_chart_df = aoi_bisko_budgets[['Temperaturgrenzwert (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']]
+    comparison_chart_df = aoi_bisko_budgets[['Temperaturgrenzwert (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']].copy()
     comparison_chart_df.loc[len(comparison_chart_df)] = [0, estimate_emissions]
     comparison_chart_df.loc[len(comparison_chart_df)] = [-1, planned_emissions]
     comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
@@ -385,18 +387,6 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     y_min = 0
     max_y = all_y.max()
 
-    def choose_step(y_max):
-        raw_step = y_max / 10
-        magnitude = 10 ** int(math.floor(math.log10(raw_step)))
-        norm = raw_step / magnitude
-        if norm < 2:
-            step = 1 * magnitude
-        elif norm < 5:
-            step = 2 * magnitude
-        else:
-            step = 5 * magnitude
-        return int(step)
-
     tick_step = choose_step(max_y)
 
     tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
@@ -518,18 +508,6 @@ def get_cumulative_chart(
     y_min = 0
     max_y = all_y.max()
 
-    def choose_step(y_max):
-        raw_step = y_max / 10
-        magnitude = 10 ** int(math.floor(math.log10(raw_step)))
-        norm = raw_step / magnitude
-        if norm < 2:
-            step = 1 * magnitude
-        elif norm < 5:
-            step = 2 * magnitude
-        else:
-            step = 5 * magnitude
-        return int(step)
-
     tick_step = choose_step(max_y)
 
     tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
@@ -592,6 +570,19 @@ def get_emission_reduction_chart(
     return fig
 
 
+def choose_step(y_max):
+    raw_step = y_max / 10
+    magnitude = 10 ** int(math.floor(math.log10(raw_step)))
+    norm = raw_step / magnitude
+    if norm < 2:
+        step = 1 * magnitude
+    elif norm < 5:
+        step = 2 * magnitude
+    else:
+        step = 5 * magnitude
+    return int(step)
+
+
 def get_artifacts(
     resources: ComputationResources,
     aoi_bisko_budgets: pd.DataFrame,
@@ -637,9 +628,7 @@ def get_artifacts(
     aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'].apply(
         lambda x: int(x) if isinstance(x, (float, int)) else x
     )
-    aoi_bisko_budgets = aoi_bisko_budgets.applymap(
-        lambda x: f'{x:.1f}'.replace('.', ',') if isinstance(x, float) else x
-    )
+    aoi_bisko_budgets = aoi_bisko_budgets.map(lambda x: f'{x:.1f}'.replace('.', ',') if isinstance(x, float) else x)
     aoi_bisko_budgets.set_index('Temperaturgrenzwert (°C)', inplace=True)
     table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources, aoi_properties)
 
