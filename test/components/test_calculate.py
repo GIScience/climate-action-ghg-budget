@@ -20,6 +20,7 @@ from ghg_budget.components.calculate import (
     get_emission_reduction_chart,
     get_comparison_chart,
     co2_budget_analysis,
+    choose_step,
 )
 from ghg_budget.components.data import BudgetParams, NOW_YEAR, city_pop_2020
 
@@ -174,6 +175,33 @@ def test_year_budget_spent():
     pd.testing.assert_frame_equal(received[0], expected)
 
 
+def test_year_budget_spent_budget_not_spent():
+    aoi_bisko_budgets = pd.DataFrame(
+        {
+            'Temperaturgrenzwert (°C)': [1.5],
+            'Wahrscheinlichkeit': ['67 %'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250],
+        }
+    )
+    emissions_df = pd.DataFrame(
+        {
+            'year': [2016, 2017, 2018, 2019],
+            'heidelberg': [200, 200, 200, 200],
+            'cumulative_emissions': [200, 400, 600, 800],
+        },
+    )
+    expected = pd.DataFrame(
+        {
+            'Temperaturgrenzwert (°C)': [1.5],
+            'Wahrscheinlichkeit': ['67 %'],
+            'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250],
+            'CO₂-Budget aufgebraucht (Jahr)': [None],
+        }
+    )
+    received = year_budget_spent(aoi_bisko_budgets, emissions_df)
+    pd.testing.assert_frame_equal(received[0], expected)
+
+
 def test_simplify_table():
     aoi_bisko_budgets = pd.DataFrame(
         {
@@ -320,3 +348,12 @@ def test_get_emission_reduction_chart():
     received = get_emission_reduction_chart(emission_reduction_df, linear_decrease, percentage_decrease)
     assert isinstance(received, Figure)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2025]))
+
+
+def test_choose_step():
+    y_max_list = [10, 800, 3000]
+    step_list = []
+    for y_max in y_max_list:
+        step = choose_step(y_max)
+        step_list.append(step)
+    assert step_list == [1, 50, 200]
