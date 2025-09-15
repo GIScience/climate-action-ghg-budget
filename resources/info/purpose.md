@@ -1,3 +1,3 @@
-Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.
-Zurzeit ist das Tool auf die folgenden Städte beschränkt: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe.
-Bei Interesse kann es auf weitere Städte ausgeweitet werden.
+Städtische CO₂-Budgets sind zurzeit nur für Berlin, Bonn, Hamburg, Heidelberg und Karlsruhe von uns berechnet worden.
+Städtische CO₂-Budgets sind relevant für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.
+Bei Interesse können wir prüfen, ob eine Berechnung für die Stadt Ihrer Wahl möglich ist.

@@ -89,7 +89,6 @@ class GHGBudget(BaseOperator[ComputeInput]):
         ) = co2_budget_analysis(aoi_properties)
 
         (
-            markdown_artifact,
             markdown_simple_artifact,
             table_artifact,
             table_simple_artifact,
@@ -117,7 +116,6 @@ class GHGBudget(BaseOperator[ComputeInput]):
             ]
         else:
             artifacts = [
-                markdown_artifact,
                 table_artifact,
                 comparison_chart_artifact,
                 time_chart_artifact,

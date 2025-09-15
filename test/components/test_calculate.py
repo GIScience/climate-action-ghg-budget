@@ -41,7 +41,7 @@ def test_co2_budget_analysis():
     assert isinstance(emissions_df, pd.DataFrame)
     assert isinstance(reduction_paths, pd.DataFrame)
     assert isinstance(emission_reduction_df, pd.DataFrame)
-    assert isinstance(linear_decrease, int)
+    assert isinstance(linear_decrease, float)
     assert isinstance(percentage_decrease, int)
 
 
@@ -139,7 +139,7 @@ def test_comparison_chart():
     )
     expected = pd.DataFrame(
         {
-            'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Bisher verbraucht', 'Prognose'],
+            'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Berichtet', 'Prognose'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
@@ -269,7 +269,7 @@ def test_emission_reduction():
                 2026,
                 2027,
             ],
-            'decrease_linear': [700.0, 633.0, 566.0],
+            'decrease_linear': [700.0, 630.0, 560.0],
             'decrease_percentage': [
                 700,
                 577.5,
@@ -284,21 +284,21 @@ def test_emission_reduction():
     )
     received = emission_reduction(emission_reduction_years, emissions_table, aoi_properties, aoi_bisko_budgets)
     pd.testing.assert_frame_equal(received[0], expected)
-    assert received[1] == 67
+    assert received[1] == 70.0
     assert received[2] == 17
 
 
 def test_get_comparison_chart():
     comparison_chart_data = {
         'BISKO CO₂-Budget 2016 (1000 Tonnen)': [10, 20, 30, 20, 20],
-        'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Bisher verbraucht', 'Prognose'],
+        'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Berichtet', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     received = get_comparison_chart(comparison_chart_df)
     assert received['data'][0]['x'] == ('1,5 °C',)
     assert received['data'][1]['x'] == ('1,7 °C',)
     assert received['data'][2]['x'] == ('2,0 °C',)
-    assert received['data'][3]['name'] == 'Bisher verbraucht'
+    assert received['data'][3]['name'] == 'Berichtet'
     assert received['data'][4]['name'] == 'Prognose'
 
 

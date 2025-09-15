@@ -22,7 +22,6 @@ from ghg_budget.components.data import (
 )
 
 from ghg_budget.components.artifact import (
-    build_methodology_description_artifact,
     build_budget_table_artifact,
     build_time_chart_artifact,
     build_methodology_description_simple_artifact,
@@ -182,7 +181,7 @@ def comparison_chart_data(
         lambda x: f'{x:.1f}'.replace('.', ',')
     )
     comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
-        lambda deg: 'Bisher verbraucht' if deg == '0,0' else ('Prognose' if deg == '-1,0' else f'{deg} °C')
+        lambda deg: 'Berichtet' if deg == '0,0' else ('Prognose' if deg == '-1,0' else f'{deg} °C')
     )
     return comparison_chart_df
 
@@ -289,7 +288,9 @@ def emission_reduction(
     percentage_scenario = current_emission
     bisko_budget_2025_2c_83p = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
     emission_sum = current_emission
-    linear_decrease = int(current_emission**2 / (2 * bisko_budget_2025_2c_83p - current_emission))
+    n_years = round((2 * bisko_budget_2025_2c_83p) / current_emission)
+    linear_decrease = current_emission / (n_years - 1)
+    # linear_decrease = int(current_emission**2 / (2 * bisko_budget_2025_2c_83p - current_emission))
     percentage_decrease = int(current_emission / bisko_budget_2025_2c_83p * 100)
     threshold_exceeded = False
     emission_reduction_df = pd.DataFrame({'Jahr': year_list})
@@ -299,9 +300,11 @@ def emission_reduction(
 
     for year in year_list[1:]:
         # Linear emission decrease scenario
-        decrease_scenario -= linear_decrease
         if decrease_scenario > 0:
-            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = decrease_scenario
+            decrease_scenario -= linear_decrease
+            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = round(
+                decrease_scenario, 1
+            )
         else:
             emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = None
 
@@ -332,7 +335,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     """
     log.debug('Creating bar chart with different CO2 budgets and planned CO2 emissions.')
 
-    stack_labels = ['Bisher verbraucht', 'Prognose']
+    stack_labels = ['Berichtet', 'Prognose']
     temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
     stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
     colors = ['gold', '#FF9913', 'red']
@@ -352,20 +355,20 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
 
     fig.add_trace(
         go.Bar(
-            x=['Bisher verbraucht <br>& Prognose'],
+            x=['Berichtet <br>& Prognose'],
             y=[
-                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Bisher verbraucht'][
+                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Berichtet'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
                 ].values[0]
             ],
-            name='Bisher verbraucht',
+            name='Berichtet',
             marker_color='#696969',
         )
     )
 
     fig.add_trace(
         go.Bar(
-            x=['Bisher verbraucht <br>& Prognose'],
+            x=['Berichtet <br>& Prognose'],
             y=[
                 stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
@@ -377,7 +380,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
     )
 
     all_y = (
-        stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Bisher verbraucht'][
+        stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Berichtet'][
             'BISKO CO₂-Budget 2016 (1000 Tonnen)'
         ].values[0]
         + stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
@@ -428,7 +431,7 @@ def get_time_chart(
             x=measured['Jahr'],
             y=measured[city_name],
             mode='lines+markers',
-            name='Messwerte',
+            name='Berichtet',
             line=dict(color='#696969'),
         )
     )
@@ -485,15 +488,15 @@ def get_cumulative_chart(
     log.debug('Creating bar chart with cumulative emissions in the AOI.')
 
     emissions_df['Category'] = emissions_df['Jahr'].apply(
-        lambda x: 'Messwerte' if x <= aoi_emission_end_year else 'Prognose'
+        lambda x: 'Berichtet' if x <= aoi_emission_end_year else 'Prognose'
     )
-    colors = {'Messwerte': '#696969', 'Prognose': '#B0B0B0'}
+    colors = {'Berichtet': '#696969', 'Prognose': '#B0B0B0'}
     city_name = aoi_properties.name.lower()
     max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max()
 
     fig = go.Figure()
 
-    for category in ['Messwerte', 'Prognose']:
+    for category in ['Berichtet', 'Prognose']:
         filtered = emissions_df[(emissions_df['Category'] == category) & (emissions_df['Jahr'] <= max_year)]
         fig.add_trace(
             go.Bar(
@@ -548,7 +551,7 @@ def get_emission_reduction_chart(
             x=emission_reduction_df['Jahr'],
             y=emission_reduction_df['decrease_linear'],
             mode='lines+markers',
-            name=f'Emissionen sinken um<br>{linear_decrease}.000 Tonnen pro Jahr',
+            name=f'Emissionen sinken um<br>{round(linear_decrease)}.000 Tonnen pro Jahr',
             line=dict(color='magenta'),
         )
     )
@@ -610,9 +613,6 @@ def get_artifacts(
     aoi_emission_end_year = aoi_emission_end_years.loc[
         aoi_emission_end_years['city_name'] == city_name, 'end_year'
     ].values[0]
-    log.debug('Creating methodology description of the plugin as Markdown artifact.')
-    text = (PROJECT_DIR / 'resources/info/methodology.md').read_text()
-    markdown_artifact = build_methodology_description_artifact(text, resources)
 
     log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
     text = (PROJECT_DIR / 'resources/info/methodology_simple.md').read_text()
@@ -664,7 +664,6 @@ def get_artifacts(
     )
 
     return (
-        markdown_artifact,
         markdown_simple_artifact,
         table_artifact,
         table_simple_artifact,

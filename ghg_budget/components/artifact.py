@@ -13,16 +13,6 @@ from climatoology.base.baseoperator import AoiProperties
 from ghg_budget.components.data import NOW_YEAR
 
 
-def build_methodology_description_artifact(text: str, resources: ComputationResources) -> _Artifact:
-    return create_markdown_artifact(
-        text=text,
-        name='Berechnung des CO₂-Budgets',
-        tl_dr=' ',
-        resources=resources,
-        filename='methodology_description',
-    )
-
-
 def build_methodology_description_simple_artifact(text: str, resources: ComputationResources) -> _Artifact:
     return create_markdown_artifact(
         text=text,
@@ -83,7 +73,6 @@ def build_budget_table_artifact(
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='ghg_budget_table',
-        primary=False,
     )
 
 
@@ -108,7 +97,8 @@ def build_budget_table_simple_artifact(
         'Verlauf der Treibhausgasemissionen ab – insbesondere davon, ob und wie stark die 1,5&nbsp;°C-Marke vorübergehend '
         'überschritten wird. Weitere Informationen zu den Auswirkungen einer Erwärmung um 1,5&nbsp;°C bzw. 2&nbsp;°C finden Sie '
         '[hier](https://www.ipcc.ch/site/assets/uploads/2020/07/SR1.5-FAQs_de_barrierefrei.pdf) unter FAQ 3.1.\n\n'
-        f'**BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen):** CO₂-Budgets, die {city_name} aktuell noch zur Verfügung stehen. Ein '
+        f'**BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen):** CO₂-Budgets, die {city_name} aktuell noch zur Verfügung '
+        'stehen, um den Temperaturgrenzwert mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Ein '
         'negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten ist. '
         '[BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf) '
         'ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter Standard, nach dem '
@@ -127,7 +117,6 @@ def build_budget_table_simple_artifact(
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
         resources=resources,
         filename='simple_ghg_budget_table',
-        primary=False,
     )
 
 
@@ -153,7 +142,6 @@ def build_budget_comparison_chart_artifact(
             'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.',
             resources=resources,
             filename='comparison_emissions_budgets',
-            primary=False,
         )
     else:
         return create_plotly_chart_artifact(
@@ -173,7 +161,6 @@ def build_budget_comparison_chart_artifact(
             'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.',
             resources=resources,
             filename='comparison_emissions_budgets',
-            primary=False,
         )
 
 
@@ -188,7 +175,7 @@ def build_time_chart_artifact(
             caption=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
             'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
             description=f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
-            '"Messwerte" sind Messwerte basierend auf dem BISKO-Standard, die Werte ab '
+            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
             f'{aoi_emission_end_year + 1} sind Prognosen unter der Annahme, dass die zurzeit '
             f'beschlossenen Maßnahmen {city_name}s zur Emissionsreduzierung umgesetzt werden. Die alternativen '
             f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
@@ -203,7 +190,6 @@ def build_time_chart_artifact(
             '"Berechnung des CO₂-Budgets".',
             resources=resources,
             filename='time_chart',
-            primary=True,
         )
     else:
         return create_plotly_chart_artifact(
@@ -215,7 +201,7 @@ def build_time_chart_artifact(
             'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
             f'{city_name} von unserem abweichen.**\n\n'
             f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
-            '"Messwerte" sind Messwerte basierend auf dem BISKO-Standard, die Werte ab '
+            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
             f'{aoi_emission_end_year + 1} sind Prognosen. Die alternativen '
             f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
             'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
@@ -229,7 +215,6 @@ def build_time_chart_artifact(
             '"Berechnung des CO₂-Budgets".',
             resources=resources,
             filename='time_chart',
-            primary=True,
         )
 
 
@@ -248,7 +233,7 @@ def build_cumulative_chart_artifact(
             'vorstellen, in die Wasser eingelassen wird. Wenn ich den Wasserhahn ein Stück zudrehe, läuft zwar weniger '
             'Wasser in die Wanne, aber solange der Stöpsel zu ist, steigt der Wasserstand trotzdem weiter an, wenn auch '
             'langsamer. Dies wird in diesem Diagramm gezeigt. Die Emissionswerte von 2016 bis '
-            f'{aoi_emission_end_year} sind Messwerte basierend auf dem BISKO-Standard, die Werte ab '
+            f'{aoi_emission_end_year} sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
             f'{aoi_emission_end_year + 1} sind Prognosen unter der Annahme, dass die zurzeit '
             f'beschlossenen Maßnahmen {city_name}s zur Emissionsreduzierung umgesetzt werden. \n\n'
             'Anmerkung: Die Emissionswerte bilden '
@@ -259,7 +244,6 @@ def build_cumulative_chart_artifact(
             'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
             resources=resources,
             filename='cumulative_chart',
-            primary=False,
         )
     else:
         return create_plotly_chart_artifact(
@@ -275,7 +259,7 @@ def build_cumulative_chart_artifact(
             'vorstellen, in die Wasser eingelassen wird. Wenn ich den Wasserhahn ein Stück zudrehe, läuft zwar weniger '
             'Wasser in die Wanne, aber solange der Stöpsel zu ist, steigt der Wasserstand trotzdem weiter an, wenn auch '
             'langsamer. Dies wird in diesem Diagramm gezeigt. Die Emissionswerte von 2016 bis '
-            f'{aoi_emission_end_year} sind Messwerte basierend auf dem BISKO-Standard, die Werte ab '
+            f'{aoi_emission_end_year} sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
             f'{aoi_emission_end_year + 1} sind Prognosen. \n\n'
             'Anmerkung: Die Emissionswerte bilden '
             f'nicht die gesamten Emissionen der Stadt {city_name} ab, sondern nur etwa 64&nbsp;% der Emissionen. Dies liegt '
@@ -285,7 +269,6 @@ def build_cumulative_chart_artifact(
             'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
             resources=resources,
             filename='cumulative_chart',
-            primary=False,
         )
 
 
@@ -310,13 +293,14 @@ def build_emission_reduction_chart_artifact(
         'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt. \n\n'
         f'Im Jahr {NOW_YEAR} hat die Stadt {city_name} noch ein CO₂-Budget von etwa {bisko_budget_now_year} '
         'Kilotonnen zur Verfügung, um den Temperaturgrenzwert von 2&nbsp;°C mit einer Wahrscheinlichkeit von 83&nbsp;% '
-        f'einzuhalten. Die Summe der Werte in jeder Kurve entspricht etwa dem CO₂-Budget von {bisko_budget_now_year} Kilotonnen. Das '
+        'einzuhalten. Die Werte für den jährlichen Rückgang der Emissionen in den Reduktionspfaden sind so gewählt, '
+        'dass das Budget genau in dem Jahr aufgebraucht ist, in dem die Emissionen auf null sinken. '
+        f'Somit entspricht die Summe der Werte in jeder Kurve etwa dem CO₂-Budget von {bisko_budget_now_year} Kilotonnen. Das '
         f'Diagramm zeigt, dass wir mehr Zeit haben, CO₂-neutral zu werden, wenn wir die Emissionen jedes Jahr um {percentage_decrease}&nbsp;% '
         'reduzieren, als wenn wir die Emissionen linear verringern. Besonders schnell ist das Budget aufgebraucht, '
-        'wenn wir die Emissionen gar nicht reduzieren. Dieses Diagramm zeigt lediglich fiktive Szenarien. Eine '
+        'wenn wir die Emissionen gar nicht reduzieren.\n\nDieses Diagramm zeigt lediglich fiktive Szenarien. Eine '
         f'Prognose der tatsächlichen Emissionen {city_name}s finden Sie links im Reiter "Entwicklung der CO₂-Emissionen '
         f'in {city_name}".',
         resources=resources,
         filename='emission_reduction_chart',
-        primary=False,
     )
