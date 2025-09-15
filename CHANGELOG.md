@@ -7,13 +7,18 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.0.1...main)
 
+### Changed
+- Scale up the plugin for more cities: Berlin, Bonn, Hamburg, Karlsruhe ([#48](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/48))
+- Update ruff config and CI ([#31](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/31))
+
+### Removed
+- Remove methodology description artifact ([#52](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/52))
+
 ## [1.0.1](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.0.1)
 
 ### Changed
 - Change icon ([#49](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/49))
 - State data sources more clearly, highlight more clearly that Paris agreement aims to limit warming to well below 2°C ([#49](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/49))
-- Scale up the plugin for more cities: Berlin, Bonn, Hamburg, Karlsruhe ([#48](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/48))
-- Update ruff config and CI ([#31](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/31))
 
 ## [1.0.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.0.0)
 
