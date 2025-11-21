@@ -7,6 +7,9 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.1.0...main)
 
+### Changed
+- Plugin now also works for administrative units within cities that it supports ([#54](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/54))
+
 ## [1.1.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.1.0) - 2025-09-16
 
 ### Added

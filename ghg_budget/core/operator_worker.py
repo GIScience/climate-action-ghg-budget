@@ -5,6 +5,7 @@ import logging
 from datetime import timedelta
 from pathlib import Path
 
+import geopandas as gpd
 import shapely
 from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
@@ -73,11 +74,18 @@ class GHGBudget(BaseOperator[ComputeInput]):
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
         if aoi_properties.name not in ['Berlin', 'Bonn', 'Demo', 'Hamburg', 'Heidelberg', 'Karlsruhe']:
-            raise ClimatoologyUserError(
-                'Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe. Bitte wählen Sie eine dieser Städte als Untersuchungsgebiet aus'
-            )
+            cities = gpd.read_file('resources/cities.geojson')
+            matching = cities.loc[cities.contains(aoi)]
+            if len(matching) == 1:
+                aoi_properties.name = matching.iloc[0]['name']
+            else:
+                raise ClimatoologyUserError(
+                    'Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe. Bitte wählen Sie eine dieser Städte als Untersuchungsgebiet aus'
+                )
+
         if aoi_properties.name == 'Demo':
             aoi_properties.name = 'Heidelberg'
+
         (
             aoi_bisko_budgets,
             comparison_chart_df,
