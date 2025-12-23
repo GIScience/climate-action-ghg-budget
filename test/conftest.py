@@ -35,7 +35,6 @@ def default_aoi_properties() -> AoiProperties:
 def expected_compute_input() -> ComputeInput:
     # noinspection PyTypeChecker
     return ComputeInput(
-        bool_blueprint=True,
         level_of_detail='erweitert',
     )
 

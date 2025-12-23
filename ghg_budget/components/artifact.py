@@ -1,36 +1,96 @@
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.graph_objects import Figure
-from climatoology.base.artifact import (
+from climatoology.base.artifact_creators import (
     create_markdown_artifact,
     create_table_artifact,
-    _Artifact,
     create_plotly_chart_artifact,
 )
+from climatoology.base.artifact import Artifact, ArtifactMetadata
 from climatoology.base.computation import ComputationResources
 from climatoology.base.baseoperator import AoiProperties
 
 from ghg_budget.components.data import NOW_YEAR
 
 
-def build_methodology_description_simple_artifact(text: str, resources: ComputationResources) -> _Artifact:
+def build_methodology_description_simple_artifact(text: str, resources: ComputationResources) -> Artifact:
+    methodology_description_simple_artifact_metadata = ArtifactMetadata(
+        name='Berechnung des CO₂-Budgets',
+        summary=' ',
+        filename='simple_methodology_description',
+    )
+
     return create_markdown_artifact(
         text=text,
-        name='Berechnung des CO₂-Budgets',
-        tl_dr=' ',
+        metadata=methodology_description_simple_artifact_metadata,
         resources=resources,
-        filename='simple_methodology_description',
+    )
+
+
+def build_time_chart_artifact(
+    line_chart: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
+) -> Artifact:
+    city_name = aoi_properties.name
+    if city_name in ['Heidelberg', 'Bonn']:
+        time_chart_artifact_metadata = ArtifactMetadata(
+            name=f'Entwicklung der CO₂-Emissionen in {city_name}',
+            summary=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
+            'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
+            description=f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
+            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
+            f'{aoi_emission_end_year + 1} sind Prognosen unter der Annahme, dass die zurzeit '
+            f'beschlossenen Maßnahmen {city_name}s zur Emissionsreduzierung umgesetzt werden. Die alternativen '
+            f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
+            'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
+            'zu überschreiten. Dabei ist zu beachten, dass das internationale Abkommen von '
+            'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.'
+            '\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
+            f'{city_name} ab, sondern nur etwa 64&nbsp;% der Emissionen. Dies liegt daran, dass die Emissionen nach '
+            'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
+            f'Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von Personen aus {city_name} außerhalb '
+            'der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik finden Sie links im Reiter '
+            '"Berechnung des CO₂-Budgets".',
+            filename='time_chart',
+        )
+    else:
+        time_chart_artifact_metadata = ArtifactMetadata(
+            name=f'Entwicklung der CO₂-Emissionen in {city_name}',
+            summary=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
+            'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
+            description=f'**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. '
+            'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
+            f'{city_name} von unserem abweichen.**\n\n'
+            f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
+            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
+            f'{aoi_emission_end_year + 1} sind Prognosen. Die alternativen '
+            f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
+            'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
+            'zu überschreiten. Dabei ist zu beachten, dass das internationale Abkommen von '
+            'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.'
+            '\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
+            f'{city_name} ab, sondern nur etwa 64&nbsp;% der Emissionen. Dies liegt daran, dass die Emissionen nach '
+            'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
+            f'Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von Personen aus {city_name} außerhalb '
+            'der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik finden Sie links im Reiter '
+            '"Berechnung des CO₂-Budgets".',
+            filename='time_chart',
+        )
+
+    return create_plotly_chart_artifact(
+        figure=line_chart,
+        metadata=time_chart_artifact_metadata,
+        resources=resources,
     )
 
 
 def build_budget_table_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
-) -> _Artifact:
+) -> Artifact:
     city_name = aoi_properties.name
-    return create_table_artifact(
-        data=table,
-        title=f'CO₂ Budget {city_name}',
-        caption=f'Wie viel des {city_name} zustehenden CO₂-Budgets wurde bereits verbraucht?',
+
+    budget_table_artifact_metadata = ArtifactMetadata(
+        name=f'CO₂ Budget {city_name}',
+        summary=f'Wie viel des {city_name} zustehenden CO₂-Budgets wurde bereits verbraucht?',
         description='Um mit einer Wahrscheinlichkeit von 67&nbsp;% bzw. 83&nbsp;% die Temperaturerhöhung auf den jeweiligen '
         f'Maximalwert zu begrenzen, hat {city_name} nur ein beschränktes CO₂-Budget zur Verfügung. Das heißt, '
         f'dass der Stadt {city_name} für die Einhaltung des Grenzwerts von 1,5&nbsp;°C mit einer Wahrscheinlichkeit '
@@ -71,19 +131,24 @@ def build_budget_table_artifact(
         f'die Verantwortung der Stadt {city_name} sowie der Stadtbevölkerung hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
-        resources=resources,
         filename='ghg_budget_table',
+    )
+
+    return create_table_artifact(
+        data=table,
+        metadata=budget_table_artifact_metadata,
+        resources=resources,
     )
 
 
 def build_budget_table_simple_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
-) -> _Artifact:
+) -> Artifact:
     city_name = aoi_properties.name
-    return create_table_artifact(
-        data=table,
-        title=f'CO₂ Budget {city_name}',
-        caption=f'Wie viel des {city_name} zustehenden CO₂-Budgets wurde bereits verbraucht?',
+
+    budget_table_simple_artifact_metadata = ArtifactMetadata(
+        name=f'CO₂ Budget {city_name}',
+        summary=f'Wie viel des {city_name} zustehenden CO₂-Budgets wurde bereits verbraucht?',
         description=f'Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat {city_name} nur ein '
         f'beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt {city_name} für die Einhaltung des '
         'Grenzwerts von 1,5&nbsp;°C das geringste Budget zur Verfügung steht, um ihren Anteil zur Unterschreitung der '
@@ -115,20 +180,23 @@ def build_budget_table_simple_artifact(
         f'die Verantwortung der Stadt {city_name} sowie der Stadtbevölkerung hinweisen, und ihren Anteil an den '
         'globalen Emissionen darstellen.\n\n'
         'Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
-        resources=resources,
         filename='simple_ghg_budget_table',
+    )
+    return create_table_artifact(
+        data=table,
+        metadata=budget_table_simple_artifact_metadata,
+        resources=resources,
     )
 
 
 def build_budget_comparison_chart_artifact(
     fig: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
-) -> _Artifact:
+) -> Artifact:
     city_name = aoi_properties.name
     if city_name in ['Heidelberg', 'Bonn']:
-        return create_plotly_chart_artifact(
-            figure=fig,
-            title='Wie viel vom CO₂-Budget ist bereits emittiert?',
-            caption=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
+        budget_comparison_chart_artifact_metadata = ArtifactMetadata(
+            name='Wie viel vom CO₂-Budget ist bereits emittiert?',
+            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
             description=f'Das Diagramm zeigt die CO₂-Budgets, die {city_name} seit der Pariser Klimakonferenz 2015 zur '
             'Verfügung standen, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Die '
             'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
@@ -140,14 +208,12 @@ def build_budget_comparison_chart_artifact(
             f'von 2&nbsp;°C weit überschritten wird, wenn die Stadt {city_name} keine zusätzlichen Anstrengungen zur '
             'Verringerung der Emissionen unternimmt. Dabei ist zu beachten, dass das internationale Abkommen von '
             'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.',
-            resources=resources,
             filename='comparison_emissions_budgets',
         )
     else:
-        return create_plotly_chart_artifact(
-            figure=fig,
-            title='Wie viel vom CO₂-Budget ist bereits emittiert?',
-            caption=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
+        budget_comparison_chart_artifact_metadata = ArtifactMetadata(
+            name='Wie viel vom CO₂-Budget ist bereits emittiert?',
+            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
             description=f'**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. '
             'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
             f'{city_name} von unserem abweichen.**\n\n'
@@ -159,74 +225,24 @@ def build_budget_comparison_chart_artifact(
             f'sichtbar, wie viel vom CO₂-Budget bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ {city_name} voraussichtlich noch '
             'ausstoßen wird, bevor die Klimaneutralität erreicht wird. Dabei ist zu beachten, dass das internationale Abkommen von '
             'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.',
-            resources=resources,
             filename='comparison_emissions_budgets',
         )
 
-
-def build_time_chart_artifact(
-    line_chart: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
-) -> _Artifact:
-    city_name = aoi_properties.name
-    if city_name in ['Heidelberg', 'Bonn']:
-        return create_plotly_chart_artifact(
-            figure=line_chart,
-            title=f'Entwicklung der CO₂-Emissionen in {city_name}',
-            caption=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
-            'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
-            description=f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
-            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
-            f'{aoi_emission_end_year + 1} sind Prognosen unter der Annahme, dass die zurzeit '
-            f'beschlossenen Maßnahmen {city_name}s zur Emissionsreduzierung umgesetzt werden. Die alternativen '
-            f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
-            'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
-            'zu überschreiten. Dabei ist zu beachten, dass das internationale Abkommen von '
-            'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.'
-            '\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
-            f'{city_name} ab, sondern nur etwa 64&nbsp;% der Emissionen. Dies liegt daran, dass die Emissionen nach '
-            'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
-            f'Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von Personen aus {city_name} außerhalb '
-            'der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik finden Sie links im Reiter '
-            '"Berechnung des CO₂-Budgets".',
-            resources=resources,
-            filename='time_chart',
-        )
-    else:
-        return create_plotly_chart_artifact(
-            figure=line_chart,
-            title=f'Entwicklung der CO₂-Emissionen in {city_name}',
-            caption=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
-            'der Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)',
-            description=f'**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. '
-            'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
-            f'{city_name} von unserem abweichen.**\n\n'
-            f'Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe '
-            '"Berichtet" sind berichtete Werte basierend auf dem BISKO-Standard, die Werte ab '
-            f'{aoi_emission_end_year + 1} sind Prognosen. Die alternativen '
-            f'Reduktionspfade stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen '
-            'könnte bzw. hätte erreichen können, ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte '
-            'zu überschreiten. Dabei ist zu beachten, dass das internationale Abkommen von '
-            'Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt.'
-            '\n\nAnmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt '
-            f'{city_name} ab, sondern nur etwa 64&nbsp;% der Emissionen. Dies liegt daran, dass die Emissionen nach '
-            'dem BISKO-Standard ermittelt wurden. Der BISKO-Standard berücksichtigt, vereinfacht gesagt, nur die '
-            f'Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von Personen aus {city_name} außerhalb '
-            'der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik finden Sie links im Reiter '
-            '"Berechnung des CO₂-Budgets".',
-            resources=resources,
-            filename='time_chart',
-        )
+    return create_plotly_chart_artifact(
+        figure=fig,
+        metadata=budget_comparison_chart_artifact_metadata,
+        resources=resources,
+    )
 
 
 def build_cumulative_chart_artifact(
     fig: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
-) -> _Artifact:
+) -> Artifact:
     city_name = aoi_properties.name
     if city_name in ['Heidelberg', 'Bonn']:
-        return create_plotly_chart_artifact(
-            figure=fig,
-            title=f'Kumulative CO₂-Emissionen in {city_name}',
-            caption=f'Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)',
+        cumulative_chart_artifact_metadata = ArtifactMetadata(
+            name=f'Kumulative CO₂-Emissionen in {city_name}',
+            summary=f'Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)',
             description='Ein Rückgang der CO₂-Emissionen bedeutet nicht, dass die CO₂-Konzentration in der Atmosphäre '
             'sinkt, sondern lediglich, dass sie langsamer steigt. Die CO₂-Konzentration in der Atmosphäre steigt so lange, '
             'wie mehr CO₂ in die Atmosphäre gelangt als aus ihr entweicht. Man kann sich das wie eine Badewanne '
@@ -242,14 +258,13 @@ def build_cumulative_chart_artifact(
             f'vereinfacht gesagt, nur die Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von '
             f'Personen aus {city_name} außerhalb der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik '
             'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
-            resources=resources,
             filename='cumulative_chart',
         )
+
     else:
-        return create_plotly_chart_artifact(
-            figure=fig,
-            title=f'Kumulative CO₂-Emissionen in {city_name}',
-            caption=f'Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)',
+        cumulative_chart_artifact_metadata = ArtifactMetadata(
+            name=f'Kumulative CO₂-Emissionen in {city_name}',
+            summary=f'Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)',
             description=f'**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. '
             'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
             f'{city_name} von unserem abweichen.**\n\n'
@@ -267,9 +282,14 @@ def build_cumulative_chart_artifact(
             f'vereinfacht gesagt, nur die Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die von '
             f'Personen aus {city_name} außerhalb der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik '
             'finden Sie links im Reiter "Berechnung des CO₂-Budgets".',
-            resources=resources,
             filename='cumulative_chart',
         )
+
+    return create_plotly_chart_artifact(
+        figure=fig,
+        metadata=cumulative_chart_artifact_metadata,
+        resources=resources,
+    )
 
 
 def build_emission_reduction_chart_artifact(
@@ -278,13 +298,12 @@ def build_emission_reduction_chart_artifact(
     aoi_properties: AoiProperties,
     aoi_bisko_budgets: pd.DataFrame,
     percentage_decrease: int,
-) -> _Artifact:
+) -> Artifact:
     city_name = aoi_properties.name
     bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
-    return create_plotly_chart_artifact(
-        figure=fig,
-        title=f'CO₂-Emissionsminderungspfade für {city_name}',
-        caption=f'Auswahl möglicher CO₂-Reduktionspfade für {city_name} unter Einhaltung des Temperaturgrenzwerts von '
+    emission_reduction_chart_artifact_metadata = ArtifactMetadata(
+        name=f'CO₂-Emissionsminderungspfade für {city_name}',
+        summary=f'Auswahl möglicher CO₂-Reduktionspfade für {city_name} unter Einhaltung des Temperaturgrenzwerts von '
         '2 °C mit 83 % Wahrscheinlichkeit',
         description=f'Viele Städte haben das CO₂-Budget für die Einhaltung des Temperaturgrenzwerts von 1,5&nbsp;°C bereits '
         'aufgebraucht und werden auch das Budget für 1,7&nbsp;°C bald aufbrauchen. Daher zeigt '
@@ -301,6 +320,10 @@ def build_emission_reduction_chart_artifact(
         'wenn wir die Emissionen gar nicht reduzieren.\n\nDieses Diagramm zeigt lediglich fiktive Szenarien. Eine '
         f'Prognose der tatsächlichen Emissionen {city_name}s finden Sie links im Reiter "Entwicklung der CO₂-Emissionen '
         f'in {city_name}".',
-        resources=resources,
         filename='emission_reduction_chart',
+    )
+    return create_plotly_chart_artifact(
+        figure=fig,
+        metadata=emission_reduction_chart_artifact_metadata,
+        resources=resources,
     )

@@ -1,6 +1,7 @@
 from datetime import date
+
+from climatoology.base.computation import AoiProperties
 from plotly.graph_objects import Figure
-from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -26,7 +27,7 @@ from ghg_budget.components.data import BudgetParams, NOW_YEAR, city_pop_2020
 
 
 def test_co2_budget_analysis():
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     (
         aoi_bisko_budgets,
         comparison_chart_df,
@@ -90,7 +91,7 @@ def test_cumulative_emissions():
             'cumulative_emissions': [1, 2, 3, 4],
         },
     )
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     received = cumulative_emissions(emissions_aoi, aoi_properties)
     pd.testing.assert_frame_equal(received, expected)
 
@@ -143,7 +144,7 @@ def test_comparison_chart():
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1, 2, 3, 2, 2],
         },
     )
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     received = comparison_chart_data(emissions_aoi, aoi_bisko_budgets, aoi_properties)
     pd.testing.assert_frame_equal(received, expected)
 
@@ -237,7 +238,7 @@ def test_emission_paths():
             'heidelberg': [1000],
         },
     )
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     budget_params = BudgetParams()
     reduction_paths = emission_paths(bisko_budget_table, emissions_table, budget_params, aoi_properties)
     assert round(reduction_paths.loc[reduction_paths['Jahr'] == 2016, '1.7 °C'].iloc[0]) == 1000.0
@@ -256,7 +257,7 @@ def test_emission_reduction():
             'heidelberg': [700],
         },
     )
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     aoi_bisko_budgets = pd.DataFrame(
         {
             'BISKO CO₂-Budget 2025 (1000 Tonnen)': [5000.0, 4000],
@@ -314,7 +315,7 @@ def test_get_time_chart():
     }
     emissions_df = pd.DataFrame(emissions_df_data)
     reduction_df = pd.DataFrame(reduction_df_data)
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     aoi_emission_end_year = 2022
     received = get_time_chart(emissions_df, reduction_df, aoi_properties, aoi_emission_end_year)
     assert isinstance(received, Figure)
@@ -328,7 +329,7 @@ def test_get_cumulative_chart():
         'cumulative_emissions': [1000],
     }
     emissions_df = pd.DataFrame(emissions_df_data)
-    aoi_properties = SimpleNamespace(name='heidelberg')
+    aoi_properties = AoiProperties(name='heidelberg', id='1')
     aoi_emission_end_year = 2022
     received = get_cumulative_chart(emissions_df, aoi_properties, aoi_emission_end_year)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2016]))

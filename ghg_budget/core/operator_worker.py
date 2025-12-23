@@ -1,6 +1,5 @@
 # You may ask yourself why this file has such a strange name.
 # Well ... python imports: https://discuss.python.org/t/warning-when-importing-a-local-module-with-the-same-name-as-a-2nd-or-3rd-party-module/27799
-import importlib
 import logging
 from datetime import timedelta
 from pathlib import Path
@@ -9,12 +8,12 @@ import geopandas as gpd
 import shapely
 from climatoology.base.baseoperator import BaseOperator, AoiProperties
 from climatoology.base.computation import ComputationResources
-from climatoology.base.info import _Info, generate_plugin_info, PluginAuthor, Concern
-from climatoology.utility.exception import ClimatoologyUserError
+from climatoology.base.plugin_info import PluginInfo, generate_plugin_info, PluginAuthor, Concern
+from climatoology.base.exception import ClimatoologyUserError
 from typing import List
 
-from climatoology.base.artifact import _Artifact
-from semver import Version
+from climatoology.base.artifact import Artifact
+from pydantic import HttpUrl
 
 from ghg_budget.components.calculate import co2_budget_analysis, get_artifacts
 from ghg_budget.core.input import ComputeInput, DetailOption
@@ -26,7 +25,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
     def __init__(self):
         super().__init__()
 
-    def info(self) -> _Info:
+    def info(self) -> PluginInfo:
         """
 
         :return: Info object with information about the plugin.
@@ -38,26 +37,25 @@ class GHGBudget(BaseOperator[ComputeInput]):
                 PluginAuthor(
                     name='Veit Ulrich',
                     affiliation='HeiGIT gGmbH',
-                    website='https://heigit.org/heigit-team/',
+                    website=HttpUrl('https://heigit.org/heigit-team/'),
                 ),
                 PluginAuthor(
                     name='Niko Krasowski',
                     affiliation='Klimanetz Heidelberg',
-                    website='https://klimanetz-heidelberg.de/',
+                    website=HttpUrl('https://klimanetz-heidelberg.de/'),
                 ),
                 PluginAuthor(
                     name='Moritz Schott',
                     affiliation='HeiGIT gGmbH',
-                    website='https://heigit.org/heigit-team/',
+                    website=HttpUrl('https://heigit.org/heigit-team/'),
                 ),
             ],
-            version=Version.parse(importlib.metadata.version('ghg_budget')),
             concerns={Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION},
             purpose=Path('resources/info/purpose.md'),
             teaser='Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.',
             methodology=Path('resources/info/methodology.md'),
-            sources=Path('resources/info/sources.bib'),
-            demo_input_parameters=ComputeInput(),
+            sources_library=Path('resources/info/sources.bib'),
+            demo_input_parameters=ComputeInput(level_of_detail=DetailOption.EXTENDED),
             computation_shelf_life=timedelta(weeks=52),
         )
         log.info(f'Return info {info.model_dump()}')
@@ -70,7 +68,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
         aoi: shapely.MultiPolygon,
         aoi_properties: AoiProperties,
         params: ComputeInput,
-    ) -> List[_Artifact]:
+    ) -> List[Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources}')
 
         if aoi_properties.name not in ['Berlin', 'Bonn', 'Demo', 'Hamburg', 'Heidelberg', 'Karlsruhe']:

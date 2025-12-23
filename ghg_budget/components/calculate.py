@@ -197,9 +197,9 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
         [f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
     ]
-    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets_simple[
-        f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
-    ].round(1)
+    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = pd.to_numeric(
+        aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'], errors='coerce'
+    ).round(1)
     return aoi_bisko_budgets_simple
 
 
