@@ -23,7 +23,7 @@ from ghg_budget.components.calculate import (
     co2_budget_analysis,
     choose_step,
 )
-from ghg_budget.components.data import BudgetParams, NOW_YEAR, city_pop_2020
+from ghg_budget.components.data import BudgetParams, city_pop_2020
 
 
 def test_co2_budget_analysis():
@@ -116,7 +116,7 @@ def test_current_budget():
             'Temperaturgrenzwert (°C)': [1, 1, 2, 2],
             'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [2, 1, 4, 3],
-            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [0, -1, 2, 1],
+            'BISKO CO₂-Budget now (1000 Tonnen)': [0, -1, 2, 1],
         },
     )
     received = current_budget(emissions_df, aoi_bisko_budgets)
@@ -208,14 +208,14 @@ def test_simplify_table():
         {
             'Wahrscheinlichkeit': ['67 %', '83 %'],
             'BISKO CO₂-Budget 2016 (1000 Tonnen)': [1250, 1000],
-            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [200, -50],
+            'BISKO CO₂-Budget now (1000 Tonnen)': [200, -50],
             'CO₂-Budget aufgebraucht (Jahr)': [2026, 2023],
         },
         index=[1.5, 1.5],
     )
     expected = pd.DataFrame(
         {
-            f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)': [-50],
+            'BISKO CO₂-Budget now (1000 Tonnen)': [-50],
             'CO₂-Budget aufgebraucht (Jahr)': [2023],
         },
         index=[1.5],
@@ -260,7 +260,7 @@ def test_emission_reduction():
     aoi_properties = AoiProperties(name='heidelberg', id='1')
     aoi_bisko_budgets = pd.DataFrame(
         {
-            'BISKO CO₂-Budget 2025 (1000 Tonnen)': [5000.0, 4000],
+            'BISKO CO₂-Budget now (1000 Tonnen)': [5000.0, 4000],
         },
     )
     expected = pd.DataFrame(

@@ -11,6 +11,9 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 ### Changed
 - Plugin now also works for administrative units within cities that it supports ([#54](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/54))
 
+### Fixed
+- Remove hard coded year in column name, so plugin does not break at new year ([#57](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/57))
+
 ## [1.1.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.1.0) - 2025-09-16
 
 ### Added

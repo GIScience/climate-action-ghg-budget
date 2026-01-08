@@ -87,6 +87,7 @@ def build_budget_table_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
 ) -> Artifact:
     city_name = aoi_properties.name
+    table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
 
     budget_table_artifact_metadata = ArtifactMetadata(
         name=f'CO₂ Budget {city_name}',
@@ -145,6 +146,7 @@ def build_budget_table_simple_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
 ) -> Artifact:
     city_name = aoi_properties.name
+    table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
 
     budget_table_simple_artifact_metadata = ArtifactMetadata(
         name=f'CO₂ Budget {city_name}',
@@ -300,7 +302,7 @@ def build_emission_reduction_chart_artifact(
     percentage_decrease: int,
 ) -> Artifact:
     city_name = aoi_properties.name
-    bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
+    bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'].iloc[-1]
     emission_reduction_chart_artifact_metadata = ArtifactMetadata(
         name=f'CO₂-Emissionsminderungspfade für {city_name}',
         summary=f'Auswahl möglicher CO₂-Reduktionspfade für {city_name} unter Einhaltung des Temperaturgrenzwerts von '
