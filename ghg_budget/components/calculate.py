@@ -468,6 +468,8 @@ def get_time_chart(
         yaxis_title='CO₂-Emissionen (1000 Tonnen)',
         template='plotly_white',
         margin=dict(t=30, b=60, l=80, r=30),
+        yaxis_tickformat=',d',
+        separators=',.',
     )
 
     return fig
@@ -566,6 +568,8 @@ def get_emission_reduction_chart(
         xaxis_title='Jahr',
         yaxis_title='CO₂-Emissionen (1000 Tonnen)',
         margin=dict(t=30, b=60, l=80, r=30),
+        yaxis_tickformat=',d',
+        separators=',.',
     )
     return fig
 
