@@ -329,3 +329,26 @@ def build_emission_reduction_chart_artifact(
         metadata=emission_reduction_chart_artifact_metadata,
         resources=resources,
     )
+
+
+def build_emissions_growth_rates_chart_artifact(
+    fig: go.Figure,
+    resources: ComputationResources,
+) -> Artifact:
+    emissions_growth_rates_artifact_metadata = ArtifactMetadata(
+        name='CO₂-Emissionsminderung im Vergleich',
+        summary=f'Durchschnittliche jährliche Minderungsrate der CO₂-Emissionen von 2016 bis {NOW_YEAR}',
+        description='Diese Abbildung zeigt die jährlichen Minderungsraten der CO₂-Emissionen für Städte, für die derzeit '
+        'Emissionsdaten verfügbar sind. Die Minderungsraten wurden mithilfe der Compound Annual Growth Rate (CAGR) berechnet. '
+        'Die Analyse basiert auf den gemeldeten CO₂-Emissionen gemäß dem BISKO-Standard und umfasst den Zeitraum von 2016 '
+        f'bis {NOW_YEAR}.\n\n'
+        'Dabei ist zu beachten, dass sich das letzte Jahr der berichteten Daten je nach Stadt unterscheidet: '
+        'Heidelberg (2022), Bonn (2022), Berlin (2023), Karlsruhe (2019) und Hamburg (2023). Emissionsdaten über '
+        'diese Jahre hinaus basieren auf Prognosen und nicht auf gemeldeten Werten.',
+        filename='emissions_growth_rates',
+    )
+    return create_plotly_chart_artifact(
+        figure=fig,
+        metadata=emissions_growth_rates_artifact_metadata,
+        resources=resources,
+    )

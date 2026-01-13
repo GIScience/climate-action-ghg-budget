@@ -29,6 +29,7 @@ from ghg_budget.components.artifact import (
     build_budget_comparison_chart_artifact,
     build_emission_reduction_chart_artifact,
     build_cumulative_chart_artifact,
+    build_emissions_growth_rates_chart_artifact,
 )
 
 PROJECT_DIR = Path(__file__).parent.parent.parent
@@ -574,6 +575,55 @@ def get_emission_reduction_chart(
     return fig
 
 
+def get_emission_growth_rates_chart(emissions_aoi: pd.DataFrame) -> Figure:
+    """
+    :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
+    """
+    cities = emissions_aoi.columns[2:].tolist()
+    first_year = emissions_aoi['year'].min()
+    colors = {'Aufwärtstrend': 'red', 'Abwärtstrend': 'green'}
+
+    fig = go.Figure()
+    legend_shown = {'Aufwärtstrend': False, 'Abwärtstrend': False}
+    for cities_name in cities:
+        first_year_emission = emissions_aoi.loc[emissions_aoi['year'] == first_year, cities_name].values[0]
+        current_year_emission = emissions_aoi.loc[emissions_aoi['year'] == NOW_YEAR, cities_name].values[0]
+        average_annual_growth_rate = (
+            ((current_year_emission / first_year_emission) ** (1 / (NOW_YEAR - first_year))) - 1
+        ) * 100
+        category = 'Aufwärtstrend' if average_annual_growth_rate > 0 else 'Abwärtstrend'
+
+        fig.add_trace(
+            go.Bar(
+                x=[cities_name.title()],
+                y=[round(average_annual_growth_rate, 1)],
+                name=category,
+                marker_color=colors[category],
+                showlegend=not legend_shown[category],
+            )
+        )
+        legend_shown[category] = True
+
+        for category in ['Aufwärtstrend', 'Abwärtstrend']:
+            if category not in [trace.name for trace in fig.data]:
+                fig.add_trace(
+                    go.Bar(
+                        x=[None],
+                        y=[0],
+                        name=category,
+                        marker_color=colors[category],
+                        showlegend=True,
+                    )
+                )
+
+    fig.update_layout(
+        xaxis_title='Städte',
+        yaxis_title='Emissionsminderung (%)',
+        margin=dict(t=30, b=60, l=80, r=30),
+    )
+    return fig
+
+
 def choose_step(y_max):
     raw_step = y_max / 10
     magnitude = 10 ** int(math.floor(math.log10(raw_step)))
@@ -664,6 +714,12 @@ def get_artifacts(
         emission_reduction_chart_data, resources, aoi_properties, aoi_bisko_budgets, percentage_decrease
     )
 
+    log.debug('Creating bar chart with emission growth rate for all AOIs as chart artifact.')
+    emission_growth_rates_chart_data = get_emission_growth_rates_chart(emissions_aoi)
+    emission_growth_rates_chart_artifact = build_emissions_growth_rates_chart_artifact(
+        emission_growth_rates_chart_data, resources
+    )
+
     return (
         markdown_simple_artifact,
         table_artifact,
@@ -672,4 +728,5 @@ def get_artifacts(
         time_chart_artifact,
         cumulative_chart_artifact,
         emission_reduction_chart_artifact,
+        emission_growth_rates_chart_artifact,
     )

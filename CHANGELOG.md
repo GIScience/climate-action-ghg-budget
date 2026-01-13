@@ -7,7 +7,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.1.0...main)
 - Updating the plugin to use the climatoology version 7
-
+- Adding the new artifact "emission_growth_rates" to the list of artifacts ([#56](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/56))
 ### Changed
 - Plugin now also works for administrative units within cities that it supports ([#54](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/54))
 

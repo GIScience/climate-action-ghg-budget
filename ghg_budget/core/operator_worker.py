@@ -102,6 +102,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
             time_chart_artifact,
             cumulative_chart_artifact,
             emission_reduction_chart_artifact,
+            emission_growth_rates_chart_artifact,
         ) = get_artifacts(
             resources,
             aoi_bisko_budgets,
@@ -127,6 +128,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
                 time_chart_artifact,
                 cumulative_chart_artifact,
                 emission_reduction_chart_artifact,
+                emission_growth_rates_chart_artifact,
             ]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 

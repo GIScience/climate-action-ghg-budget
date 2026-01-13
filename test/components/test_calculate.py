@@ -21,6 +21,7 @@ from ghg_budget.components.calculate import (
     get_emission_reduction_chart,
     get_comparison_chart,
     co2_budget_analysis,
+    get_emission_growth_rates_chart,
     choose_step,
 )
 from ghg_budget.components.data import BudgetParams, city_pop_2020
@@ -349,6 +350,19 @@ def test_get_emission_reduction_chart():
     received = get_emission_reduction_chart(emission_reduction_df, linear_decrease, percentage_decrease)
     assert isinstance(received, Figure)
     np.testing.assert_array_equal(received['data'][0]['x'], ([2025]))
+
+
+def test_get_emission_growth_rates_chart():
+    emissions_aoi = pd.DataFrame(
+        {
+            'year': [2016, 2026, 2027],
+            'heidelberg': [1, 1, 1],
+            'bonn': [1000, 2000, 1000],
+        }
+    )
+
+    received = get_emission_growth_rates_chart(emissions_aoi)
+    assert isinstance(received, Figure)
 
 
 def test_choose_step():
