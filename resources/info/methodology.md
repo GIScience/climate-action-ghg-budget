@@ -10,12 +10,12 @@ Quantifizierbar wir das durch CO₂-Budgets.
 Dieses Tool zeigt das verbleibende CO₂-Budget, welches die gewählte Stadt noch emittieren darf, um ihren gerechten Anteil zur Begrenzung der globalen Erwärmung auf eine bestimmte Temperatur (1,5 °C, 1,7 °C oder 2 °C) zu leisten.
 Um dies herauszufinden, berechnen wir zuerst das weltweite CO₂-Budget, das uns zur Verfügung steht, um die Erwärmung auf die eben genannten Temperaturen zu begrenzen.
 Da das Pariser Klimaabkommen Ende 2015 beschlossen wurde, beziehen wir uns auf das CO₂-Budget ab dem Jahr 2016.
-Die aktuellsten und genauesten Zahlen zum weltweiten CO₂-Budget stammen jedoch aus dem IPCC-Bericht von 2021.
+Wir nutzen jedoch Zahlen zum weltweiten CO₂-Budget aus dem [IPCC-Bericht von 2021 (Tabelle SPM.2, S. 29)](https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_SPM.pdf).
 Dort wird das globale Budget ab 2020 angegeben.
 Um trotzdem das Budget ab 2016 zu ermitteln, addieren wir zum globalen Budget von 2020 die weltweiten CO₂-Emissionen zwischen 2016 und 2020 hinzu.
-Somit berücksichtigen wir den Beginn des Pariser Abkommens und nutzen gleichzeitig die neuesten wissenschaftlichen Daten.
 Anschließend wird das globale CO₂-Budget für verschiedene Temperaturgrenzwerte auf den Anteil der gewählten Stadt an der Weltbevölkerung heruntergerechnet.
 Dieses städtische Budget umfasst alle von der lokalen Bevölkerung verursachten CO₂-Emissionen.
+
 Dem heruntergerechneten Budget stellen wir die tatsächlich gemessenen Emissionen gegenüber.
 Die Städte, für die das CO₂-Budget-Tool verfügbar ist, messen ihre Emissionen nach der [BISKO Systematik](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-Methodik.pdf).
 Aus der CO₂-Bilanzierung bis 2018 für die Stadt Heidelberg geht hervor, dass die sogenannten BISKO-Emissionen nur rund 64 % der gesamten Emissionen abdecken, die von der Heidelberger Bevölkerung verursacht werden.
