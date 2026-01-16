@@ -27,6 +27,7 @@ def build_budget_table_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
 ) -> _Artifact:
     city_name = aoi_properties.name
+    table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
     return create_table_artifact(
         data=table,
         title=f'CO₂ Budget {city_name}',
@@ -80,6 +81,7 @@ def build_budget_table_simple_artifact(
     table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
 ) -> _Artifact:
     city_name = aoi_properties.name
+    table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
     return create_table_artifact(
         data=table,
         title=f'CO₂ Budget {city_name}',
@@ -280,7 +282,7 @@ def build_emission_reduction_chart_artifact(
     percentage_decrease: int,
 ) -> _Artifact:
     city_name = aoi_properties.name
-    bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
+    bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'].iloc[-1]
     return create_plotly_chart_artifact(
         figure=fig,
         title=f'CO₂-Emissionsminderungspfade für {city_name}',

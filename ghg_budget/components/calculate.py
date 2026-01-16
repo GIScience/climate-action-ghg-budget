@@ -126,7 +126,7 @@ def current_budget(emissions_df: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame) 
     """
     current_cumulative_emissions = emissions_df.loc[emissions_df['year'] == NOW_YEAR, 'cumulative_emissions'].values[0]
 
-    aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = (
+    aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'] = (
         aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] - current_cumulative_emissions
     )
     return aoi_bisko_budgets
@@ -195,11 +195,8 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     """
     aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %']
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
-        [f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
+        ['BISKO CO₂-Budget now (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
     ]
-    aoi_bisko_budgets_simple[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets_simple[
-        f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
-    ].round(1)
     return aoi_bisko_budgets_simple
 
 
@@ -286,12 +283,12 @@ def emission_reduction(
     current_emission = emissions_aoi.loc[emissions_aoi['year'] == start_year, city_name].values[0]
     decrease_scenario = current_emission
     percentage_scenario = current_emission
-    bisko_budget_2025_2c_83p = aoi_bisko_budgets['BISKO CO₂-Budget 2025 (1000 Tonnen)'].iloc[-1]
+    bisko_budget_now_2c_83p = aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'].iloc[-1]
     emission_sum = current_emission
-    n_years = round((2 * bisko_budget_2025_2c_83p) / current_emission)
+    n_years = round((2 * bisko_budget_now_2c_83p) / current_emission)
     linear_decrease = current_emission / (n_years - 1)
-    # linear_decrease = int(current_emission**2 / (2 * bisko_budget_2025_2c_83p - current_emission))
-    percentage_decrease = int(current_emission / bisko_budget_2025_2c_83p * 100)
+    # linear_decrease = int(current_emission**2 / (2 * bisko_budget_now_2c_83p - current_emission))
+    percentage_decrease = int(current_emission / bisko_budget_now_2c_83p * 100)
     threshold_exceeded = False
     emission_reduction_df = pd.DataFrame({'Jahr': year_list})
     emission_reduction_df.loc[0, 'decrease_linear'] = current_emission
@@ -309,7 +306,7 @@ def emission_reduction(
             emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = None
 
         # Percentage emission decrease scenario
-        percentage_scenario *= 1 - current_emission / bisko_budget_2025_2c_83p
+        percentage_scenario *= 1 - current_emission / bisko_budget_now_2c_83p
         emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_percentage'] = round(
             percentage_scenario, 1
         )
@@ -317,7 +314,7 @@ def emission_reduction(
         # Business as usual scenario
         emission_sum += current_emission
         if not threshold_exceeded:
-            if emission_sum < bisko_budget_2025_2c_83p:
+            if emission_sum < bisko_budget_now_2c_83p:
                 emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = current_emission
             else:
                 emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = 0
@@ -622,8 +619,8 @@ def get_artifacts(
     aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
         'BISKO CO₂-Budget 2016 (1000 Tonnen)'
     ].round(1)
-    aoi_bisko_budgets[f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'] = aoi_bisko_budgets[
-        f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'
+    aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'] = aoi_bisko_budgets[
+        'BISKO CO₂-Budget now (1000 Tonnen)'
     ].round(1)
     aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'].apply(
         lambda x: int(x) if isinstance(x, (float, int)) else x
