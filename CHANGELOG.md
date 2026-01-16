@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.1.0...main)
-- Updating the plugin to use the climatoology version 7
+## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.2.0...main)
+
+## [1.2.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.2.0) - 2026-01-16
+
+### Added
 - Adding the new artifact "emission_growth_rates" to the list of artifacts ([#56](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/56))
+
 ### Changed
 - Plugin now also works for administrative units within cities that it supports ([#54](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/54))
+- Updated the plugin to use the climatoology version 7
 
 ### Fixed
 - Remove hard coded year in column name, so plugin does not break at new year ([#57](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/57))

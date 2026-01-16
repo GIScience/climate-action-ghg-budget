@@ -1,6 +1,6 @@
 [project]
 name = "ghg_budget"
-version = "1.1.0"
+version = "1.2.0"
 description = "Estimate the remaining GHG budget of an area to reach at least COP21."
 authors = [
     { name = "Veit Ulrich", email = "veit.ulrich@heigit.org" },
