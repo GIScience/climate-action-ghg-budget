@@ -296,11 +296,12 @@ def test_get_comparison_chart():
         'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Berichtet', 'Prognose'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
-    received = get_comparison_chart(comparison_chart_df)
+    aoi_emission_end_year = 2023
+    received = get_comparison_chart(comparison_chart_df, aoi_emission_end_year)
     assert received['data'][0]['x'] == ('1,5 °C',)
     assert received['data'][1]['x'] == ('1,7 °C',)
     assert received['data'][2]['x'] == ('2,0 °C',)
-    assert received['data'][3]['name'] == 'Berichtet'
+    assert received['data'][3]['name'] == f'Berichtet bis {aoi_emission_end_year}'
     assert received['data'][4]['name'] == 'Prognose'
 
 

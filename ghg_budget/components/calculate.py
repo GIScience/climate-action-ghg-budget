@@ -326,7 +326,7 @@ def emission_reduction(
     return emission_reduction_df, linear_decrease, percentage_decrease
 
 
-def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
+def get_comparison_chart(comparison_chart_df: pd.DataFrame, aoi_emission_end_year: int) -> Figure:
     """
     :param comparison_chart_df: Dataframe with different CO2 budgets and planned CO2 emissions
     :return: Bar chart with different CO2 budgets and planned CO2 emissions
@@ -359,7 +359,7 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame) -> Figure:
                     'BISKO CO₂-Budget 2016 (1000 Tonnen)'
                 ].values[0]
             ],
-            name='Berichtet',
+            name=f'Berichtet bis {aoi_emission_end_year}',
             marker_color='#696969',
         )
     )
@@ -691,7 +691,7 @@ def get_artifacts(
     table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, aoi_properties)
 
     log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
-    comparison_chart_data = get_comparison_chart(comparison_chart_df)
+    comparison_chart_data = get_comparison_chart(comparison_chart_df, aoi_emission_end_year)
     comparison_chart_artifact = build_budget_comparison_chart_artifact(
         comparison_chart_data, resources, aoi_properties, aoi_emission_end_year
     )

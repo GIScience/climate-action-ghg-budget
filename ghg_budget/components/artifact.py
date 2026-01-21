@@ -198,7 +198,7 @@ def build_budget_comparison_chart_artifact(
     if city_name in ['Heidelberg', 'Bonn']:
         budget_comparison_chart_artifact_metadata = ArtifactMetadata(
             name='Wie viel vom CO₂-Budget ist bereits emittiert?',
-            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
+            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden, verglichen mit den berichteten (bis {aoi_emission_end_year}) und prognostizierten Emissionen.',
             description=f'Das Diagramm zeigt die CO₂-Budgets, die {city_name} seit der Pariser Klimakonferenz 2015 zur '
             'Verfügung standen, um verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Die '
             'graue Säule daneben zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen '
@@ -215,7 +215,7 @@ def build_budget_comparison_chart_artifact(
     else:
         budget_comparison_chart_artifact_metadata = ArtifactMetadata(
             name='Wie viel vom CO₂-Budget ist bereits emittiert?',
-            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden',
+            summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden, verglichen mit den berichteten (bis {aoi_emission_end_year}) und prognostizierten Emissionen.',
             description=f'**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. '
             'Diese basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der Stadt '
             f'{city_name} von unserem abweichen.**\n\n'

@@ -9,6 +9,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ### Added
 - Adding the new artifact "emission_growth_rates" to the list of artifacts ([#56](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/56))
+- Adding the last co2 report date to the comparison chart artifact ([#60](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/60))
 
 ### Changed
 - Updated the plugin to use the climatoology version 7
