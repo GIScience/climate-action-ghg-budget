@@ -1,7 +1,7 @@
 # <img src="resources/info/icon.jpg" width="5%"> GHG Budget
 
 The GHG Budget Tool calculates the CO₂ budget for the selected city or municipality that may be emitted in order to achieve the climate targets that were agreed at the COP 21 in Paris at the end of 2015.
-The tool is currently limited to the following cities: Berlin, Bonn, Heidelberg, Karlsruhe.
+The tool is currently limited to the following cities: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe.
 However, it is to be extended to other cities in the future.
 
 ## Preparation
@@ -11,20 +11,13 @@ Create a new branch by running git checkout -b <my_new_branch_name>.
 After you have finished your implementation, you can create a merge request to the main branch that can be reviewed by the CA team.
 We highly encourage you to create smaller intermediate MRs for review!
 
-### Python Environment
+## Development setup
 
-We use [poetry](https://python-poetry.org) as an environment management system.
-Make sure you have it installed.
-Apart from some base dependencies, there is only one fixed dependency for you, which is the [climatoology](https://gitlab.gistools.geog.uni-heidelberg.de/climate-action/climatoology) package that holds all the infrastructure functionality.
-Make sure you have read-access to the climatoology repository (i.e. you can clone it).
+To run your plugin locally requires the following setup:
 
-Now run
-
-```shell
-poetry install --with dev,test
-```
-
-and you are ready to code within your poetry environment.
+1. Set up the [infrastructure](https://gitlab.heigit.org/climate-action/infrastructure) locally in `devel` mode
+2. Copy your [.env.base_template](.env.base_template) to `.env.base` and update it
+3. Run `poetry run python ghg_budget/plugin.py`
 
 ### Testing
 
@@ -61,12 +54,16 @@ This will make debugging easier at a later stage.
 
 To release a new plugin version
 
-1. update the version attribute in the [pyproject.toml](pyproject.toml) (e.g. by running `poetry version {patch|minor|major}`)
-2. update the version in the plugin `info` method
-3. create a [release](https://docs.gitlab.com/ee/user/project/releases/) on GitLab, preferably including a changelog
-
-Please adhere to the [Semantic Versioning](https://semver.org/) scheme.
-You can think of the plugin methods (info method, input parameters and artifacts) as the public API of your plugin.
+1. Update the [CHANGELOG.md](CHANGELOG.md).
+   It should already be up to date but give it one last read and update the heading above this upcoming release
+2. Decide on the new version number.
+   We suggest you adhere to the [Semantic Versioning](https://semver.org/) scheme, based on the changes since the last
+   release.
+   You can think of your plugin methods (info method, input parameters and artifacts) as the public API of your plugin.
+3. Update the version attribute in the [pyproject.toml](pyproject.toml) (e.g. by running
+   `poetry version {patch|minor|major}`)
+4. Create a [release]((https://docs.gitlab.com/ee/user/project/releases/#create-a-release-in-the-releases-page)) on
+   GitLab, including a changelog
 
 ## Docker
 
@@ -82,7 +79,7 @@ In case you want to manually build and run locally (e.g. to test a new feature i
 
 
 ```shell
-docker build --secret id=CI_JOB_TOKEN . --tag repo.heigit.org/climate-action/ghg-budget:devel
+docker build . --tag repo.heigit.org/climate-action/ghg-budget:devel
 ```
 
 Note that this will overwrite any existing image with the same tag (i.e. the one you previously pulled from the Climate
@@ -90,6 +87,19 @@ Action docker registry).
 
 To mimic the build behaviour of the CI you have to add `--build-arg CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD)`
 to the above command.
+
+#### Canary
+
+To build a canary version update your `climatoology` dependency declaration to point to the `main` branch and update
+your lock file (`poetry update climatoology`).
+Then run
+
+```shell
+docker build . \
+  --build-arg CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD) \
+  --tag repo.heigit.org/climate-action/ghg-budget:canary \
+  --push
+```
 
 ### Run
 

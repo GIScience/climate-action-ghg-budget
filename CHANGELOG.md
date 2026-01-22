@@ -13,6 +13,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ### Changed
 - Updated the plugin to use the climatoology version 7
+- Refactored plugin to adhere to new plugin structure and improve code readability ([#61](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/61))
 
 ## [1.2.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.2.0) - 2026-01-16
 

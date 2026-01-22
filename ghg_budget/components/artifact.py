@@ -8,9 +8,8 @@ from climatoology.base.artifact_creators import (
 )
 from climatoology.base.artifact import Artifact, ArtifactMetadata
 from climatoology.base.computation import ComputationResources
-from climatoology.base.baseoperator import AoiProperties
 
-from ghg_budget.components.data import NOW_YEAR
+from ghg_budget.components.data import NOW_YEAR, EMISSION_PROJECTION_CITIES
 
 
 def build_methodology_description_simple_artifact(text: str, resources: ComputationResources) -> Artifact:
@@ -28,10 +27,9 @@ def build_methodology_description_simple_artifact(text: str, resources: Computat
 
 
 def build_time_chart_artifact(
-    line_chart: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
+    line_chart: Figure, resources: ComputationResources, city_name: str, aoi_emission_end_year: int
 ) -> Artifact:
-    city_name = aoi_properties.name
-    if city_name in ['Heidelberg', 'Bonn']:
+    if city_name in EMISSION_PROJECTION_CITIES:
         time_chart_artifact_metadata = ArtifactMetadata(
             name=f'Entwicklung der CO₂-Emissionen in {city_name}',
             summary=f'Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung '
@@ -83,10 +81,7 @@ def build_time_chart_artifact(
     )
 
 
-def build_budget_table_artifact(
-    table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
-) -> Artifact:
-    city_name = aoi_properties.name
+def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResources, city_name: str) -> Artifact:
     table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
 
     budget_table_artifact_metadata = ArtifactMetadata(
@@ -143,9 +138,8 @@ def build_budget_table_artifact(
 
 
 def build_budget_table_simple_artifact(
-    table: pd.DataFrame, resources: ComputationResources, aoi_properties: AoiProperties
+    table: pd.DataFrame, resources: ComputationResources, city_name: str
 ) -> Artifact:
-    city_name = aoi_properties.name
     table = table.rename(columns={'BISKO CO₂-Budget now (1000 Tonnen)': f'BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)'})
 
     budget_table_simple_artifact_metadata = ArtifactMetadata(
@@ -192,10 +186,9 @@ def build_budget_table_simple_artifact(
 
 
 def build_budget_comparison_chart_artifact(
-    fig: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
+    fig: Figure, resources: ComputationResources, city_name: str, aoi_emission_end_year: int
 ) -> Artifact:
-    city_name = aoi_properties.name
-    if city_name in ['Heidelberg', 'Bonn']:
+    if city_name in EMISSION_PROJECTION_CITIES:
         budget_comparison_chart_artifact_metadata = ArtifactMetadata(
             name='Wie viel vom CO₂-Budget ist bereits emittiert?',
             summary=f'{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu 1,7 °C bzw. 2,0 °C Erwärmung führen würden, verglichen mit den berichteten (bis {aoi_emission_end_year}) und prognostizierten Emissionen.',
@@ -238,10 +231,9 @@ def build_budget_comparison_chart_artifact(
 
 
 def build_cumulative_chart_artifact(
-    fig: Figure, resources: ComputationResources, aoi_properties: AoiProperties, aoi_emission_end_year: int
+    fig: Figure, resources: ComputationResources, city_name: str, aoi_emission_end_year: int
 ) -> Artifact:
-    city_name = aoi_properties.name
-    if city_name in ['Heidelberg', 'Bonn']:
+    if city_name in EMISSION_PROJECTION_CITIES:
         cumulative_chart_artifact_metadata = ArtifactMetadata(
             name=f'Kumulative CO₂-Emissionen in {city_name}',
             summary=f'Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)',
@@ -297,11 +289,10 @@ def build_cumulative_chart_artifact(
 def build_emission_reduction_chart_artifact(
     fig: go.Figure,
     resources: ComputationResources,
-    aoi_properties: AoiProperties,
+    city_name: str,
     aoi_bisko_budgets: pd.DataFrame,
     percentage_decrease: int,
 ) -> Artifact:
-    city_name = aoi_properties.name
     bisko_budget_now_year = aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'].iloc[-1]
     emission_reduction_chart_artifact_metadata = ArtifactMetadata(
         name=f'CO₂-Emissionsminderungspfade für {city_name}',

@@ -76,3 +76,5 @@ class BudgetParams(BaseModel):
 
 
 NOW_YEAR = datetime.date.today().year
+
+EMISSION_PROJECTION_CITIES = ['Heidelberg', 'Bonn']  # cities where we have emission projections
