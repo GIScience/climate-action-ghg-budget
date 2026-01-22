@@ -7,6 +7,5 @@ __pycache__/
 .coverage
 coverage.xml
 
-CI_JOB_TOKEN
 
 ohsome_log/

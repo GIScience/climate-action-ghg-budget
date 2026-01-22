@@ -67,8 +67,7 @@ To release a new plugin version
 
 ## Docker
 
-To build docker images, you need to give the engine access to the climatoology repository.
-Create a file `CI_JOB_TOKEN` that contains your personal access token to the climatoology repository.
+
 
 ### Build
 
