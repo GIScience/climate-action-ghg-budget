@@ -5,14 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.2.0...main)
+## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.3.0...main)
+
+## [1.3.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.3.0) - 2026-02-12
 
 ### Added
 - Adding the new artifact "emission_growth_rates" to the list of artifacts ([#56](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/56))
 - Adding the last co2 report date to the comparison chart artifact ([#60](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/60))
 
 ### Changed
-- Updated the plugin to use the climatoology version 7
+- Updated the plugin to use the climatoology version 7.0.3
 - Refactored plugin to adhere to new plugin structure and improve code readability ([#61](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/issues/61))
 
 ### Removed
