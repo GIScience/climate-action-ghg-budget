@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ghg-budget VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-24 10:26+0200\n"
+"POT-Creation-Date: 2026-04-24 15:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgid ""
 "below 2&nbsp;°C."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:49 ghg_budget/components/artifact.py:327
+#: ghg_budget/components/artifact.py:49 ghg_budget/components/artifact.py:328
 #, python-brace-format, python-format
 msgid ""
 "Note: The emission values do not represent the entire emissions of {city_name} but only about 64&nbsp;% of the "
@@ -58,7 +58,7 @@ msgid ""
 "\"Calculation of the CO₂-budget\"."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:63 ghg_budget/components/artifact.py:287 ghg_budget/components/artifact.py:341
+#: ghg_budget/components/artifact.py:63 ghg_budget/components/artifact.py:288 ghg_budget/components/artifact.py:342
 #, python-brace-format
 msgid ""
 "**Because we do not have any emission projections for {city_name}, we created our own estimation. It is not based on "
@@ -71,12 +71,12 @@ msgstr ""
 msgid "{NOW_YEAR} BISKO CO₂-budget (1000 tons)"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:89 ghg_budget/components/artifact.py:184
+#: ghg_budget/components/artifact.py:89 ghg_budget/components/artifact.py:185
 #, python-brace-format
 msgid "{city_name} CO₂ budget"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:90 ghg_budget/components/artifact.py:185
+#: ghg_budget/components/artifact.py:90 ghg_budget/components/artifact.py:186
 #, python-brace-format
 msgid "How much of the CO₂-budget of {city_name} is already consumed?"
 msgstr ""
@@ -92,11 +92,11 @@ msgid ""
 "2&nbsp;°C respectively): These also mean that more CO₂ may still be emitted."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:101 ghg_budget/components/artifact.py:194
+#: ghg_budget/components/artifact.py:101 ghg_budget/components/artifact.py:195
 msgid "**Explanation of the columns**"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:103 ghg_budget/components/artifact.py:196
+#: ghg_budget/components/artifact.py:103 ghg_budget/components/artifact.py:197
 msgid ""
 "**Temperature limit (°C):** Target limit on maximum warming. The Paris Agreement stipulates limiting the temperature "
 "increase to well below 2&nbsp;°C. Global warming of 1.5&nbsp;°C already increases the risk of extreme weather events "
@@ -130,7 +130,7 @@ msgid ""
 "the available budget has already been exceeded."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:131 ghg_budget/components/artifact.py:215
+#: ghg_budget/components/artifact.py:131 ghg_budget/components/artifact.py:216
 #, python-brace-format
 msgid ""
 "**CO₂-budget consumed (year):** When the CO₂-budgets will be exhausted depends on how quickly we reduce our emissions"
@@ -140,7 +140,7 @@ msgid ""
 "budget."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:139 ghg_budget/components/artifact.py:223
+#: ghg_budget/components/artifact.py:139 ghg_budget/components/artifact.py:224
 #, python-brace-format
 msgid ""
 "**Note:** The CO₂-budgets in this table do not mean that the temperature limits will automatically be met if "
@@ -149,7 +149,7 @@ msgid ""
 " and to illustrate their share of global emissions."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:146 ghg_budget/components/artifact.py:230
+#: ghg_budget/components/artifact.py:146 ghg_budget/components/artifact.py:231
 msgid "You can find more information on CO₂-budgets on the left under \"Calculation of the CO₂-budget\"."
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 msgid "BISKO CO₂-budget {NOW_YEAR} (1000 tons)"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:188
+#: ghg_budget/components/artifact.py:189
 #, python-brace-format
 msgid ""
 "To limit warming to the respective maximum temperature value, {city_name} only has a limited CO₂-budget at its "
@@ -167,7 +167,7 @@ msgid ""
 "2&nbsp;°C respectively), more CO₂ may still be emitted."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:207
+#: ghg_budget/components/artifact.py:208
 #, python-brace-format
 msgid ""
 "**BISKO CO₂-budget {NOW_YEAR} (1000 tons):** CO₂-budgets currently still available to {city_name} to meet the "
@@ -177,11 +177,11 @@ msgid ""
 "cities such as {city_name} use to estimate their emissions."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:262
+#: ghg_budget/components/artifact.py:263
 msgid "How much CO₂-budget has already been emitted?"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:264
+#: ghg_budget/components/artifact.py:265
 #, python-brace-format
 msgid ""
 "The share of {city_name}'s emissions on the global CO₂-emission that, with an  83 % probability, would keep warming "
@@ -189,7 +189,7 @@ msgid ""
 "until {aoi_emission_end_year})."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:269
+#: ghg_budget/components/artifact.py:270
 #, python-brace-format
 msgid ""
 "The chart shows the CO₂-budgets available to {city_name} since the 2015 Paris Climate Conference to meet various "
@@ -204,17 +204,17 @@ msgid ""
 "below 2&nbsp;°C."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:310
+#: ghg_budget/components/artifact.py:311
 #, python-brace-format
 msgid "Cumulative CO₂-emissions in {city_name}"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:311
+#: ghg_budget/components/artifact.py:312
 #, python-brace-format
 msgid "Total CO₂-emissions in {city_name} per year since 2016 (in 1000 tons)"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:314
+#: ghg_budget/components/artifact.py:315
 #, python-brace-format
 msgid ""
 "A reduction in CO₂ emissions does not mean that the concentration of CO₂ in the atmosphere decreases, but merely that"
@@ -227,19 +227,19 @@ msgid ""
 " implemented."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:370
+#: ghg_budget/components/artifact.py:371
 #, python-brace-format
 msgid "CO₂-emission reduction paths for {city_name}"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:372
+#: ghg_budget/components/artifact.py:373
 #, python-brace-format
 msgid ""
 "Selection of potential CO₂-reduction paths of {city_name} that stay below the temperature threshold of 2°C with 83 % "
 "probability"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:377
+#: ghg_budget/components/artifact.py:378
 msgid ""
 "Many cities have already used up their CO₂-budget for meeting the 1.5&nbsp;°C temperature limit and will soon have "
 "used up the budget for 1.7&nbsp;°C as well. This chart therefore illustrates a selection of possible CO₂ reduction "
@@ -247,7 +247,7 @@ msgid ""
 "limiting the temperature increase to well below 2&nbsp;°C."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:385
+#: ghg_budget/components/artifact.py:386
 #, python-brace-format, python-format
 msgid ""
 "In {NOW_YEAR}, the city of {city_name} still has a CO₂-budget of approximately {bisko_budget_now_year} kilotons "
@@ -259,23 +259,23 @@ msgid ""
 "particularly quickly if we do not reduce emissions at all."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:396
+#: ghg_budget/components/artifact.py:397
 #, python-brace-format
 msgid ""
 "This diagram only shows fictive scenarios. You can find a projection of the real emissions of {city_name} on the left"
 " under \"Development of CO₂-emissions in {city_name}\"."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:426
+#: ghg_budget/components/artifact.py:427
 msgid "Comparison of CO₂-emission reduction"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:427
+#: ghg_budget/components/artifact.py:428
 #, python-brace-format
 msgid "Average yearly reduction rate of CO₂-emissions from 2016 to {NOW_YEAR}"
 msgstr ""
 
-#: ghg_budget/components/artifact.py:430
+#: ghg_budget/components/artifact.py:431
 #, python-brace-format
 msgid ""
 "This figure shows the annual CO₂ emission reduction rates for cities for which emission data is currently available. "
@@ -283,7 +283,7 @@ msgid ""
 "CO₂ emissions in accordance with the BISKO standard and covers the period from 2016 to {NOW_YEAR}."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:437
+#: ghg_budget/components/artifact.py:438
 msgid ""
 "Note that the last year of reported data differs between cities: Heidelberg (2022), Bonn (2022), Berlin (2023), "
 "Karlsruhe (2019) and Hamburg (2019). Emission data beyond these years are based on estimates and not on reported "
@@ -302,16 +302,16 @@ msgstr ""
 msgid "is not consumed"
 msgstr ""
 
+#: ghg_budget/components/calculate.py:176 ghg_budget/components/calculate.py:432
+msgid "."
+msgstr ""
+
 #: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:139
 msgid "1.7 °C"
 msgstr ""
 
 #: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:149
 msgid "2.0 °C"
-msgstr ""
-
-#: ghg_budget/components/calculate.py:432
-msgid "."
 msgstr ""
 
 #: ghg_budget/components/data.py:24
@@ -370,7 +370,7 @@ msgstr ""
 
 #: ghg_budget/components/figures.py:245
 #, python-brace-format
-msgid "Emissions are reduced by<br>{linear_decrease}'000 tons per year"
+msgid "Emissions are reduced by<br>{linear_decrease},000 tons per year"
 msgstr ""
 
 #: ghg_budget/components/figures.py:256

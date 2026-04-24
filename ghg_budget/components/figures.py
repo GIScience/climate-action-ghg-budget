@@ -242,7 +242,7 @@ def get_emission_reduction_chart(
             x=emission_reduction_df['Year'],
             y=emission_reduction_df['decrease_linear'],
             mode='lines+markers',
-            name=tr("Emissions are reduced by<br>{linear_decrease}'000 tons per year").format(
+            name=tr('Emissions are reduced by<br>{linear_decrease},000 tons per year').format(
                 linear_decrease=round(linear_decrease)
             ),
             line=dict(color='magenta'),
