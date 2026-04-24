@@ -1,17 +1,18 @@
 from enum import Enum
 
+from climatoology.base.i18n import N_
 from pydantic import BaseModel, Field
 
 
 class DetailOption(Enum):
-    SIMPLE = 'einfach'
-    EXTENDED = 'erweitert'
+    SIMPLE = N_('simple')
+    EXTENDED = N_('extended')
 
 
 class ComputeInput(BaseModel):
     level_of_detail: DetailOption = Field(
-        title='Detailgrad',
-        description='Bitte wählen Sie, wie detailliert Sie die Ergebnisse haben möchten.',
+        title=N_('Degree of detail'),
+        description=N_('Please choose how detailed you would like the results to be.'),
         examples=[DetailOption.EXTENDED],
         default=DetailOption.EXTENDED,
     )

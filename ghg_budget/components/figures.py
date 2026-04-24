@@ -1,7 +1,9 @@
 import logging
 import math
+from enum import StrEnum
 
 import pandas as pd
+from climatoology.base.i18n import tr
 from plotly import graph_objects as go
 from plotly.graph_objs import Figure
 
@@ -13,24 +15,25 @@ budget_params = BudgetParams()
 
 def get_comparison_chart(comparison_chart_df: pd.DataFrame, aoi_emission_end_year: int) -> Figure:
     """
+    :param aoi_emission_end_year:
     :param comparison_chart_df: Dataframe with different CO2 budgets and planned CO2 emissions
     :return: Bar chart with different CO2 budgets and planned CO2 emissions
     """
     log.debug('Creating bar chart with different CO2 budgets and planned CO2 emissions.')
 
-    stack_labels = ['Berichtet', 'Prognose']
-    temperature_bar = comparison_chart_df[~comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
-    stacked_bar = comparison_chart_df[comparison_chart_df['Temperaturgrenzwert (°C)'].isin(stack_labels)]
+    stack_labels = ['Reported', 'Projection']
+    temperature_bar = comparison_chart_df[~comparison_chart_df['Temperature threshold (°C)'].isin(stack_labels)]
+    stacked_bar = comparison_chart_df[comparison_chart_df['Temperature threshold (°C)'].isin(stack_labels)]
     colors = ['gold', '#FF9913', 'red']
-    names = ['1,5 °C', '1,7 °C', '2,0 °C']
+    names = [tr('1.5 °C'), tr('1.7 °C'), tr('2.0 °C')]
     fig = go.Figure()
 
     for temperature, color in zip(names, colors):
-        subset = temperature_bar[temperature_bar['Temperaturgrenzwert (°C)'] == temperature]
+        subset = temperature_bar[temperature_bar['Temperature threshold (°C)'] == temperature]
         fig.add_trace(
             go.Bar(
-                x=subset['Temperaturgrenzwert (°C)'],
-                y=subset['BISKO CO₂-Budget 2016 (1000 Tonnen)'],
+                x=subset['Temperature threshold (°C)'],
+                y=subset['BISKO CO₂-budget 2016 (1000 tons)'],
                 name=temperature,
                 marker_color=color,
             )
@@ -38,36 +41,36 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame, aoi_emission_end_yea
 
     fig.add_trace(
         go.Bar(
-            x=['Berichtet <br>& Prognose'],
+            x=[tr('Reported <br>& Projection')],
             y=[
-                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Berichtet'][
-                    'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+                stacked_bar[stacked_bar['Temperature threshold (°C)'] == 'Reported'][
+                    'BISKO CO₂-budget 2016 (1000 tons)'
                 ].values[0]
             ],
-            name=f'Berichtet bis {aoi_emission_end_year}',
+            name=tr('Reported until {aoi_emission_end_year}').format(aoi_emission_end_year=aoi_emission_end_year),
             marker_color='#696969',
         )
     )
 
     fig.add_trace(
         go.Bar(
-            x=['Berichtet <br>& Prognose'],
+            x=[tr('Reported <br>& Projection')],
             y=[
-                stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
-                    'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+                stacked_bar[stacked_bar['Temperature threshold (°C)'] == 'Projection'][
+                    'BISKO CO₂-budget 2016 (1000 tons)'
                 ].values[0]
             ],
-            name='Prognose',
+            name=tr('Projection'),
             marker_color='#B0B0B0',
         )
     )
 
     all_y = (
-        stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Berichtet'][
-            'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+        stacked_bar[stacked_bar['Temperature threshold (°C)'] == 'Reported'][
+            'BISKO CO₂-budget 2016 (1000 tons)'
         ].values[0]
-        + stacked_bar[stacked_bar['Temperaturgrenzwert (°C)'] == 'Prognose'][
-            'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+        + stacked_bar[stacked_bar['Temperature threshold (°C)'] == 'Projection'][
+            'BISKO CO₂-budget 2016 (1000 tons)'
         ].values[0]
     )
     y_min = 0
@@ -75,12 +78,12 @@ def get_comparison_chart(comparison_chart_df: pd.DataFrame, aoi_emission_end_yea
 
     tick_step = choose_step(max_y)
 
-    tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
-    ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
+    tick_vals = list(range(y_min, int(max_y) + tick_step, tick_step))
+    tick_text = [f'{val:,.0f}'.replace(',', tr(',')) for val in tick_vals]
 
     fig.update_layout(
         barmode='stack',
-        yaxis=dict(title='CO₂-Emissionen (1000 Tonnen)', tickvals=tickvals, ticktext=ticktext),
+        yaxis=dict(title=tr('CO₂-emissions (1000 tons)'), tickvals=tick_vals, ticktext=tick_text),
         showlegend=True,
         legend_traceorder='normal',
         margin=dict(t=30, b=60, l=80, r=30),
@@ -101,60 +104,60 @@ def get_time_chart(
     """
     log.debug('Creating line chart with projected yearly emissions of the AOI and alternative reduction paths.')
 
-    max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max() + 5
+    max_year = emissions_df[['Year', city_name]].dropna()['Year'].max() + 5
 
-    measured = emissions_df[(emissions_df['Jahr'] <= aoi_emission_end_year) & (emissions_df['Jahr'] <= max_year)]
-    projected = emissions_df[(emissions_df['Jahr'] >= aoi_emission_end_year) & (emissions_df['Jahr'] <= max_year)]
+    measured = emissions_df[(emissions_df['Year'] <= aoi_emission_end_year) & (emissions_df['Year'] <= max_year)]
+    projected = emissions_df[(emissions_df['Year'] >= aoi_emission_end_year) & (emissions_df['Year'] <= max_year)]
 
     fig = go.Figure()
 
     fig.add_trace(
         go.Scatter(
-            x=measured['Jahr'],
+            x=measured['Year'],
             y=measured[city_name],
             mode='lines+markers',
-            name='Berichtet',
+            name=tr('Reported'),
             line=dict(color='#696969'),
         )
     )
 
     fig.add_trace(
         go.Scatter(
-            x=projected['Jahr'],
+            x=projected['Year'],
             y=projected[city_name],
             mode='lines+markers',
-            name='Prognose',
+            name=tr('Projection'),
             line=dict(color='#B0B0B0'),
         )
     )
 
     fig.add_trace(
         go.Scatter(
-            x=emission_paths_df['Jahr'],
+            x=emission_paths_df['Year'],
             y=round(emission_paths_df['1.7 °C'], 1),
             mode='lines',
-            name='1,7 °C',
+            name=tr('1.7 °C'),
             line=dict(dash='dash', color='#FF9913'),
         )
     )
 
     fig.add_trace(
         go.Scatter(
-            x=emission_paths_df['Jahr'],
+            x=emission_paths_df['Year'],
             y=round(emission_paths_df['2.0 °C'], 1),
             mode='lines',
-            name='2,0 °C',
+            name=tr('2.0 °C'),
             line=dict(dash='dot', color='red'),
         )
     )
 
     fig.update_layout(
-        xaxis_title='Jahr',
-        yaxis_title='CO₂-Emissionen (1000 Tonnen)',
+        xaxis_title=tr('Year'),
+        yaxis_title=tr('CO₂-emissions (1000 tons)'),
         template='plotly_white',
         margin=dict(t=30, b=60, l=80, r=30),
         yaxis_tickformat=',d',
-        separators=',.',
+        separators=tr(',,'),
     )
 
     return fig
@@ -167,21 +170,26 @@ def get_cumulative_chart(emissions_df: pd.DataFrame, city_name: str, aoi_emissio
     :param city_name: Name of the AOI
     :return: Bar chart with cumulative emissions in the AOI
     """
+
+    class Category(StrEnum):
+        REPORTED = tr('Reported')
+        ESTIMATE = tr('Projection')
+
     log.debug('Creating bar chart with cumulative emissions in the AOI.')
 
-    emissions_df['Category'] = emissions_df['Jahr'].apply(
-        lambda x: 'Berichtet' if x <= aoi_emission_end_year else 'Prognose'
+    emissions_df['Category'] = emissions_df['Year'].apply(
+        lambda x: Category.REPORTED if x <= aoi_emission_end_year else Category.ESTIMATE
     )
-    colors = {'Berichtet': '#696969', 'Prognose': '#B0B0B0'}
-    max_year = emissions_df[['Jahr', city_name]].dropna()['Jahr'].max()
+    colors = {Category.REPORTED: '#696969', Category.ESTIMATE: '#B0B0B0'}
+    max_year = emissions_df[['Year', city_name]].dropna()['Year'].max()
 
     fig = go.Figure()
 
-    for category in ['Berichtet', 'Prognose']:
-        filtered = emissions_df[(emissions_df['Category'] == category) & (emissions_df['Jahr'] <= max_year)]
+    for category in Category:
+        filtered = emissions_df[(emissions_df['Category'] == category) & (emissions_df['Year'] <= max_year)]
         fig.add_trace(
             go.Bar(
-                x=filtered['Jahr'],
+                x=filtered['Year'],
                 y=round(filtered['cumulative_emissions'], 0),
                 name=category,
                 marker_color=colors[category],
@@ -194,13 +202,13 @@ def get_cumulative_chart(emissions_df: pd.DataFrame, city_name: str, aoi_emissio
 
     tick_step = choose_step(max_y)
 
-    tickvals = list(range(y_min, int(max_y) + tick_step, tick_step))
-    ticktext = [f'{val:,.0f}'.replace(',', '.') for val in tickvals]
+    tick_vals = list(range(y_min, int(max_y) + tick_step, tick_step))
+    tick_text = [f'{val:,.0f}'.replace(',', tr(',')) for val in tick_vals]
 
     fig.update_layout(
         barmode='group',
-        xaxis_title='Jahr',
-        yaxis=dict(title='Aufsummierte CO₂-Emissionen (1000 Tonnen)', tickvals=tickvals, ticktext=ticktext),
+        xaxis_title=tr('Year'),
+        yaxis=dict(title=tr('Total CO₂-emissions (1000 tons)'), tickvals=tick_vals, ticktext=tick_text),
         margin=dict(t=30, b=60, l=80, r=30),
     )
 
@@ -220,38 +228,42 @@ def get_emission_reduction_chart(
 
     fig.add_trace(
         go.Scatter(
-            x=emission_reduction_df['Jahr'],
+            x=emission_reduction_df['Year'],
             y=emission_reduction_df['decrease_percentage'],
             mode='lines+markers',
-            name=f'Emissionen sinken um<br>{percentage_decrease} % pro Jahr',
+            name=tr('Emissions are reduced by <br>{percentage_decrease}% per year').format(
+                percentage_decrease=percentage_decrease
+            ),
             line=dict(color='blue'),
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=emission_reduction_df['Jahr'],
+            x=emission_reduction_df['Year'],
             y=emission_reduction_df['decrease_linear'],
             mode='lines+markers',
-            name=f'Emissionen sinken um<br>{round(linear_decrease)}.000 Tonnen pro Jahr',
+            name=tr("Emissions are reduced by<br>{linear_decrease}'000 tons per year").format(
+                linear_decrease=round(linear_decrease)
+            ),
             line=dict(color='magenta'),
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=emission_reduction_df['Jahr'],
+            x=emission_reduction_df['Year'],
             y=emission_reduction_df['business_as_usual'],
             mode='lines+markers',
-            name='Business as usual',
+            name=tr('Business as usual'),
             line=dict(color='#2ca02c'),
         )
     )
 
     fig.update_layout(
-        xaxis_title='Jahr',
-        yaxis_title='CO₂-Emissionen (1000 Tonnen)',
+        xaxis_title=tr('Year'),
+        yaxis_title=tr('CO₂-emissions (1000 tons)'),
         margin=dict(t=30, b=60, l=80, r=30),
         yaxis_tickformat=',d',
-        separators=',.',
+        separators=tr(',,'),
     )
     return fig
 
@@ -261,20 +273,25 @@ def get_emission_growth_rates_chart(emissions_aoi: pd.DataFrame) -> Figure:
     :param emissions_aoi: pd.DataFrame with past yearly (estimated) CO2 emissions in the AOI
     :return: Plotly figure with emission growth rate for all AOIs
     """
+
+    class Trend(StrEnum):
+        INCREASE = tr('Upward trend')
+        DECREASE = tr('Downward trend')
+
     cities = emissions_aoi.columns[2:].tolist()
-    colors = {'Aufwärtstrend': 'red', 'Abwärtstrend': 'green'}
+    colors = {Trend.INCREASE: 'red', Trend.DECREASE: 'green'}
 
     fig = go.Figure()
-    legend_shown = {'Aufwärtstrend': False, 'Abwärtstrend': False}
+    legend_shown = {Trend.INCREASE: False, Trend.DECREASE: False}
     for cities_name in cities:
-        first_year_emission = emissions_aoi.loc[emissions_aoi['Jahr'] == budget_params.pledge_year, cities_name].values[
+        first_year_emission = emissions_aoi.loc[emissions_aoi['Year'] == budget_params.pledge_year, cities_name].values[
             0
         ]
-        current_year_emission = emissions_aoi.loc[emissions_aoi['Jahr'] == NOW_YEAR, cities_name].values[0]
+        current_year_emission = emissions_aoi.loc[emissions_aoi['Year'] == NOW_YEAR, cities_name].values[0]
         average_annual_growth_rate = (
             ((current_year_emission / first_year_emission) ** (1 / (NOW_YEAR - budget_params.pledge_year))) - 1
         ) * 100
-        category = 'Aufwärtstrend' if average_annual_growth_rate > 0 else 'Abwärtstrend'
+        category = Trend.INCREASE if average_annual_growth_rate > 0 else Trend.DECREASE
 
         fig.add_trace(
             go.Bar(
@@ -287,7 +304,7 @@ def get_emission_growth_rates_chart(emissions_aoi: pd.DataFrame) -> Figure:
         )
         legend_shown[category] = True
 
-        for category in ['Aufwärtstrend', 'Abwärtstrend']:
+        for category in Trend:
             if category not in [trace.name for trace in fig.data]:
                 fig.add_trace(
                     go.Bar(
@@ -300,8 +317,8 @@ def get_emission_growth_rates_chart(emissions_aoi: pd.DataFrame) -> Figure:
                 )
 
     fig.update_layout(
-        xaxis_title='Städte',
-        yaxis_title='Emissionsminderung (%)',
+        xaxis_title=tr('Cities'),
+        yaxis_title=tr('Emission reduction (%)'),
         margin=dict(t=30, b=60, l=80, r=30),
     )
     return fig

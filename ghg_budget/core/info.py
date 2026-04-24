@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 
+from climatoology.base.i18n import N_
 from climatoology.base.plugin_info import Concern, PluginAuthor, PluginInfo, generate_plugin_info
 from pydantic import HttpUrl
 
@@ -33,9 +34,7 @@ def get_info() -> PluginInfo:
             ),
         ],
         concerns={Concern.CLIMATE_ACTION__GHG_EMISSION, Concern.CLIMATE_ACTION__MITIGATION},
-        purpose=Path('resources/info/purpose.md'),
-        teaser='Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen.',
-        methodology=Path('resources/info/methodology.md'),
+        teaser=N_('Calculation of urban CO₂-budgets to limit global warming to specific temperatures.'),
         sources_library=Path('resources/info/sources.bib'),
         demo_input_parameters=ComputeInput(level_of_detail=DetailOption.EXTENDED),
         computation_shelf_life=timedelta(weeks=52),

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Tuple
 
 import pandas as pd
+from climatoology.base.i18n import N_
 from pydantic import BaseModel
 
 emissions_aoi = pd.read_csv('./resources/min_co2_kt_sum.csv')
@@ -20,8 +21,8 @@ class GHGData:
 GHG_DATA = GHGData(
     budget_glob=pd.DataFrame(
         {
-            'Temperaturgrenzwert (°C)': [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
-            'Wahrscheinlichkeit': ['67 %', '83 %', '67 %', '83 %', '67 %', '83 %'],
+            N_('Temperature threshold (°C)'): [1.5, 1.5, 1.7, 1.7, 2.0, 2.0],
+            N_('Probability'): ['67 %', '83 %', '67 %', '83 %', '67 %', '83 %'],
             'budget_glob': [400000000, 300000000, 700000000, 550000000, 1150000000, 900000000],
         },
     ),

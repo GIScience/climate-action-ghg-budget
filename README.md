@@ -1,6 +1,7 @@
 # <img src="resources/info/icon.jpg" width="5%"> GHG Budget
 
-The GHG Budget Tool calculates the CO₂ budget for the selected city or municipality that may be emitted in order to achieve the climate targets that were agreed at the COP 21 in Paris at the end of 2015.
+The GHG Budget Tool calculates the CO₂ budget for the selected city or municipality that may be emitted in order to
+achieve the climate targets that were agreed at the COP 21 in Paris at the end of 2015.
 The tool is currently limited to the following cities: Berlin, Bonn, Hamburg, Heidelberg, Karlsruhe.
 However, it is to be extended to other cities in the future.
 
@@ -8,7 +9,8 @@ However, it is to be extended to other cities in the future.
 
 Use git to clone this repository to your computer.
 Create a new branch by running git checkout -b <my_new_branch_name>.
-After you have finished your implementation, you can create a merge request to the main branch that can be reviewed by the CA team.
+After you have finished your implementation, you can create a merge request to the main branch that can be reviewed by
+the CA team.
 We highly encourage you to create smaller intermediate MRs for review!
 
 ## Development setup
@@ -19,9 +21,46 @@ To run your plugin locally requires the following setup:
 2. Copy your [.env.base_template](.env.base_template) to `.env.base` and update it
 3. Run `poetry run python ghg_budget/plugin.py`
 
+### Translations
+
+We use [GNU gettext](https://www.gnu.org/software/gettext/) with support
+of [pybabel](https://babel.pocoo.org/en/latest/) for translations.
+In case a string or Markdown file was updated, the translation needs to be adapted.
+To do so run
+
+1. Extract .pot templates
+   ```shell
+   # If changes to the .md files were made run
+   poetry run md2po -P -S resources/locales/en/*.md resources/locales
+   # If changes to strings in the source code were made run
+   poetry run pybabel extract ghg_budget/ \
+       -w 120 \
+       -o resources/locales/messages.pot \
+       --keyword=tr \
+       --copyright-holder="HeiGIT gGmbH" \
+       --project=ghg-budget
+   ```
+2. Update .po files
+   ```shell
+   poetry run pybabel update \
+       -w 120 \
+       -i resources/locales/<the-changed-file>.pot \
+       -D <the-changed-file> \
+       -d resources/locales/
+   ```
+3. Now update the fresh .po files with the new translations
+4. If changes were made to the .md files, for each available language run
+   ```shell
+   poetry run po2md \
+     -m 120 \
+     -i resources/locales/<target-lang>/LC_MESSAGES/ \
+     -t resources/locales/en/ \
+     -o resources/locales/<target-lang>
+   ```
+
 ### Testing
 
-We use [pytest](pytest.org) as testing engine.
+We use [pytest](https://pytest.org) as testing engine.
 Ensure all tests are passing on the unmodified repository by running `poetry run pytest`.
 
 #### Coverage
@@ -41,8 +80,10 @@ It is important that the code created by the different plugin developers adheres
 We use [ruff](https://docs.astral.sh/ruff/) for linting and formatting the code as part of our pre-commit hooks.
 Please activate pre-commit by running `poetry run pre-commit install`.
 It will now run automatically before each commit and apply fixes for a variety of lint errors to your code.
-Note that we have increased the maximum number of characters per line to be 120 to make better use of large modern displays.
-If you want to keep short lines explicitly seperate (e.g. in the definition of functions or list) please use ["magic trailing commas"](https://docs.astral.sh/ruff/settings/#format_skip-magic-trailing-comma).
+Note that we have increased the maximum number of characters per line to be 120 to make better use of large modern
+displays.
+If you want to keep short lines explicitly seperate (e.g. in the definition of functions or list) please
+use ["magic trailing commas"](https://docs.astral.sh/ruff/settings/#format_skip-magic-trailing-comma).
 
 ### Logging
 
@@ -67,15 +108,12 @@ To release a new plugin version
 
 ## Docker
 
-
-
 ### Build
 
 The tool is also [Dockerised](Dockerfile).
 Images are automatically built and deployed in the [CI-pipeline](.gitlab-ci.yml).
 
 In case you want to manually build and run locally (e.g. to test a new feature in development), execute
-
 
 ```shell
 docker build . --tag repo.heigit.org/climate-action/ghg-budget:devel

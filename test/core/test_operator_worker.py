@@ -1,5 +1,5 @@
 from climatoology.base.artifact import Artifact
-from climatoology.base.plugin_info import PluginInfo
+from climatoology.base.plugin_info import PluginInfo, DEFAULT_LANGUAGE
 
 
 def test_plugin_info_request(operator):
@@ -14,6 +14,7 @@ def test_plugin_compute_request(
         params=expected_compute_input,
         aoi=default_aoi,
         aoi_properties=default_aoi_properties,
+        language=DEFAULT_LANGUAGE,
     )
     assert len(computed_artifacts) == 6
     for artifact in computed_artifacts:

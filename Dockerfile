@@ -1,11 +1,12 @@
 FROM python:3.13-bookworm
 
 ARG CI_COMMIT_SHORT_SHA
+ARG USER='plugin'
 ENV PACKAGE_NAME='ghg_budget'
 
-RUN useradd -ms /bin/bash plugin
-USER plugin
-ENV WD=/home/plugin
+RUN useradd -ms /bin/bash $USER
+USER $USER
+ENV WD=/home/$USER
 WORKDIR $WD
 
 ENV POETRY_HOME="$WD/.cache/poetry"
@@ -21,8 +22,11 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-ansi --no-interaction --without dev,test --no-root
 
 COPY $PACKAGE_NAME $PACKAGE_NAME
-COPY resources resources
+COPY --chown=$USER resources resources
 COPY README.md ./README.md
+
+# see https://github.com/python-babel/babel/issues/1268
+RUN poetry run pybabel compile -d resources/locales; exit 0
 
 RUN if [[ -n "${CI_COMMIT_SHORT_SHA}" ]]; then sed -E -i "s/^(version *= *\"[^+]*)\"/\\1+${CI_COMMIT_SHORT_SHA}\"/" pyproject.toml; fi;
 

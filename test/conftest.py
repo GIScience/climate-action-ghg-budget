@@ -2,8 +2,9 @@ import uuid
 
 import pytest
 import shapely
-from climatoology.base.computation import ComputationScope
 from climatoology.base.baseoperator import AoiProperties
+from climatoology.base.computation import ComputationScope
+from shapely import Polygon
 
 from ghg_budget.core.input import ComputeInput
 from ghg_budget.core.operator_worker import GHGBudget
@@ -13,7 +14,7 @@ from ghg_budget.core.operator_worker import GHGBudget
 def default_aoi() -> shapely.MultiPolygon:
     return shapely.MultiPolygon(
         polygons=[
-            [
+            Polygon(
                 [
                     [8.65, 49.39],
                     [8.65, 49.43],
@@ -21,7 +22,7 @@ def default_aoi() -> shapely.MultiPolygon:
                     [8.74, 49.39],
                     [8.65, 49.39],
                 ]
-            ]
+            )
         ]
     )
 
@@ -35,7 +36,7 @@ def default_aoi_properties() -> AoiProperties:
 def expected_compute_input() -> ComputeInput:
     # noinspection PyTypeChecker
     return ComputeInput(
-        level_of_detail='erweitert',
+        level_of_detail='extended',
     )
 
 

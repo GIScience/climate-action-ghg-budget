@@ -1,0 +1,524 @@
+# German translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-04-24 10:26+0200\n"
+"PO-Revision-Date: 2026-04-24 10:27+0200\n"
+"Last-Translator: Moritz Schott <moritz.schott@heigit.org>\n"
+"Language-Team: de <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
+"X-Generator: Poedit 3.9\n"
+
+#: ghg_budget/components/artifact.py:17
+msgid "Calculation of the CO₂-budget"
+msgstr "Berechnung des CO₂-Budgets"
+
+#: ghg_budget/components/artifact.py:18
+msgid " "
+msgstr " "
+
+#: ghg_budget/components/artifact.py:33
+#, python-brace-format
+msgid "Development of the CO₂-emissions in {city_name}"
+msgstr "Entwicklung der CO₂-Emissionen in {city_name}"
+
+#: ghg_budget/components/artifact.py:35
+#, python-brace-format
+msgid ""
+"Development of the CO₂-emissions in {city_name} and alternative reduction paths since 2016 by maintaining temperature "
+"thresholds with 83 % probability (in 1000 tons)"
+msgstr ""
+"Entwicklung der CO₂-Emissionen {city_name}s und alternative Reduktionspfade seit 2016 unter Einhaltung der "
+"Temperaturgrenzwerte mit 83 % Wahrscheinlichkeit (in 1000 Tonnen)"
+
+#: ghg_budget/components/artifact.py:40
+#, python-brace-format
+msgid ""
+"The emission values from 2016 up to {aoi_emission_end_year} in the data set \"reported\" are reported values based on "
+"the BISKO-standard, the values from {year_after} onwards are predictions assuming that the measures adopted by "
+"{city_name} to reduce emissions are actually implemented. The alternative reduction paths represent fictive scenarios "
+"of how {city_name} could become (or could have become) CO₂-neutral by 2040 without exceeding the CO₂-budgets "
+"available to stay below certain temperature thresholds. Note that the Paris agreement demands a limit significantly "
+"below 2&nbsp;°C."
+msgstr ""
+"Die Emissionswerte von 2016 bis {aoi_emission_end_year} in der Datenreihe \"Berichtet\" sind berichtete Werte "
+"basierend auf dem BISKO-Standard, die Werte ab {year_after} sind Prognosen unter der Annahme, dass die zurzeit "
+"beschlossenen Maßnahmen {city_name}s zur Emissionsreduzierung umgesetzt werden. Die alternativen Reduktionspfade "
+"stellen fiktive Szenarien dar, wie {city_name} bis 2040 CO₂-Neutralität erreichen könnte bzw. hätte erreichen können, "
+"ohne die CO₂-Budgets für die Einhaltung der Temperaturgrenzwerte zu überschreiten. Dabei ist zu beachten, dass das "
+"internationale Abkommen von Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt."
+
+#: ghg_budget/components/artifact.py:49 ghg_budget/components/artifact.py:327
+#, python-format, python-brace-format
+msgid ""
+"Note: The emission values do not represent the entire emissions of {city_name} but only about 64&nbsp;% of the "
+"emissions. This is due to how emissions are determined according to the BISKO-Standard. The BISKO-Standard reflects, "
+"in simple terms, only emissions within the city boundaries of {city_name} but not those emitted by inhabitants of "
+"{city_name} outside the city area. More information on the BISKO classification can be found on the left under "
+"\"Calculation of the CO₂-budget\"."
+msgstr ""
+"Anmerkung: Die Emissionswerte bilden nicht die gesamten Emissionen der Stadt {city_name} ab, sondern nur etwa 64&nbsp;"
+"% der Emissionen. Dies liegt daran, dass die Emissionen nach dem BISKO-Standard ermittelt wurden. Der BISKO-Standard "
+"berücksichtigt, vereinfacht gesagt, nur die Emissionen, die innerhalb {city_name}s entstehen, nicht jedoch jene, die "
+"von Personen aus {city_name} außerhalb der Stadtgrenzen verursacht werden. Mehr Informationen zur BISKO-Systematik "
+"finden Sie links im Reiter \"Berechnung des CO₂-Budgets\"."
+
+#: ghg_budget/components/artifact.py:63 ghg_budget/components/artifact.py:287 ghg_budget/components/artifact.py:341
+#, python-brace-format
+msgid ""
+"**Because we do not have any emission projections for {city_name}, we created our own estimation. It is not based on "
+"potentially planned measures of the city. The actually targeted reduction path of {city_name} may therefore differ "
+"from ours.**"
+msgstr ""
+"**Da uns für die Stadt {city_name} keine Emissionsprognose vorliegt, haben wir unsere eigene Prognose erstellt. Diese "
+"basiert nicht auf evtl. geplanten Maßnahmen der Stadt. Somit kann der tatsächlich vorgesehene Reduktionspfad der "
+"Stadt {city_name} von unserem abweichen.**"
+
+#: ghg_budget/components/artifact.py:85
+#, python-brace-format
+msgid "{NOW_YEAR} BISKO CO₂-budget (1000 tons)"
+msgstr "BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)"
+
+#: ghg_budget/components/artifact.py:89 ghg_budget/components/artifact.py:184
+#, python-brace-format
+msgid "{city_name} CO₂ budget"
+msgstr "CO₂ Budget {city_name}"
+
+#: ghg_budget/components/artifact.py:90 ghg_budget/components/artifact.py:185
+#, python-brace-format
+msgid "How much of the CO₂-budget of {city_name} is already consumed?"
+msgstr "Wie viel des {city_name} zustehenden CO₂-Budgets wurde bereits verbraucht?"
+
+#: ghg_budget/components/artifact.py:92
+#, python-format, python-brace-format
+msgid ""
+"To limit the temperature increase to the respective maximum value with a probability of 67&nbsp;% or 83&nbsp;%, "
+"{city_name} only has a limited CO₂ budget available. This means that the city of {city_name} has the smallest budget "
+"available to contribute its share toward staying below the 1.5&nbsp;°C limit with a probability of 83&nbsp;%. If we "
+"as a society accept a greater risk of failure, that is, only a 67&nbsp;% probability of staying within the limit, "
+"{city_name} has a larger budget available. The same applies to higher temperature thresholds (1.7&nbsp;°C and 2&nbsp;"
+"°C respectively): These also mean that more CO₂ may still be emitted."
+msgstr ""
+"Um mit einer Wahrscheinlichkeit von 67&nbsp;% bzw. 83&nbsp;% die Temperaturerhöhung auf den jeweiligen Maximalwert zu "
+"begrenzen, hat {city_name} nur ein beschränktes CO₂-Budget zur Verfügung. Das heißt, dass der Stadt {city_name} für "
+"die Einhaltung des Grenzwerts von 1,5&nbsp;°C mit einer Wahrscheinlichkeit von 83&nbsp;% das geringste Budget zur "
+"Verfügung steht, um ihren Anteil zur Unterschreitung der Grenze beizutragen. Nehmen wir gesellschaftlich ein größeres "
+"Risiko des Scheiterns in Kauf, also eine Wahrscheinlichkeit von nur 67&nbsp;%, um den Grenzwert einzuhalten, steht "
+"{city_name} ein höheres Budget zur Verfügung. Gleiches gilt für höhere Temperaturgrenzen (1,7&nbsp;°C bzw. 2&nbsp;"
+"°C): Diese bedeuten ebenfalls, dass noch mehr CO₂ emittiert werden darf."
+
+#: ghg_budget/components/artifact.py:101 ghg_budget/components/artifact.py:194
+msgid "**Explanation of the columns**"
+msgstr "**Erläuterung der Spalten**"
+
+#: ghg_budget/components/artifact.py:103 ghg_budget/components/artifact.py:196
+msgid ""
+"**Temperature limit (°C):** Target limit on maximum warming. The Paris Agreement stipulates limiting the temperature "
+"increase to well below 2&nbsp;°C. Global warming of 1.5&nbsp;°C already increases the risk of extreme weather events "
+"such as heatwaves and heavy rainfall. At 2&nbsp;°C of warming, these risks will be considerably higher. The specific "
+"impacts, however, depend on the trajectory of greenhouse gas emissions — in particular on whether and by how much the "
+"1.5&nbsp;°C threshold is temporarily exceeded. Further information on the effects of 1.5&nbsp;°C warming and 2&nbsp;"
+"°C warming respectively can be found [here](https://www.ipcc.ch/site/assets/uploads/sites/2/2018/12/"
+"SR15_FAQ_Low_Res.pdf) under FAQ 3.1."
+msgstr ""
+"**Temperaturgrenzwert (°C):** Angestrebte Begrenzung auf eine maximale Erwärmung. Das internationale Abkommen von "
+"Paris gibt eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vor. Eine globale Erwärmung um 1,5&nbsp;°C "
+"erhöht bereits das Risiko für extreme Wetterereignisse wie Hitzewellen und Starkregen. Bei einer Erwärmung um 2&nbsp;"
+"°C werden diese Risiken noch deutlich höher ausfallen. Die konkreten Auswirkungen hängen jedoch vom Verlauf der "
+"Treibhausgasemissionen ab – insbesondere davon, ob und wie stark die 1,5&nbsp;°C-Marke vorübergehend überschritten "
+"wird. Weitere Informationen zu den Auswirkungen einer Erwärmung um 1,5&nbsp;°C bzw. 2&nbsp;°C finden Sie [hier]"
+"(https://www.ipcc.ch/site/assets/uploads/2020/07/SR1.5-FAQs_de_barrierefrei.pdf) unter FAQ 3.1."
+
+#: ghg_budget/components/artifact.py:114
+msgid ""
+"**Probability:** The exact increase in temperature for a certain amount of emitted CO₂ cannot be predicted exactly. "
+"The International Panel on Climate Change (IPCC) therefore calculates global CO₂-budgets for various probabilities of "
+"staying below temperature thresholds."
+msgstr ""
+"**Wahrscheinlichkeit:** Wie stark die globale Durchschnittstemperatur durch eine bestimmte Menge an ausgestoßenem CO₂ "
+"steigt, kann nicht exakt vorhergesagt werden. Daher berechnet der Weltklimarat (IPCC) die globalen CO₂-Budgets für "
+"verschiedene Wahrscheinlichkeiten, dass die Temperaturgrenzwerte eingehalten werden."
+
+#: ghg_budget/components/artifact.py:120
+#, python-brace-format
+msgid ""
+"**BISKO CO₂-budget 2016 (1000 tons):** The CO₂-budgets still available to {city_name} in 2016, when the Paris climate "
+"targets were decided. [BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/"
+"Beschreibung_der_BISKO-Methodik.pdf) is a standard developed by the Institute for Energy and Environmental Research "
+"(IFEU), according to which many cities such as {city_name} estimate their emissions."
+msgstr ""
+"**BISKO CO₂-Budget 2016 (1000 Tonnen):** Jene CO₂-Budgets, die {city_name} 2016 noch zur Verfügung standen, als die "
+"Pariser Klimaziele beschlossen wurden. [BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/"
+"Beschreibung_der_BISKO-Methodik.pdf) ist ein vom Institut für Energie- und Umweltforschung (IFEU) entwickelter "
+"Standard, nach dem viele Städte wie {city_name} ihre Emissionen schätzen."
+
+#: ghg_budget/components/artifact.py:127
+#, python-brace-format
+msgid ""
+"**{NOW_YEAR} BISKO CO₂-budget (1000 tons):** CO₂-budget still available to {city_name}. A negative value means that "
+"the available budget has already been exceeded."
+msgstr ""
+"**BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen):** CO₂-Budgets, die {city_name} aktuell noch zur Verfügung stehen. Ein "
+"negativer Wert bedeutet, dass das verfügbare Budget bereits überschritten ist."
+
+#: ghg_budget/components/artifact.py:131 ghg_budget/components/artifact.py:215
+#, python-brace-format
+msgid ""
+"**CO₂-budget consumed (year):** When the CO₂-budgets will be exhausted depends on how quickly we reduce our emissions "
+"and bring them down to zero. The year dates shown in this column are based on the assumption that the city of "
+"{city_name} successfully implements the emission reduction measures it has already agreed upon. If the column reads "
+"\"will not be consumed\", this means that {city_name}, based on current emission projections, will not exceed this "
+"budget."
+msgstr ""
+"**CO₂-Budget aufgebraucht (Jahr):** Wann die CO₂-Budgets aufgebraucht sind, hängt davon ab, wie schnell wir unsere "
+"Emissionen reduzieren und auf Null bringen. Die Jahreszahlen in dieser Spalte beruhen auf der Annahme, dass die Stadt "
+"{city_name} die von ihr bereits beschlossenen Maßnahmen zur Emissionsreduzierung erfolgreich umsetzt. Wenn in der "
+"Spalte \"wird nicht aufgebraucht\" steht, bedeutet dies, dass {city_name} basierend auf den aktuellen "
+"Emissionsprognosen dieses Budget nicht überschreiten wird."
+
+#: ghg_budget/components/artifact.py:139 ghg_budget/components/artifact.py:223
+#, python-brace-format
+msgid ""
+"**Note:** The CO₂-budgets in this table do not mean that the temperature limits will automatically be met if "
+"{city_name} stays within its budgets. For the limits not to be exceeded, the entire world must adhere to its CO₂-"
+"budget. However, with this information we aim to highlight the responsibility of {city_name} and its inhabitants, and "
+"to illustrate their share of global emissions."
+msgstr ""
+"**Anmerkung:** Die CO₂-Budgets in dieser Tabelle sind nicht so zu verstehen, dass die Temperaturgrenzwerte "
+"automatisch unterschritten werden, wenn {city_name} die Budgets einhält. Damit die Grenzen nicht überschritten "
+"werden, muss die ganze Welt ihr CO₂-Budget einhalten. Jedoch wollen wir mit diesen Informationen auf die "
+"Verantwortung der Stadt {city_name} sowie der Stadtbevölkerung hinweisen, und ihren Anteil an den globalen Emissionen "
+"darstellen."
+
+#: ghg_budget/components/artifact.py:146 ghg_budget/components/artifact.py:230
+msgid "You can find more information on CO₂-budgets on the left under \"Calculation of the CO₂-budget\"."
+msgstr "Mehr Informationen zu den CO₂-Budgets finden Sie links im Reiter \"Berechnung des CO₂-Budgets\"."
+
+#: ghg_budget/components/artifact.py:181
+#, python-brace-format
+msgid "BISKO CO₂-budget {NOW_YEAR} (1000 tons)"
+msgstr "BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen)"
+
+#: ghg_budget/components/artifact.py:188
+#, python-brace-format
+msgid ""
+"To limit warming to the respective maximum temperature value, {city_name} only has a limited CO₂-budget at its "
+"disposal. This means that, in order to meet the 1.5 °C limit, the city of {city_name} has the smallest budget "
+"available to contribute to keeping warming below that threshold. For higher temperature thresholds (1.7&nbsp;°C and "
+"2&nbsp;°C respectively), more CO₂ may still be emitted."
+msgstr ""
+"Um die Temperaturerhöhung auf den jeweiligen Maximalwert zu begrenzen, hat {city_name} nur ein beschränktes CO₂-"
+"Budget zur Verfügung. Das heißt, dass der Stadt {city_name} für die Einhaltung des Grenzwerts von 1,5&nbsp;°C das "
+"geringste Budget zur Verfügung steht, um ihren Anteil zur Unterschreitung der Grenze beizutragen. Für höhere "
+"Temperaturgrenzen (1,7&nbsp;°C bzw. 2&nbsp;°C) darf noch mehr CO₂ emittiert werden."
+
+#: ghg_budget/components/artifact.py:207
+#, python-brace-format
+msgid ""
+"**BISKO CO₂-budget {NOW_YEAR} (1000 tons):** CO₂-budgets currently still available to {city_name} to meet the "
+"temperature limit with an 83&nbsp;% probability. A negative value means that the available budget has already been "
+"exceeded. [BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-"
+"Methodik.pdf) is a standard developed by the Institute for Energy and Environmental Research (IFEU), which many "
+"cities such as {city_name} use to estimate their emissions."
+msgstr ""
+"**BISKO CO₂-Budget {NOW_YEAR} (1000 Tonnen):** CO₂-Budgets, die {city_name} aktuell noch zur Verfügung stehen, um den "
+"Temperaturgrenzwert mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Ein negativer Wert bedeutet, dass das "
+"verfügbare Budget bereits überschritten ist. [BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/"
+"Angebote/Beschreibung_der_BISKO-Methodik.pdf) ist ein vom Institut für Energie- und Umweltforschung (IFEU) "
+"entwickelter Standard, nach dem viele Städte wie {city_name} ihre Emissionen schätzen."
+
+#: ghg_budget/components/artifact.py:262
+msgid "How much CO₂-budget has already been emitted?"
+msgstr "Wie viel vom CO₂-Budget ist bereits emittiert?"
+
+#: ghg_budget/components/artifact.py:264
+#, python-brace-format
+msgid ""
+"The share of {city_name}'s emissions on the global CO₂-emission that, with an  83 % probability, would keep warming "
+"within the 1.5 °C target (or lead to warming of 1.7 °C/2.0 °C , compared with reported and projected emissions (up "
+"until {aoi_emission_end_year})."
+msgstr ""
+"{city_name}s Anteil an den globalen CO₂-Emissionen, die mit 83 % Wahrscheinlichkeit das 1,5 °C-Ziel einhalten oder zu "
+"1,7 °C bzw. 2,0 °C Erwärmung führen würden, verglichen mit den berichteten (bis {aoi_emission_end_year}) und "
+"prognostizierten Emissionen."
+
+#: ghg_budget/components/artifact.py:269
+#, python-brace-format
+msgid ""
+"The chart shows the CO₂-budgets available to {city_name} since the 2015 Paris Climate Conference to meet various "
+"temperature limits with an 83&nbsp;% probability. The grey bar to the right shows the total of the CO₂-budget already "
+"used and {city_name}'s the projected emissions. The dark grey section of the bar shows how much CO₂ {city_name} "
+"emitted from 2016 until {aoi_emission_end_year}, the most recent year for which data is available. It therefore "
+"illustrates how much of the CO₂-budget has already been used up. The light grey section shows how much CO₂ "
+"{city_name} is expected to emit before achieving climate neutrality. This projection is based on the climate "
+"protection measures currently adopted by the city of {city_name}. The chart shows that even the CO₂-budget for the "
+"2&nbsp;°C threshold will be significantly exceeded if the city of {city_name} does not make additional efforts to "
+"reduce emissions. It should be noted that the Paris Agreement stipulates limiting the temperature increase to well "
+"below 2&nbsp;°C."
+msgstr ""
+"Das Diagramm zeigt die CO₂-Budgets, die {city_name} seit der Pariser Klimakonferenz 2015 zur Verfügung standen, um "
+"verschiedene Temperaturgrenzwerte mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Die graue Säule daneben "
+"zeigt die Summe des bereits verbrauchten CO₂-Budgets und der prognostizierten Emissionen {city_name}s. Der "
+"dunkelgraue Teil der Säule zeigt, wie viel CO₂ {city_name} von 2016 bis einschließlich {aoi_emission_end_year} "
+"ausgestoßen hat, dem aktuellsten Jahr, für das Daten vorliegen. Er macht somit sichtbar, wie viel vom CO₂-Budget "
+"bereits verbraucht ist. Der hellgraue Teil zeigt, wieviel CO₂ {city_name} voraussichtlich noch ausstoßen wird, bevor "
+"die Klimaneutralität erreicht wird. Diese Prognose basiert auf den aktuell beschlossenen Klimaschutzmaßnahmen der "
+"Stadt {city_name}. Das Diagramm zeigt, dass selbst das CO₂-Budget für den Grenzwert von 2&nbsp;°C weit überschritten "
+"wird, wenn die Stadt {city_name} keine zusätzlichen Anstrengungen zur Verringerung der Emissionen unternimmt. Dabei "
+"ist zu beachten, dass das internationale Abkommen von Paris eine Begrenzung auf deutlich unter 2&nbsp;°C "
+"Temperaturerhöhung vorgibt."
+
+#: ghg_budget/components/artifact.py:310
+#, python-brace-format
+msgid "Cumulative CO₂-emissions in {city_name}"
+msgstr "Kumulative CO₂-Emissionen in {city_name}"
+
+#: ghg_budget/components/artifact.py:311
+#, python-brace-format
+msgid "Total CO₂-emissions in {city_name} per year since 2016 (in 1000 tons)"
+msgstr "Aufsummierte CO₂-Emissionen {city_name}s pro Jahr seit 2016 (in 1000 Tonnen)"
+
+#: ghg_budget/components/artifact.py:314
+#, python-brace-format
+msgid ""
+"A reduction in CO₂ emissions does not mean that the concentration of CO₂ in the atmosphere decreases, but merely that "
+"it is rising more slowly. The concentration of CO₂ in the atmosphere will continue to rise as long as more CO₂ enters "
+"the atmosphere than escapes from it. You can think of it as a bathtub into which water is being filled. If I turn the "
+"tap down a little, less water flows into the tub, but as long as the plug is in, the water level still continues to "
+"rise, albeit more slowly. This is shown in this chart. The emission figures from 2016 to {aoi_emission_end_year} are "
+"reported figures based on the BISKO standard. The figures from {year_after} onwards are projections based on the "
+"assumption that the emission reduction measures currently agreed upon by {city_name} will be implemented."
+msgstr ""
+"Ein Rückgang der CO₂-Emissionen bedeutet nicht, dass die CO₂-Konzentration in der Atmosphäre sinkt, sondern "
+"lediglich, dass sie langsamer steigt. Die CO₂-Konzentration in der Atmosphäre steigt so lange, wie mehr CO₂ in die "
+"Atmosphäre gelangt als aus ihr entweicht. Man kann sich das wie eine Badewanne vorstellen, in die Wasser eingelassen "
+"wird. Wenn ich den Wasserhahn ein Stück zudrehe, läuft zwar weniger Wasser in die Wanne, aber solange der Stöpsel zu "
+"ist, steigt der Wasserstand trotzdem weiter an, wenn auch langsamer. Dies wird in diesem Diagramm gezeigt. Die "
+"Emissionswerte von 2016 bis {aoi_emission_end_year} sind berichtete Werte basierend auf dem BISKO-Standard, die Werte "
+"ab {year_after} sind Prognosen unter der Annahme, dass die zurzeit beschlossenen Maßnahmen {city_name}s zur "
+"Emissionsreduzierung umgesetzt werden."
+
+#: ghg_budget/components/artifact.py:370
+#, python-brace-format
+msgid "CO₂-emission reduction paths for {city_name}"
+msgstr "CO₂-Emissionsminderungspfade für {city_name}"
+
+#: ghg_budget/components/artifact.py:372
+#, python-brace-format
+msgid ""
+"Selection of potential CO₂-reduction paths of {city_name} that stay below the temperature threshold of 2°C with 83 % "
+"probability"
+msgstr ""
+"Auswahl möglicher CO₂-Reduktionspfade für {city_name} unter Einhaltung des Temperaturgrenzwerts von 2 °C mit 83 % "
+"Wahrscheinlichkeit"
+
+#: ghg_budget/components/artifact.py:377
+msgid ""
+"Many cities have already used up their CO₂-budget for meeting the 1.5&nbsp;°C temperature limit and will soon have "
+"used up the budget for 1.7&nbsp;°C as well. This chart therefore illustrates a selection of possible CO₂ reduction "
+"pathways that comply with the 2&nbsp;°C temperature limit. It should be noted that the Paris Agreement stipulates "
+"limiting the temperature increase to well below 2&nbsp;°C."
+msgstr ""
+"Viele Städte haben das CO₂-Budget für die Einhaltung des Temperaturgrenzwerts von 1,5&nbsp;°C bereits aufgebraucht "
+"und werden auch das Budget für 1,7&nbsp;°C bald aufbrauchen. Daher zeigt dieses Diagramm beispielhaft eine Auswahl "
+"möglicher CO₂-Reduktionspfade unter Einhaltung des Temperaturgrenzwerts von 2&nbsp;°C. Dabei ist zu beachten, dass "
+"das internationale Abkommen von Paris eine Begrenzung auf deutlich unter 2&nbsp;°C Temperaturerhöhung vorgibt."
+
+#: ghg_budget/components/artifact.py:385
+#, python-format, python-brace-format
+msgid ""
+"In {NOW_YEAR}, the city of {city_name} still has a CO₂-budget of approximately {bisko_budget_now_year} kilotons "
+"available to stay within the 2&nbsp;°C temperature limit with a 83&nbsp;% probability. The values for the annual "
+"emission decrease in the reduction pathways are chosen such that the budget is exhausted precisely in the year in "
+"which emissions drop to zero. Thus, the sum of the values in each curve corresponds approximately to the CO₂-budget "
+"of {bisko_budget_now_year} kilotons. The chart shows that we have more time to become CO₂-neutral if we reduce "
+"emissions by {percentage_decrease}&nbsp;% each year than if we reduce them linearly. The budget is used up "
+"particularly quickly if we do not reduce emissions at all."
+msgstr ""
+"Im Jahr {NOW_YEAR} hat die Stadt {city_name} noch ein CO₂-Budget von etwa {bisko_budget_now_year} Kilotonnen zur "
+"Verfügung, um den Temperaturgrenzwert von 2&nbsp;°C mit einer Wahrscheinlichkeit von 83&nbsp;% einzuhalten. Die Werte "
+"für den jährlichen Rückgang der Emissionen in den Reduktionspfaden sind so gewählt, dass das Budget genau in dem Jahr "
+"aufgebraucht ist, in dem die Emissionen auf null sinken. Somit entspricht die Summe der Werte in jeder Kurve etwa dem "
+"CO₂-Budget von {bisko_budget_now_year} Kilotonnen. Das Diagramm zeigt, dass wir mehr Zeit haben, CO₂-neutral zu "
+"werden, wenn wir die Emissionen jedes Jahr um {percentage_decrease}&nbsp;% reduzieren, als wenn wir die Emissionen "
+"linear verringern. Besonders schnell ist das Budget aufgebraucht, wenn wir die Emissionen gar nicht reduzieren."
+
+#: ghg_budget/components/artifact.py:396
+#, python-brace-format
+msgid ""
+"This diagram only shows fictive scenarios. You can find a projection of the real emissions of {city_name} on the left "
+"under \"Development of CO₂-emissions in {city_name}\"."
+msgstr ""
+"Dieses Diagramm zeigt lediglich fiktive Szenarien. Eine Prognose der tatsächlichen Emissionen {city_name}s finden Sie "
+"links im Reiter \"Entwicklung der CO₂-Emissionen in {city_name}\"."
+
+#: ghg_budget/components/artifact.py:426
+msgid "Comparison of CO₂-emission reduction"
+msgstr "CO₂-Emissionsminderung im Vergleich"
+
+#: ghg_budget/components/artifact.py:427
+#, python-brace-format
+msgid "Average yearly reduction rate of CO₂-emissions from 2016 to {NOW_YEAR}"
+msgstr "Durchschnittliche jährliche Minderungsrate der CO₂-Emissionen von 2016 bis {NOW_YEAR}"
+
+#: ghg_budget/components/artifact.py:430
+#, python-brace-format
+msgid ""
+"This figure shows the annual CO₂ emission reduction rates for cities for which emission data is currently available. "
+"The reduction rates were calculated using the Compound Annual Growth Rate (CAGR). The analysis is based on reported "
+"CO₂ emissions in accordance with the BISKO standard and covers the period from 2016 to {NOW_YEAR}."
+msgstr ""
+"Diese Abbildung zeigt die jährlichen Minderungsraten der CO₂-Emissionen für Städte, für die derzeit Emissionsdaten "
+"verfügbar sind. Die Minderungsraten wurden mithilfe der Compound Annual Growth Rate (CAGR) berechnet. Die Analyse "
+"basiert auf den gemeldeten CO₂-Emissionen gemäß dem BISKO-Standard und umfasst den Zeitraum von 2016 bis {NOW_YEAR}."
+
+#: ghg_budget/components/artifact.py:437
+msgid ""
+"Note that the last year of reported data differs between cities: Heidelberg (2022), Bonn (2022), Berlin (2023), "
+"Karlsruhe (2019) and Hamburg (2019). Emission data beyond these years are based on estimates and not on reported data."
+msgstr ""
+"Dabei ist zu beachten, dass sich das letzte Jahr der berichteten Daten je nach Stadt unterscheidet: Heidelberg "
+"(2022), Bonn (2022), Berlin (2023), Karlsruhe (2019) und Hamburg (2023). Emissionsdaten über diese Jahre hinaus "
+"basieren auf Prognosen und nicht auf gemeldeten Werten."
+
+#: ghg_budget/components/calculate.py:95
+msgid "BISKO CO₂-budget 2016 (1000 tons)"
+msgstr "BISKO CO₂-Budget 2016 (1000 Tonnen)"
+
+#: ghg_budget/components/calculate.py:149
+msgid "CO₂-budget consumed (year)"
+msgstr "CO₂-Budget aufgebraucht (Jahr)"
+
+#: ghg_budget/components/calculate.py:154
+msgid "is not consumed"
+msgstr "wird nicht aufgebraucht"
+
+#: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:139
+msgid "1.7 °C"
+msgstr "1,7 °C"
+
+#: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:149
+msgid "2.0 °C"
+msgstr "2,0 °C"
+
+#: ghg_budget/components/calculate.py:432
+msgid "."
+msgstr ","
+
+#: ghg_budget/components/data.py:24
+msgid "Temperature threshold (°C)"
+msgstr "Temperaturgrenzwert (°C)"
+
+#: ghg_budget/components/data.py:25
+msgid "Probability"
+msgstr "Wahrscheinlichkeit"
+
+#: ghg_budget/components/figures.py:28
+msgid "1.5 °C"
+msgstr "1,5 °C"
+
+#: ghg_budget/components/figures.py:44 ghg_budget/components/figures.py:57
+msgid "Reported <br>& Projection"
+msgstr "Berichtet <br>& Prognose"
+
+#: ghg_budget/components/figures.py:50
+#, python-brace-format
+msgid "Reported until {aoi_emission_end_year}"
+msgstr "Berichtet bis {aoi_emission_end_year}"
+
+#: ghg_budget/components/figures.py:63 ghg_budget/components/figures.py:129 ghg_budget/components/figures.py:176
+msgid "Projection"
+msgstr "Prognose"
+
+#: ghg_budget/components/figures.py:82 ghg_budget/components/figures.py:206
+msgid ","
+msgstr "'"
+
+#: ghg_budget/components/figures.py:86 ghg_budget/components/figures.py:156 ghg_budget/components/figures.py:263
+msgid "CO₂-emissions (1000 tons)"
+msgstr "CO₂-Emissionen (1000 Tonnen)"
+
+#: ghg_budget/components/figures.py:119 ghg_budget/components/figures.py:175
+msgid "Reported"
+msgstr "Berichtet"
+
+#: ghg_budget/components/figures.py:155 ghg_budget/components/figures.py:210 ghg_budget/components/figures.py:262
+msgid "Year"
+msgstr "Jahr"
+
+#: ghg_budget/components/figures.py:160 ghg_budget/components/figures.py:266
+msgid ",,"
+msgstr ",'"
+
+#: ghg_budget/components/figures.py:211
+msgid "Total CO₂-emissions (1000 tons)"
+msgstr "Aufsummierte CO₂-Emissionen (1000 Tonnen)"
+
+#: ghg_budget/components/figures.py:234
+#, python-brace-format
+msgid "Emissions are reduced by <br>{percentage_decrease}% per year"
+msgstr "Emissionen sinken um<br>{percentage_decrease} % pro Jahr"
+
+#: ghg_budget/components/figures.py:245
+#, python-brace-format
+msgid "Emissions are reduced by<br>{linear_decrease}'000 tons per year"
+msgstr "Emissionen sinken um<br>{linear_decrease}.000 Tonnen pro Jahr"
+
+#: ghg_budget/components/figures.py:256
+msgid "Business as usual"
+msgstr "Business as usual"
+
+#: ghg_budget/components/figures.py:278
+msgid "Upward trend"
+msgstr "Aufwärtstrend"
+
+#: ghg_budget/components/figures.py:279
+msgid "Downward trend"
+msgstr "Abwärtstrend"
+
+#: ghg_budget/components/figures.py:320
+msgid "Cities"
+msgstr "Städte"
+
+#: ghg_budget/components/figures.py:321
+msgid "Emission reduction (%)"
+msgstr "Emissionsminderung (%)"
+
+#: ghg_budget/core/info.py:37
+msgid "Calculation of urban CO₂-budgets to limit global warming to specific temperatures."
+msgstr "Ermittlung städtischer CO₂-Budgets für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen."
+
+#: ghg_budget/core/input.py:8
+msgid "simple"
+msgstr "einfach"
+
+#: ghg_budget/core/input.py:9
+msgid "extended"
+msgstr "erweitert"
+
+#: ghg_budget/core/input.py:14
+msgid "Degree of detail"
+msgstr "Detailgrad"
+
+#: ghg_budget/core/input.py:15
+msgid "Please choose how detailed you would like the results to be."
+msgstr "Bitte wählen Sie, wie detailliert Sie die Ergebnisse haben möchten."
+
+#: ghg_budget/core/operator_worker.py:51
+#, python-brace-format
+msgid ""
+"The CO₂-budget-tool can currently only be applied to the following cities in Germany: {allowed_cities}. Please choose "
+"one of these cities as area of interest"
+msgstr ""
+"Das CO₂-Budget-Tool funktioniert momentan nur für folgende Städte: {allowed_cities}. Bitte wählen Sie eine dieser "
+"Städte als Untersuchungsgebiet aus"

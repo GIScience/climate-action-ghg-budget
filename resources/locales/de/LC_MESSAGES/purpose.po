@@ -1,0 +1,30 @@
+# German translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-04-01 20:05+0200\n"
+"PO-Revision-Date: 2026-04-24 10:27+0200\n"
+"Last-Translator: Moritz Schott <moritz.schott@heigit.org>\n"
+"Language-Team: de <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
+"X-Generator: Poedit 3.9\n"
+
+#: resources/locales/en/purpose.md:1
+msgid ""
+"For now, we only calculated city-wide CO₂-Budgets for the German cities Berlin, Bonn, Hamburg, Heidelberg and "
+"Karlsruhe. City-wide CO₂-Budgets are relevant to limit global warming to certain temperatures. If you are interested, "
+"we can evaluate if a calculation for your city is possible."
+msgstr ""
+"Städtische CO₂-Budgets sind zurzeit nur für Berlin, Bonn, Hamburg, Heidelberg und Karlsruhe von uns berechnet worden. "
+"Städtische CO₂-Budgets sind relevant für die Begrenzung der globalen Erwärmung auf bestimmte Temperaturen. Bei "
+"Interesse können wir prüfen, ob eine Berechnung für die Stadt Ihrer Wahl möglich ist."

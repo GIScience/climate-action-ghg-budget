@@ -1,0 +1,181 @@
+# German translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-04-24 10:14+0200\n"
+"PO-Revision-Date: 2026-04-24 10:26+0200\n"
+"Last-Translator: Moritz Schott <moritz.schott@heigit.org>\n"
+"Language-Team: de <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
+"X-Generator: Poedit 3.9\n"
+
+#: resources/locales/en/methodology.md:1
+msgid "CO₂-Budget calculation"
+msgstr "Berechnung des CO₂-Budgets"
+
+#: resources/locales/en/methodology.md:3
+msgid ""
+"A so-called CO₂ budget refers to the amount of CO₂ that may be emitted in order to limit global warming to a specific "
+"temperature (e.g. 1.5 °C). As such, these budgets form the basis for meeting the goals set by the Paris Agreement. "
+"The Paris Agreement was adopted at the end of 2015 during the UN Climate Conference in Paris. In this agreement, "
+"nations commit to limiting global warming to \"well below\" 2 °C compared to pre-industrial levels and to making "
+"efforts to limit it to 1.5 °C. This means that every country and its population is assigned responsibility for "
+"addressing their share of the global problem. This is quantified through CO₂ budgets."
+msgstr ""
+"Ein sogenanntes CO₂-Budget bezeichnet die Menge an CO₂, welche emittiert werden darf, um die globale Erwärmung auf "
+"eine bestimmte Temperatur (z.B. 1,5 °C) zu begrenzen. Damit bilden solche Budgets die Grundlage, um die Grenzwerte "
+"des Pariser Klimaabkommens einzuhalten. Das Pariser Klimaabkommen wurde Ende 2015 während der UN-Klimakonferenz in "
+"Paris verabschiedet. In diesem Abkommen verpflichten sich die Staaten dazu, die globale Erwärmung auf „deutlich "
+"unter“ 2 °C im Vergleich zur vorindustriellen Zeit zu begrenzen und Anstrengungen für eine Begrenzung auf 1,5 °C zu "
+"unternehmen. Somit wird jedem Staat und seiner Bevölkerung die Verantwortung für die Bewältigung eines Teils des "
+"globalen Problems zugeschrieben. Quantifizierbar wir das durch CO₂-Budgets."
+
+#: resources/locales/en/methodology.md:13
+#, python-brace-format
+msgid ""
+"This tool shows the remaining CO₂ budget that the selected city may still emit in order to make its fair contribution "
+"to limiting global warming to a specific temperature (1.5 °C, 1.7 °C, or 2 °C). To determine this, we first calculate "
+"the global CO₂ budget available to us to limit warming to the temperatures mentioned above. As the Paris Climate "
+"Agreement was adopted at the end of 2015, we refer to the CO₂ budget from 2016 onwards. However, we use figures for "
+"the global CO₂ budget from the [2021 IPCC report (Table SPM.2, p. 29)]{1}. This report specifies the global budget "
+"from 2020 onwards. To still calculate the budget from 2016 onwards, we add the global CO₂ emissions between 2016 and "
+"2020 to the global budget of 2020. The global CO₂ budget for the various temperature limits is then scaled down to "
+"the selected city's share of the world population. This urban budget encompasses all CO₂ emissions caused by the "
+"local population."
+msgstr ""
+"Dieses Tool zeigt das verbleibende CO₂-Budget, welches die gewählte Stadt noch emittieren darf, um ihren gerechten "
+"Anteil zur Begrenzung der globalen Erwärmung auf eine bestimmte Temperatur (1,5 °C, 1,7 °C oder 2 °C) zu leisten. Um "
+"dies herauszufinden, berechnen wir zuerst das weltweite CO₂-Budget, das uns zur Verfügung steht, um die Erwärmung auf "
+"die eben genannten Temperaturen zu begrenzen. Da das Pariser Klimaabkommen Ende 2015 beschlossen wurde, beziehen wir "
+"uns auf das CO₂-Budget ab dem Jahr 2016. Wir nutzen jedoch Zahlen zum weltweiten CO₂-Budget aus dem [IPCC-Bericht von "
+"2021 (Tabelle SPM.2, S. 29)]{1}. Dort wird das globale Budget ab 2020 angegeben. Um trotzdem das Budget ab 2016 zu "
+"ermitteln, addieren wir zum globalen Budget von 2020 die weltweiten CO₂-Emissionen zwischen 2016 und 2020 hinzu. "
+"Anschließend wird das globale CO₂-Budget für verschiedene Temperaturgrenzwerte auf den Anteil der gewählten Stadt an "
+"der Weltbevölkerung heruntergerechnet. Dieses städtische Budget umfasst alle von der lokalen Bevölkerung verursachten "
+"CO₂-Emissionen."
+
+#: resources/locales/en/methodology.md:27
+#, python-format, python-brace-format
+msgid ""
+"We compare the scaled-down budget with the actually measured emissions. The cities for which the CO₂ budget tool is "
+"available measure their emissions according to the [BISKO methodology]{1}. The CO₂ accounting for Heidelberg until "
+"2018 shows that the so-called BISKO emissions cover only around 64 % of the total emissions caused by the "
+"Heidelberg's population. The reason for this incomplete coverage is that, put simply, the BISKO standard only takes "
+"into account emissions generated within the city limits, but not those caused by the city's population outside those "
+"boundaries. As we use the emission values determined by the cities according to the BISKO methodology, we must also "
+"take a nuanced view of the CO₂ budget for the selected city . A part of the budget, in the case of Heidelberg "
+"precisely 64 %, can be allocated to BISKO emissions. The remainder is reserved for non-BISKO emissions. According to "
+"this reasoning, and assuming that the share of BISKO emissions in total emissions is similar across all available "
+"cities, the final CO₂ budget represents only 64 % of the total budget of the local urban population."
+msgstr ""
+"Dem heruntergerechneten Budget stellen wir die tatsächlich gemessenen Emissionen gegenüber. Die Städte, für die das "
+"CO₂-Budget-Tool verfügbar ist, messen ihre Emissionen nach der [BISKO Systematik]{1}. Aus der CO₂-Bilanzierung bis "
+"2018 für die Stadt Heidelberg geht hervor, dass die sogenannten BISKO-Emissionen nur rund 64 % der gesamten "
+"Emissionen abdecken, die von der Heidelberger Bevölkerung verursacht werden. Der Grund für diese unvollständige "
+"Erfassung ist, dass der BISKO-Standard, vereinfacht gesagt, nur die Emissionen berücksichtigt, die innerhalb der "
+"Stadtgrenze entstehen, nicht jedoch jene, die von der Stadtbevölkerung außerhalb der Stadtgrenzen verursacht werden. "
+"Da wir die nach BISKO-Systematik ermittelten Emissionswerte der Städte verwenden, müssen wir auch das CO₂-Budget der "
+"gewählten Stadt differenziert betrachten. Ein Teil des Budgets, nämlich im Falle Heidelbergs genau die 64 %, kann für "
+"BISKO-Emissionen aufgewendet werden. Der Rest ist den Nicht-BISKO Emissionen vorbehalten. Entsprechend dieser "
+"Überlegung sowie der Annahme, dass der Anteil der BISKO-Emissionen an den gesamten Emissionen in allen verfügbaren "
+"Städten ähnlich ist, umfasst das dargestellte, finale CO₂-Budget nur 64 % des Gesamtbudgets der lokalen "
+"Stadtbevölkerung."
+
+#: resources/locales/en/methodology.md:42
+msgid "Data basis"
+msgstr "Datengrundlage"
+
+#: resources/locales/en/methodology.md:44
+msgid "The calculation of the CO₂-budget are based on data on the global CO₂-budget by the IPCC."
+msgstr "Die Berechnung des CO₂-Budgets basiert auf Daten zum globalen CO₂-Budget vom IPCC."
+
+#: resources/locales/en/methodology.md:46
+msgid "Emission data"
+msgstr "Emissionsdaten"
+
+#: resources/locales/en/methodology.md:48
+msgid "City"
+msgstr "Stadt"
+
+#: resources/locales/en/methodology.md:48
+msgid "Source for yearly emissions"
+msgstr "Quelle für jährliche Emissionen"
+
+#: resources/locales/en/methodology.md:48
+msgid "Source for emission estimates"
+msgstr "Quelle für Emissionsprognosen"
+
+#: resources/locales/en/methodology.md:48
+msgid "Berlin"
+msgstr "Berlin"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgid "[Stadt Berlin]{1}"
+msgstr "[Stadt Berlin]{1}"
+
+#: resources/locales/en/methodology.md:48
+msgctxt "resources/locales/en/methodology.md:48"
+msgid "own calculations"
+msgstr "eigene Berechnung"
+
+#: resources/locales/en/methodology.md:48
+msgid "Bonn"
+msgstr "Bonn"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgctxt "resources/locales/en/methodology.md:48"
+msgid "[Stadt Bonn]{1}"
+msgstr "[Stadt Bonn]{1}"
+
+#: resources/locales/en/methodology.md:48
+msgid "Hamburg"
+msgstr "Hamburg"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgid "[Stadt Hamburg]{1}"
+msgstr "[Stadt Hamburg]{1}"
+
+#: resources/locales/en/methodology.md:48
+msgid "Heidelberg"
+msgstr "Heidelberg"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgid "[ifeu gGmbH]{1}"
+msgstr "[ifeu gGmbH]{1}"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgid "[Stadt Heidelberg]{1}"
+msgstr "[Stadt Heidelberg]{1}"
+
+#: resources/locales/en/methodology.md:48
+msgid "Karlsruhe"
+msgstr "Karlsruhe"
+
+#: resources/locales/en/methodology.md:48
+#, python-brace-format
+msgid "[Stadt Karlsruhe]{1}"
+msgstr "[Stadt Karlsruhe]{1}"
+
+#: resources/locales/en/methodology.md:56
+#, python-brace-format
+msgid ""
+"We happily share the data we used to calculate the CO₂-budgets. Please contact Kirsten von Elverfeldt per mail at "
+"[kirsten.vonelverfeldt@heigit.org]{1} if you are interested."
+msgstr ""
+"Auf Anfrage teilen wir sehr gerne die Daten, die wir zur Berechnung des CO₂-Budgets verwendet haben. Bitte "
+"kontaktieren Sie bei Interesse Kirsten von Elverfeldt per E-Mail: [kirsten.vonelverfeldt@heigit.org]{1}."

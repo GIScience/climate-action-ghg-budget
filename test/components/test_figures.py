@@ -15,26 +15,26 @@ from ghg_budget.components.figures import (
 
 def test_get_comparison_chart():
     comparison_chart_data = {
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)': [10, 20, 30, 20, 20],
-        'Temperaturgrenzwert (°C)': ['1,5 °C', '1,7 °C', '2,0 °C', 'Berichtet', 'Prognose'],
+        'BISKO CO₂-budget 2016 (1000 tons)': [10, 20, 30, 20, 20],
+        'Temperature threshold (°C)': ['1.5 °C', '1.7 °C', '2.0 °C', 'Reported', 'Projection'],
     }
     comparison_chart_df = pd.DataFrame(comparison_chart_data)
     aoi_emission_end_year = 2023
     received = get_comparison_chart(comparison_chart_df, aoi_emission_end_year)
-    assert received['data'][0]['x'] == ('1,5 °C',)
-    assert received['data'][1]['x'] == ('1,7 °C',)
-    assert received['data'][2]['x'] == ('2,0 °C',)
-    assert received['data'][3]['name'] == f'Berichtet bis {aoi_emission_end_year}'
-    assert received['data'][4]['name'] == 'Prognose'
+    assert received['data'][0]['x'] == ('1.5 °C',)
+    assert received['data'][1]['x'] == ('1.7 °C',)
+    assert received['data'][2]['x'] == ('2.0 °C',)
+    assert received['data'][3]['name'] == f'Reported until {aoi_emission_end_year}'
+    assert received['data'][4]['name'] == 'Projection'
 
 
 def test_get_time_chart():
     emissions_df_data = {
-        'Jahr': [2016],
+        'Year': [2016],
         'heidelberg': [1000],
     }
     reduction_df_data = {
-        'Jahr': [2016],
+        'Year': [2016],
         '1.7 °C': [900],
         '2.0 °C': [800],
     }
@@ -49,7 +49,7 @@ def test_get_time_chart():
 
 def test_get_cumulative_chart():
     emissions_df_data = {
-        'Jahr': [2016],
+        'Year': [2016],
         'heidelberg': [1000],
         'cumulative_emissions': [1000],
     }
@@ -63,7 +63,7 @@ def test_get_cumulative_chart():
 
 def test_get_emission_reduction_chart():
     emission_reduction_df_data = {
-        'Jahr': [2025],
+        'Year': [2025],
         'decrease_linear': [1000],
         'decrease_percentage': [1000],
         'business_as_usual': [1000],
@@ -79,7 +79,7 @@ def test_get_emission_reduction_chart():
 def test_get_emission_growth_rates_chart():
     emissions_aoi = pd.DataFrame(
         {
-            'Jahr': [2016, 2026, 2027],
+            'Year': [2016, 2026, 2027],
             'heidelberg': [1, 1, 1],
             'bonn': [1000, 2000, 1000],
         }

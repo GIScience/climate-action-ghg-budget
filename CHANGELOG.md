@@ -7,6 +7,8 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.3.0...main)
 
+- translate the plugin to English
+
 ## [1.3.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.3.0) - 2026-02-12
 
 ### Added

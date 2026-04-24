@@ -1,22 +1,14 @@
+import logging
 from pathlib import Path
 from typing import Tuple
 
-import logging
 import numpy as np
 import pandas as pd
 import sympy as sp
-
 from climatoology.base.computation import ComputationResources
+from climatoology.base.i18n import N_, tr
 from pandas import DataFrame
-
-from ghg_budget.components.data import (
-    BudgetParams,
-    GHG_DATA,
-    NOW_YEAR,
-    aoi_emission_end_years,
-    emissions_aoi,
-    city_pop_2020,
-)
+from pydantic_extra_types.language_code import LanguageAlpha2
 
 from ghg_budget.components.artifact import (
     build_budget_table_artifact,
@@ -27,6 +19,14 @@ from ghg_budget.components.artifact import (
     build_emission_reduction_chart_artifact,
     build_cumulative_chart_artifact,
     build_emissions_growth_rates_chart_artifact,
+)
+from ghg_budget.components.data import (
+    BudgetParams,
+    GHG_DATA,
+    NOW_YEAR,
+    aoi_emission_end_years,
+    emissions_aoi,
+    city_pop_2020,
 )
 from ghg_budget.components.figures import (
     get_comparison_chart,
@@ -92,10 +92,8 @@ def calculate_bisko_budgets(
     assert 0 < budget_params.bisko_factor < 1, (
         'The BISKO factor is not between 0 and 1. Please check the population and emission data.'
     )
-    budget_glob['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = budget_glob['budget_aoi'] * budget_params.bisko_factor
-    aoi_bisko = budget_glob[
-        ['Temperaturgrenzwert (°C)', 'Wahrscheinlichkeit', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']
-    ].copy()
+    budget_glob[N_('BISKO CO₂-budget 2016 (1000 tons)')] = budget_glob['budget_aoi'] * budget_params.bisko_factor
+    aoi_bisko = budget_glob[['Temperature threshold (°C)', 'Probability', 'BISKO CO₂-budget 2016 (1000 tons)']].copy()
     return aoi_bisko
 
 
@@ -107,8 +105,8 @@ def cumulative_emissions(emissions_aoi: pd.DataFrame, city_name: str) -> pd.Data
     :param city_name: name of the AOI
     :return: pd.DataFrame with past and projected yearly CO2 emissions in the AOI and cumulative emissions per year
     """
-    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['Jahr', city_name]].copy()
-    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['Jahr', city_name]].copy()
+    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['Year', city_name]].copy()
+    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['Year', city_name]].copy()
 
     emissions_df = pd.concat([estimation, projection])
     emissions_df['cumulative_emissions'] = emissions_df[city_name].cumsum()
@@ -123,10 +121,10 @@ def current_budget(emissions_df: pd.DataFrame, aoi_bisko_budgets: pd.DataFrame) 
     :param aoi_bisko_budgets: pd.DataFrame with CO2 budgets of the AOI in the pledge_year
     :return: pd:DataFrame with CO2 budgets of the AOI in the pledge_year and current CO2 budget
     """
-    current_cumulative_emissions = emissions_df.loc[emissions_df['Jahr'] == NOW_YEAR, 'cumulative_emissions'].values[0]
+    current_cumulative_emissions = emissions_df.loc[emissions_df['Year'] == NOW_YEAR, 'cumulative_emissions'].values[0]
 
-    aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'] = (
-        aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] - current_cumulative_emissions
+    aoi_bisko_budgets['BISKO CO₂-budget now (1000 tons)'] = (
+        aoi_bisko_budgets['BISKO CO₂-budget 2016 (1000 tons)'] - current_cumulative_emissions
     )
     return aoi_bisko_budgets
 
@@ -144,18 +142,16 @@ def year_budget_spent(aoi_bisko_budgets: pd.DataFrame, emissions_df: pd.DataFram
     def find_year(budget):
         spent_years = emissions_df[emissions_df['cumulative_emissions'] > budget]
         if not spent_years.empty:
-            return spent_years.iloc[0]['Jahr']
+            return spent_years.iloc[0]['Year']
         else:
             return None
 
-    aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets[
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)'
-    ].apply(find_year)
+    aoi_bisko_budgets[N_('CO₂-budget consumed (year)')] = aoi_bisko_budgets['BISKO CO₂-budget 2016 (1000 tons)'].apply(
+        find_year
+    )
 
-    aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = (
-        aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)']
-        .replace([np.inf, -np.inf], np.nan)
-        .fillna('wird nicht aufgebraucht')
+    aoi_bisko_budgets['CO₂-budget consumed (year)'] = (
+        aoi_bisko_budgets['CO₂-budget consumed (year)'].replace([np.inf, -np.inf], np.nan).fillna(N_('is not consumed'))
     )
 
     return aoi_bisko_budgets, emissions_df
@@ -170,19 +166,19 @@ def comparison_chart_data(emissions_aoi: pd.DataFrame, aoi_bisko_budgets: pd.Dat
     :param city_name: Name of the AOI
     :return: pd.DataFrame with CO2 budgets depending on warming goals and total planned emissions of the AOI
     """
-    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['Jahr', city_name]].copy()
+    estimation = emissions_aoi[emissions_aoi['category'] == 'estimation'][['Year', city_name]].copy()
     estimate_emissions = estimation[city_name].sum()
-    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['Jahr', city_name]].copy()
+    projection = emissions_aoi[emissions_aoi['category'] == 'projection'][['Year', city_name]].copy()
     planned_emissions = projection[city_name].sum()
-    aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %'].reset_index()
-    comparison_chart_df = aoi_bisko_budgets[['Temperaturgrenzwert (°C)', 'BISKO CO₂-Budget 2016 (1000 Tonnen)']].copy()
-    comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
-        lambda x: f'{x:.1f}'.replace('.', ',')
+    aoi_bisko_budgets = aoi_bisko_budgets[aoi_bisko_budgets['Probability'] == '83 %'].reset_index()
+    comparison_chart_df = aoi_bisko_budgets[['Temperature threshold (°C)', 'BISKO CO₂-budget 2016 (1000 tons)']].copy()
+    comparison_chart_df['Temperature threshold (°C)'] = comparison_chart_df['Temperature threshold (°C)'].apply(
+        lambda x: f'{x:.1f}'.replace('.', tr('.'))
     )
-    comparison_chart_df.loc[len(comparison_chart_df)] = ['Berichtet', estimate_emissions]
-    comparison_chart_df.loc[len(comparison_chart_df)] = ['Prognose', planned_emissions]
-    comparison_chart_df['Temperaturgrenzwert (°C)'] = comparison_chart_df['Temperaturgrenzwert (°C)'].apply(
-        lambda deg: f'{deg} °C' if deg not in ['Berichtet', 'Prognose'] else deg
+    comparison_chart_df.loc[len(comparison_chart_df)] = ['Reported', estimate_emissions]
+    comparison_chart_df.loc[len(comparison_chart_df)] = ['Projection', planned_emissions]
+    comparison_chart_df['Temperature threshold (°C)'] = comparison_chart_df['Temperature threshold (°C)'].apply(
+        lambda deg: f'{deg} °C' if deg not in ['Reported', 'Projection'] else deg
     )
     return comparison_chart_df
 
@@ -194,9 +190,9 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
     :return: pd.DataFrame with simplified table of the BISKO CO2 budgets of the AOI from the pledge_year onwards
     """
-    aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Wahrscheinlichkeit'] == '83 %']
+    aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Probability'] == '83 %']
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
-        ['BISKO CO₂-Budget now (1000 Tonnen)', 'CO₂-Budget aufgebraucht (Jahr)']
+        ['BISKO CO₂-budget now (1000 tons)', 'CO₂-budget consumed (year)']
     ]
     return aoi_bisko_budgets_simple
 
@@ -218,14 +214,14 @@ def emission_paths(
     """
     bisko_budget_table.reset_index(inplace=False)
     budget_1point7 = bisko_budget_table.loc[
-        (bisko_budget_table['Temperaturgrenzwert (°C)'] == 1.7) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)',
+        (bisko_budget_table['Temperature threshold (°C)'] == 1.7) & (bisko_budget_table['Probability'] == '83 %'),
+        'BISKO CO₂-budget 2016 (1000 tons)',
     ].values[0]
     budget_2point0 = bisko_budget_table.loc[
-        (bisko_budget_table['Temperaturgrenzwert (°C)'] == 2.0) & (bisko_budget_table['Wahrscheinlichkeit'] == '83 %'),
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)',
+        (bisko_budget_table['Temperature threshold (°C)'] == 2.0) & (bisko_budget_table['Probability'] == '83 %'),
+        'BISKO CO₂-budget 2016 (1000 tons)',
     ].values[0]
-    emissions_pledge_year = emission_table.loc[emission_table['Jahr'] == budget_params.pledge_year, city_name]
+    emissions_pledge_year = emission_table.loc[emission_table['Year'] == budget_params.pledge_year, city_name]
 
     x = sp.symbols('x')
     a, b, c, d = sp.symbols('a b c d')
@@ -256,7 +252,7 @@ def emission_paths(
     y_1point7 = f_numeric_1point7(x_vals)
     y_2point0 = f_numeric_2point0(x_vals)
 
-    emission_paths_df = pd.DataFrame({'Jahr': x_vals, '1.7 °C': y_1point7, '2.0 °C': y_2point0})
+    emission_paths_df = pd.DataFrame({'Year': x_vals, N_('1.7 °C'): y_1point7, N_('2.0 °C'): y_2point0})
 
     return emission_paths_df
 
@@ -279,19 +275,19 @@ def emission_reduction(
     """
     start_year, end_year = year_range
     year_list = list(range(start_year, end_year + 1))
-    current_emission = emissions_aoi.loc[emissions_aoi['Jahr'] == start_year, city_name].values[0]
+    current_emission = emissions_aoi.loc[emissions_aoi['Year'] == start_year, city_name].values[0]
 
     decrease_scenario = current_emission
     percentage_scenario = current_emission
     emission_sum = current_emission
 
-    bisko_budget_now_2c_83p = aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'].iloc[-1]
+    bisko_budget_now_2c_83p = aoi_bisko_budgets['BISKO CO₂-budget now (1000 tons)'].iloc[-1]
     n_years = round((2 * bisko_budget_now_2c_83p) / current_emission)
     linear_decrease = current_emission / (n_years - 1)
     percentage_decrease = int(current_emission / bisko_budget_now_2c_83p * 100)
     threshold_exceeded = False
 
-    emission_reduction_df = pd.DataFrame({'Jahr': year_list})
+    emission_reduction_df = pd.DataFrame({'Year': year_list})
     emission_reduction_df.loc[0, 'decrease_linear'] = current_emission
     emission_reduction_df.loc[0, 'decrease_percentage'] = current_emission
     emission_reduction_df.loc[0, 'business_as_usual'] = current_emission
@@ -300,15 +296,15 @@ def emission_reduction(
         # Linear emission decrease scenario
         if decrease_scenario > 0:
             decrease_scenario -= linear_decrease
-            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = round(
+            emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'decrease_linear'] = round(
                 decrease_scenario, 1
             )
         else:
-            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_linear'] = None
+            emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'decrease_linear'] = None
 
         # Percentage emission decrease scenario
         percentage_scenario *= 1 - current_emission / bisko_budget_now_2c_83p
-        emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'decrease_percentage'] = round(
+        emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'decrease_percentage'] = round(
             percentage_scenario, 1
         )
 
@@ -316,12 +312,12 @@ def emission_reduction(
         emission_sum += current_emission
         if not threshold_exceeded:
             if emission_sum < bisko_budget_now_2c_83p:
-                emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = current_emission
+                emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'business_as_usual'] = current_emission
             else:
-                emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = 0
+                emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'business_as_usual'] = 0
                 threshold_exceeded = True
         else:
-            emission_reduction_df.loc[emission_reduction_df['Jahr'] == year, 'business_as_usual'] = None
+            emission_reduction_df.loc[emission_reduction_df['Year'] == year, 'business_as_usual'] = None
 
     return emission_reduction_df, linear_decrease, percentage_decrease
 
@@ -336,8 +332,10 @@ def get_artifacts(
     city_name: str,
     linear_decrease: int,
     percentage_decrease: int,
+    lang: LanguageAlpha2,
 ):
     """
+    :param lang: Output language requested
     :param percentage_decrease: Yearly decrease of CO2 emissions [%] in the percentage decrease scenario
     :param linear_decrease: Yearly decrease of CO2 emissions [kt] in the linear decrease scenario
     :param resources: The plugin computation resources
@@ -354,7 +352,12 @@ def get_artifacts(
     ].values[0]
 
     log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
-    text = (PROJECT_DIR / 'resources/info/methodology_simple.md').read_text()
+
+    methodology_simple_path = PROJECT_DIR / f'resources/locales/{lang}/methodology_simple.md'
+    if not methodology_simple_path.exists():
+        methodology_simple_path = PROJECT_DIR / 'resources/locales/en/methodology_simple.md'
+    text = methodology_simple_path.read_text()
+
     markdown_simple_artifact = build_methodology_description_simple_artifact(text, resources)
 
     log.debug('Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.')
@@ -417,15 +420,15 @@ def format_table_data(aoi_bisko_budgets: DataFrame) -> DataFrame:
     :param aoi_bisko_budgets: Table with BISKO CO2 budgets of the AOI from the pledge_year onwards
     :return: Formatted table with rounded values, decimal commas instead of decimal points, etc.
     """
-    aoi_bisko_budgets['BISKO CO₂-Budget 2016 (1000 Tonnen)'] = aoi_bisko_budgets[
-        'BISKO CO₂-Budget 2016 (1000 Tonnen)'
+    aoi_bisko_budgets['BISKO CO₂-budget 2016 (1000 tons)'] = aoi_bisko_budgets[
+        'BISKO CO₂-budget 2016 (1000 tons)'
     ].round(1)
-    aoi_bisko_budgets['BISKO CO₂-Budget now (1000 Tonnen)'] = aoi_bisko_budgets[
-        'BISKO CO₂-Budget now (1000 Tonnen)'
-    ].round(1)
-    aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'] = aoi_bisko_budgets['CO₂-Budget aufgebraucht (Jahr)'].apply(
+    aoi_bisko_budgets['BISKO CO₂-budget now (1000 tons)'] = aoi_bisko_budgets['BISKO CO₂-budget now (1000 tons)'].round(
+        1
+    )
+    aoi_bisko_budgets['CO₂-budget consumed (year)'] = aoi_bisko_budgets['CO₂-budget consumed (year)'].apply(
         lambda x: int(x) if isinstance(x, (float, int)) else x
     )
-    aoi_bisko_budgets = aoi_bisko_budgets.map(lambda x: f'{x:.1f}'.replace('.', ',') if isinstance(x, float) else x)
-    aoi_bisko_budgets.set_index('Temperaturgrenzwert (°C)', inplace=True)
+    aoi_bisko_budgets = aoi_bisko_budgets.map(lambda x: f'{x:.1f}'.replace('.', tr('.')) if isinstance(x, float) else x)
+    aoi_bisko_budgets.set_index('Temperature threshold (°C)', inplace=True)
     return aoi_bisko_budgets

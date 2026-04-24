@@ -1,0 +1,21 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-01 20:05+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 3.19.3\n"
+
+#: resources/locales/en/purpose.md:1
+msgid ""
+"For now, we only calculated city-wide CO₂-Budgets for the German cities "
+"Berlin, Bonn, Hamburg, Heidelberg and Karlsruhe. City-wide CO₂-Budgets are "
+"relevant to limit global warming to certain temperatures. If you are "
+"interested, we can evaluate if a calculation for your city is possible."
+msgstr ""
