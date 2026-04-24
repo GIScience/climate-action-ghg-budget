@@ -1,4 +1,5 @@
 FROM python:3.13-bookworm
+SHELL ["/bin/bash", "-c"]
 
 ARG CI_COMMIT_SHORT_SHA
 ARG USER='plugin'
@@ -32,5 +33,4 @@ RUN if [[ -n "${CI_COMMIT_SHORT_SHA}" ]]; then sed -E -i "s/^(version *= *\"[^+]
 
 RUN poetry install --no-ansi --no-interaction --only-root
 
-SHELL ["/bin/bash", "-c"]
 ENTRYPOINT exec poetry run python ${PACKAGE_NAME}/plugin.py
