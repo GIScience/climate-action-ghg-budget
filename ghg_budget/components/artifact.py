@@ -83,7 +83,7 @@ def build_time_chart_artifact(
 
 def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResources, city_name: str) -> Artifact:
     latest_column_name = tr('{NOW_YEAR} BISKO CO₂-budget (1000 tons)').format(NOW_YEAR=NOW_YEAR)
-    table = table.rename(columns={'BISKO CO₂-budget 2016 (1000 tons)': latest_column_name})
+    table = table.rename(columns={'BISKO CO₂-budget now (1000 tons)': latest_column_name})
     table = translate_dataframe(table)
 
     name = tr('{city_name} CO₂ budget').format(city_name=city_name)
