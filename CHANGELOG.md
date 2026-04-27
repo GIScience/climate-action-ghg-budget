@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.3.0...main)
+## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.0...main)
+
+## [1.4.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.0) - 2026-04-27
 
 - translate the plugin to English
 
