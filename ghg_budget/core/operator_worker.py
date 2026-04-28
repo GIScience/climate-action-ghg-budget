@@ -15,7 +15,7 @@ from pydantic_extra_types.language_code import LanguageAlpha2
 
 from ghg_budget.components.calculate import co2_budget_analysis, get_artifacts
 from ghg_budget.core.info import get_info
-from ghg_budget.core.input import ComputeInput, DetailOption
+from ghg_budget.core.input import ComputeInput
 
 log = logging.getLogger(__name__)
 
@@ -68,16 +68,7 @@ class GHGBudget(BaseOperator[ComputeInput]):
             percentage_decrease,
         ) = co2_budget_analysis(city_name)
 
-        (
-            markdown_simple_artifact,
-            table_artifact,
-            table_simple_artifact,
-            comparison_chart_artifact,
-            time_chart_artifact,
-            cumulative_chart_artifact,
-            emission_reduction_chart_artifact,
-            emission_growth_rates_chart_artifact,
-        ) = get_artifacts(
+        artifacts = get_artifacts(
             resources,
             aoi_bisko_budgets,
             comparison_chart_df,
@@ -88,23 +79,9 @@ class GHGBudget(BaseOperator[ComputeInput]):
             linear_decrease,
             percentage_decrease,
             lang=language,
+            level_of_detail=params.level_of_detail,
         )
 
-        if params.level_of_detail == DetailOption.SIMPLE:
-            artifacts = [
-                markdown_simple_artifact,
-                table_simple_artifact,
-                time_chart_artifact,
-            ]
-        else:
-            artifacts = [
-                table_artifact,
-                comparison_chart_artifact,
-                time_chart_artifact,
-                cumulative_chart_artifact,
-                emission_reduction_chart_artifact,
-                emission_growth_rates_chart_artifact,
-            ]
         log.debug(f'Returning {len(artifacts)} artifacts.')
 
         return artifacts

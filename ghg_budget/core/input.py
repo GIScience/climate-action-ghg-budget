@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import StrEnum
 
 from climatoology.base.i18n import N_
 from pydantic import BaseModel, Field
 
 
-class DetailOption(Enum):
+class DetailOption(StrEnum):
     SIMPLE = N_('simple')
     EXTENDED = N_('extended')
 

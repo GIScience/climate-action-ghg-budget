@@ -5,11 +5,13 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 import sympy as sp
+from climatoology.base.artifact import Artifact
 from climatoology.base.computation import ComputationResources
 from climatoology.base.i18n import N_, tr
 from pandas import DataFrame
 from pydantic_extra_types.language_code import LanguageAlpha2
 
+from ghg_budget.core.input import DetailOption
 from ghg_budget.components.artifact import (
     build_budget_table_artifact,
     build_time_chart_artifact,
@@ -333,8 +335,10 @@ def get_artifacts(
     linear_decrease: int,
     percentage_decrease: int,
     lang: LanguageAlpha2,
-):
+    level_of_detail: DetailOption,
+) -> list[Artifact]:
     """
+    :param level_of_detail: The level of detail requested
     :param lang: Output language requested
     :param percentage_decrease: Yearly decrease of CO2 emissions [%] in the percentage decrease scenario
     :param linear_decrease: Yearly decrease of CO2 emissions [kt] in the linear decrease scenario
@@ -351,42 +355,86 @@ def get_artifacts(
         aoi_emission_end_years['city_name'] == city_name, 'end_year'
     ].values[0]
 
-    log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
-
-    methodology_simple_path = PROJECT_DIR / f'resources/locales/{lang}/methodology_simple.md'
-    if not methodology_simple_path.exists():
-        methodology_simple_path = PROJECT_DIR / 'resources/locales/en/methodology_simple.md'
-    text = methodology_simple_path.read_text()
-
-    markdown_simple_artifact = build_methodology_description_simple_artifact(text, resources)
-
-    log.debug('Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.')
-    aoi_bisko_budgets = format_table_data(aoi_bisko_budgets)
-    table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources, city_name)
-
-    log.debug(
-        'Creating simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table '
-        'artifact.'
-    )
-    aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
-    table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, city_name)
-
-    log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
-    comparison_chart_data = get_comparison_chart(comparison_chart_df, aoi_emission_end_year)
-    comparison_chart_artifact = build_budget_comparison_chart_artifact(
-        comparison_chart_data, resources, city_name, aoi_emission_end_year
-    )
-
     log.debug('Creating bar chart with development of the emissions in the AOI as chart artifact.')
     time_chart_figure = get_time_chart(emissions_df, emission_paths_df, city_name, aoi_emission_end_year)
     time_chart_artifact = build_time_chart_artifact(time_chart_figure, resources, city_name, aoi_emission_end_year)
 
-    log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
-    cumulative_chart_data = get_cumulative_chart(emissions_df, city_name, aoi_emission_end_year)
-    cumulative_chart_artifact = build_cumulative_chart_artifact(
-        cumulative_chart_data, resources, city_name, aoi_emission_end_year
-    )
+    artifacts = [time_chart_artifact]
 
+    match level_of_detail:
+        case DetailOption.SIMPLE:
+            markdown_simple_artifact = get_simple_methodology(lang=lang, resources=resources)
+            table_simple_artifact = get_simple_table(
+                aoi_bisko_budgets=aoi_bisko_budgets, city_name=city_name, resources=resources
+            )
+
+            artifacts = [
+                markdown_simple_artifact,
+                table_simple_artifact,
+            ] + artifacts
+
+        case DetailOption.EXTENDED:
+            aoi_bisko_budgets, table_artifact = get_table_artifact(
+                aoi_bisko_budgets=aoi_bisko_budgets, city_name=city_name, resources=resources
+            )
+
+            comparison_chart_artifact = get_comparison_chart_artifact(
+                aoi_emission_end_year=aoi_emission_end_year,
+                city_name=city_name,
+                comparison_chart_df=comparison_chart_df,
+                resources=resources,
+            )
+            cumulative_chart_artifact = get_cumulative_chart_artifact(
+                aoi_emission_end_year=aoi_emission_end_year,
+                city_name=city_name,
+                emissions_df=emissions_df,
+                resources=resources,
+            )
+
+            emission_reduction_chart_artifact = get_emission_reduction_chart_artifact(
+                aoi_bisko_budgets=aoi_bisko_budgets,
+                city_name=city_name,
+                emission_reduction_df=emission_reduction_df,
+                linear_decrease=linear_decrease,
+                percentage_decrease=percentage_decrease,
+                resources=resources,
+            )
+
+            emission_growth_rates_chart_artifact = get_emission_growth_rate_chart_artifact(resources=resources)
+
+            artifacts = (
+                [table_artifact, comparison_chart_artifact]
+                + artifacts
+                + [
+                    cumulative_chart_artifact,
+                    emission_reduction_chart_artifact,
+                    emission_growth_rates_chart_artifact,
+                ]
+            )
+
+        case _:
+            raise NotImplementedError(f'{level_of_detail} not yet supported')
+
+    return artifacts
+
+
+def get_emission_growth_rate_chart_artifact(resources: ComputationResources) -> Artifact:
+    log.debug('Creating bar chart with emission growth rate for all AOIs as chart artifact.')
+    emission_growth_rates_chart_data = get_emission_growth_rates_chart(emissions_aoi)
+    emission_growth_rates_chart_artifact = build_emissions_growth_rates_chart_artifact(
+        emission_growth_rates_chart_data, resources
+    )
+    return emission_growth_rates_chart_artifact
+
+
+def get_emission_reduction_chart_artifact(
+    aoi_bisko_budgets: DataFrame,
+    city_name: str,
+    emission_reduction_df: DataFrame,
+    linear_decrease: int,
+    percentage_decrease: int,
+    resources: ComputationResources,
+) -> Artifact:
     log.debug('Creating line chart with possible emission reduction paths in the AOI as chart artifact.')
     emission_reduction_chart_data = get_emission_reduction_chart(
         emission_reduction_df, linear_decrease, percentage_decrease
@@ -394,23 +442,59 @@ def get_artifacts(
     emission_reduction_chart_artifact = build_emission_reduction_chart_artifact(
         emission_reduction_chart_data, resources, city_name, aoi_bisko_budgets, percentage_decrease
     )
+    return emission_reduction_chart_artifact
 
-    log.debug('Creating bar chart with emission growth rate for all AOIs as chart artifact.')
-    emission_growth_rates_chart_data = get_emission_growth_rates_chart(emissions_aoi)
-    emission_growth_rates_chart_artifact = build_emissions_growth_rates_chart_artifact(
-        emission_growth_rates_chart_data, resources
-    )
 
-    return (
-        markdown_simple_artifact,
-        table_artifact,
-        table_simple_artifact,
-        comparison_chart_artifact,
-        time_chart_artifact,
-        cumulative_chart_artifact,
-        emission_reduction_chart_artifact,
-        emission_growth_rates_chart_artifact,
+def get_cumulative_chart_artifact(
+    aoi_emission_end_year, city_name: str, emissions_df: DataFrame, resources: ComputationResources
+) -> Artifact:
+    log.debug('Creating bar chart with development of cumulative emissions in the AOI as chart artifact.')
+    cumulative_chart_data = get_cumulative_chart(emissions_df, city_name, aoi_emission_end_year)
+    cumulative_chart_artifact = build_cumulative_chart_artifact(
+        cumulative_chart_data, resources, city_name, aoi_emission_end_year
     )
+    return cumulative_chart_artifact
+
+
+def get_comparison_chart_artifact(
+    aoi_emission_end_year, city_name: str, comparison_chart_df: DataFrame, resources: ComputationResources
+) -> Artifact:
+    log.debug('Creating bar chart with different GHG budgets and planned GHG emissions as chart artifact.')
+    comparison_chart_data = get_comparison_chart(comparison_chart_df, aoi_emission_end_year)
+    comparison_chart_artifact = build_budget_comparison_chart_artifact(
+        comparison_chart_data, resources, city_name, aoi_emission_end_year
+    )
+    return comparison_chart_artifact
+
+
+def get_table_artifact(
+    aoi_bisko_budgets: DataFrame, city_name: str, resources: ComputationResources
+) -> tuple[DataFrame, Artifact]:
+    log.debug('Creating table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table artifact.')
+    aoi_bisko_budgets = format_table_data(aoi_bisko_budgets)
+    table_artifact = build_budget_table_artifact(aoi_bisko_budgets, resources, city_name)
+    return aoi_bisko_budgets, table_artifact
+
+
+def get_simple_table(aoi_bisko_budgets: DataFrame, city_name: str, resources: ComputationResources) -> Artifact:
+    log.debug(
+        'Creating simplified table with the BISKO CO2 budgets of the AOI from the pledge_year onwards as table '
+        'artifact.'
+    )
+    aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
+    table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, city_name)
+    return table_simple_artifact
+
+
+def get_simple_methodology(lang: LanguageAlpha2, resources: ComputationResources) -> Artifact:
+    log.debug('Creating methodology description of the plugin in simple language as Markdown artifact.')
+    methodology_simple_path = PROJECT_DIR / f'resources/locales/{lang}/methodology_simple.md'
+    if not methodology_simple_path.exists():
+        methodology_simple_path = PROJECT_DIR / 'resources/locales/en/methodology_simple.md'
+    text = methodology_simple_path.read_text()
+
+    markdown_simple_artifact = build_methodology_description_simple_artifact(text, resources)
+    return markdown_simple_artifact
 
 
 def format_table_data(aoi_bisko_budgets: DataFrame) -> DataFrame:

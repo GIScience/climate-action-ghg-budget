@@ -6,6 +6,7 @@ from climatoology.base.baseoperator import AoiProperties
 from climatoology.base.computation import ComputationScope
 from shapely import Polygon
 
+from ghg_budget.core.input import DetailOption
 from ghg_budget.core.input import ComputeInput
 from ghg_budget.core.operator_worker import GHGBudget
 
@@ -34,10 +35,7 @@ def default_aoi_properties() -> AoiProperties:
 
 @pytest.fixture
 def expected_compute_input() -> ComputeInput:
-    # noinspection PyTypeChecker
-    return ComputeInput(
-        level_of_detail='extended',
-    )
+    return ComputeInput(level_of_detail=DetailOption.EXTENDED)
 
 
 # The following fixtures can be ignored on plugin setup
