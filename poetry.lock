@@ -3805,14 +3805,14 @@ telegram = ["requests"]
 
 [[package]]
 name = "translate-toolkit"
-version = "3.19.6"
+version = "3.19.7"
 description = "Tools and API for translation and localization engineering."
 optional = false
 python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "translate_toolkit-3.19.6-py3-none-any.whl", hash = "sha256:0eba15a9a6d954125046ed6d33642779e22a3da6ff291a7dec65852c125aadab"},
-    {file = "translate_toolkit-3.19.6.tar.gz", hash = "sha256:966a7c459a8aba6a86e504b0532dc5f29ab8ca6e852e5f78f270eddd7c8b0e95"},
+    {file = "translate_toolkit-3.19.7-py3-none-any.whl", hash = "sha256:3f7e55c19706a51af16cdfe4b6752acd8262864615c08d52a98c3c07cdbbdf56"},
+    {file = "translate_toolkit-3.19.7.tar.gz", hash = "sha256:5de1107a12c2cba4642a32f4fdb6f95b0c474f8540b929377583d53d92958de6"},
 ]
 
 [package.dependencies]
