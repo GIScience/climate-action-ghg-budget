@@ -51,7 +51,7 @@ def build_time_chart_artifact(
         'This is due to how emissions are determined according to the BISKO-Standard. The BISKO-Standard reflects, in '
         'simple terms, only emissions within the city boundaries of {city_name} but not those emitted by inhabitants '
         'of {city_name} outside the city area. '
-        'More information on the BISKO classification can be found on the left under "Calculation of the CO₂-budget".'
+        'More information on the BISKO classification can be found on the left under "Read about the methodology".'
     )
     description = '\n\n'.join([description_main, description_remark])
     description = description.format(
@@ -143,7 +143,7 @@ def build_budget_table_artifact(table: pd.DataFrame, resources: ComputationResou
         'to illustrate their share of global emissions.'
     )
     description_further_info = tr(
-        'You can find more information on CO₂-budgets on the left under "Calculation of the CO₂-budget".'
+        'You can find more information on CO₂-budgets on the left under "Read about the methodology".'
     )
     description = '\n\n'.join(
         [
@@ -330,7 +330,7 @@ def build_cumulative_chart_artifact(
         'This is due to how emissions are determined according to the BISKO-Standard. '
         'The BISKO-Standard reflects, in simple terms, only emissions within the city boundaries of {city_name} but '
         'not those emitted by inhabitants of {city_name} outside the city area. '
-        'More information on the BISKO classification can be found on the left under "Calculation of the CO₂-budget".'
+        'More information on the BISKO classification can be found on the left under "Read about the methodology".'
     )
     description = '\n\n'.join([description_main, description_remark])
     description = description.format(

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ghg-budget VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-24 15:02+0200\n"
+"POT-Creation-Date: 2026-05-08 12:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,8 +54,8 @@ msgid ""
 "Note: The emission values do not represent the entire emissions of {city_name} but only about 64&nbsp;% of the "
 "emissions. This is due to how emissions are determined according to the BISKO-Standard. The BISKO-Standard reflects, "
 "in simple terms, only emissions within the city boundaries of {city_name} but not those emitted by inhabitants of "
-"{city_name} outside the city area. More information on the BISKO classification can be found on the left under "
-"\"Calculation of the CO₂-budget\"."
+"{city_name} outside the city area. More information on the BISKO classification can be found on the left under \"Read"
+" about the methodology\"."
 msgstr ""
 
 #: ghg_budget/components/artifact.py:63 ghg_budget/components/artifact.py:288 ghg_budget/components/artifact.py:342
@@ -149,8 +149,8 @@ msgid ""
 " and to illustrate their share of global emissions."
 msgstr ""
 
-#: ghg_budget/components/artifact.py:146 ghg_budget/components/artifact.py:231
-msgid "You can find more information on CO₂-budgets on the left under \"Calculation of the CO₂-budget\"."
+#: ghg_budget/components/artifact.py:146
+msgid "You can find more information on CO₂-budgets on the left under \"Read about the methodology\"."
 msgstr ""
 
 #: ghg_budget/components/artifact.py:181
@@ -175,6 +175,10 @@ msgid ""
 "exceeded. [BISKO](https://www.kea-bw.de/fileadmin/user_upload/Energiemanagement/Angebote/Beschreibung_der_BISKO-"
 "Methodik.pdf) is a standard developed by the Institute for Energy and Environmental Research (IFEU), which many "
 "cities such as {city_name} use to estimate their emissions."
+msgstr ""
+
+#: ghg_budget/components/artifact.py:231
+msgid "You can find more information on CO₂-budgets on the left under \"Calculation of the CO₂-budget\"."
 msgstr ""
 
 #: ghg_budget/components/artifact.py:263
@@ -290,27 +294,27 @@ msgid ""
 "data."
 msgstr ""
 
-#: ghg_budget/components/calculate.py:95
+#: ghg_budget/components/calculate.py:97
 msgid "BISKO CO₂-budget 2016 (1000 tons)"
 msgstr ""
 
-#: ghg_budget/components/calculate.py:149
+#: ghg_budget/components/calculate.py:151
 msgid "CO₂-budget consumed (year)"
 msgstr ""
 
-#: ghg_budget/components/calculate.py:154
+#: ghg_budget/components/calculate.py:156
 msgid "is not consumed"
 msgstr ""
 
-#: ghg_budget/components/calculate.py:176 ghg_budget/components/calculate.py:432
+#: ghg_budget/components/calculate.py:178 ghg_budget/components/calculate.py:516
 msgid "."
 msgstr ""
 
-#: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:139
+#: ghg_budget/components/calculate.py:257 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:139
 msgid "1.7 °C"
 msgstr ""
 
-#: ghg_budget/components/calculate.py:255 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:149
+#: ghg_budget/components/calculate.py:257 ghg_budget/components/figures.py:28 ghg_budget/components/figures.py:149
 msgid "2.0 °C"
 msgstr ""
 

@@ -7,6 +7,9 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.0...main)
 
+### Fixed
+- Update reference to methodology in artifact descriptions ([#68](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/work_items/68))
+
 ## [1.4.0](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.0) - 2026-04-27
 
 - translate the plugin to English
