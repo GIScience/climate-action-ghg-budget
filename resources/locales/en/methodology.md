@@ -52,7 +52,3 @@ The calculation of the CO₂-budget are based on data on the global CO₂-budget
 | Hamburg    | [Stadt Hamburg](https://www.hamburg.de/politik-und-verwaltung/behoerden/bukea/themen/klima/klimaschutz-klimaplan/co2-bilanz-hh-2023-169240)                                                   | own calculations                                                                |
 | Heidelberg | [ifeu gGmbH](https://www.heidelberg.de/site/Heidelberg2021/get/documents_E621906288/heidelberg/Objektdatenbank/31/PDF/Energie%20und%20Klimaschutz/31_pdf_CO2-Bilanz_Heidelberg_2022-2023.pdf) | [Stadt Heidelberg](https://stdhd.de/s/klimaschutzplan)                          |
 | Karlsruhe  | [Stadt Karlsruhe](https://transparenz.karlsruhe.de/dataset/treibhausgasbilanz-karlsruhe)                                                                                                      | own calculations                                                                |
-
-We happily share the data we used to calculate the CO₂-budgets.
-Please contact Kirsten von Elverfeldt per mail
-at [kirsten.vonelverfeldt@heigit.org](mailto:kirsten.vonelverfeldt@heigit.org) if you are interested.

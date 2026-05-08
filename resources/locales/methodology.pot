@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 10:14+0200\n"
+"POT-Creation-Date: 2026-05-08 12:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,11 +140,4 @@ msgstr ""
 
 #: resources/locales/en/methodology.md:48
 msgid "[Stadt Karlsruhe]{1}"
-msgstr ""
-
-#: resources/locales/en/methodology.md:56
-msgid ""
-"We happily share the data we used to calculate the CO₂-budgets. Please "
-"contact Kirsten von Elverfeldt per mail at [kirsten.vonelverfeldt@heigit.org]"
-"{1} if you are interested."
 msgstr ""
