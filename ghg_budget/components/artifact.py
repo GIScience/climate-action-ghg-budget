@@ -435,8 +435,8 @@ def build_emissions_growth_rates_chart_artifact(
         'from 2016 to {NOW_YEAR}.'
     )
     description_remark = tr(
-        'Note that the last year of reported data differs between cities: Heidelberg (2022), Bonn (2022), '
-        'Berlin (2023), Karlsruhe (2019) and Hamburg (2019). '
+        'Note that the last year of reported data differs between cities: Berlin (2023), Bonn (2022), Hamburg (2019), '
+        'Heidelberg (2022), and Karlsruhe (2019). '
         'Emission data beyond these years are based on estimates and not on reported data.'
     )
     description = '\n\n'.join([description_main, description_remark])

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ghg-budget VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-08 12:08+0200\n"
+"POT-Creation-Date: 2026-05-11 11:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -289,8 +289,8 @@ msgstr ""
 
 #: ghg_budget/components/artifact.py:438
 msgid ""
-"Note that the last year of reported data differs between cities: Heidelberg (2022), Bonn (2022), Berlin (2023), "
-"Karlsruhe (2019) and Hamburg (2019). Emission data beyond these years are based on estimates and not on reported "
+"Note that the last year of reported data differs between cities: Berlin (2023), Bonn (2022), Hamburg (2019), "
+"Heidelberg (2022), and Karlsruhe (2019). Emission data beyond these years are based on estimates and not on reported "
 "data."
 msgstr ""
 
@@ -389,11 +389,11 @@ msgstr ""
 msgid "Downward trend"
 msgstr ""
 
-#: ghg_budget/components/figures.py:320
+#: ghg_budget/components/figures.py:321
 msgid "Cities"
 msgstr ""
 
-#: ghg_budget/components/figures.py:321
+#: ghg_budget/components/figures.py:322
 msgid "Emission reduction (%)"
 msgstr ""
 

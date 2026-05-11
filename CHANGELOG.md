@@ -7,6 +7,9 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.0...main)
 
+### Changed
+- Order cities alphabetically in emissions_growth_rates_chart_artifact ([#64](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/work_items/64))
+
 ### Fixed
 - Update reference to methodology in artifact descriptions ([#68](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/work_items/68))
 

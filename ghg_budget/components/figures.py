@@ -279,6 +279,7 @@ def get_emission_growth_rates_chart(emissions_aoi: pd.DataFrame) -> Figure:
         DECREASE = tr('Downward trend')
 
     cities = emissions_aoi.columns[2:].tolist()
+    cities.sort()
     colors = {Trend.INCREASE: 'red', Trend.DECREASE: 'green'}
 
     fig = go.Figure()

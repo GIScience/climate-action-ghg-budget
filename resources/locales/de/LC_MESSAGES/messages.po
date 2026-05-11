@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-08 12:08+0200\n"
-"PO-Revision-Date: 2026-05-08 12:17+0200\n"
+"POT-Creation-Date: 2026-05-11 11:38+0200\n"
+"PO-Revision-Date: 2026-05-11 11:41+0200\n"
 "Last-Translator: Moritz Schott <moritz.schott@heigit.org>\n"
 "Language-Team: de <LL@li.org>\n"
 "Language: de\n"
@@ -390,13 +390,13 @@ msgstr ""
 
 #: ghg_budget/components/artifact.py:438
 msgid ""
-"Note that the last year of reported data differs between cities: Heidelberg (2022), Bonn (2022), Berlin (2023), "
-"Karlsruhe (2019) and Hamburg (2019). Emission data beyond these years are based on estimates and not on reported "
+"Note that the last year of reported data differs between cities: Berlin (2023), Bonn (2022), Hamburg (2019), "
+"Heidelberg (2022), and Karlsruhe (2019). Emission data beyond these years are based on estimates and not on reported "
 "data."
 msgstr ""
-"Dabei ist zu beachten, dass sich das letzte Jahr der berichteten Daten je nach Stadt unterscheidet: Heidelberg "
-"(2022), Bonn (2022), Berlin (2023), Karlsruhe (2019) und Hamburg (2023). Emissionsdaten über diese Jahre hinaus "
-"basieren auf Prognosen und nicht auf gemeldeten Werten."
+"Dabei ist zu beachten, dass sich das letzte Jahr der berichteten Daten je nach Stadt unterscheidet: Berlin (2023), "
+"Bonn (2022), Hamburg (2019), Heidelberg (2022) und Karlsruhe (2019). Emissionsdaten über diese Jahre hinaus basieren "
+"auf Prognosen und nicht auf gemeldeten Werten."
 
 #: ghg_budget/components/calculate.py:97
 msgid "BISKO CO₂-budget 2016 (1000 tons)"
@@ -493,11 +493,11 @@ msgstr "Aufwärtstrend"
 msgid "Downward trend"
 msgstr "Abwärtstrend"
 
-#: ghg_budget/components/figures.py:320
+#: ghg_budget/components/figures.py:321
 msgid "Cities"
 msgstr "Städte"
 
-#: ghg_budget/components/figures.py:321
+#: ghg_budget/components/figures.py:322
 msgid "Emission reduction (%)"
 msgstr "Emissionsminderung (%)"
 
