@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project mostly adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.1...main)
+## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.2...main)
+
+## [1.4.2](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.2) - 2026-09-10
+
+### Added
+
+- Add AOI constraints ([#73](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/work_items/73))
+
+### Changed
+
+- Update climatoology to 7.4.0
 
 ## [1.4.1](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.1) - 2026-06-05
 

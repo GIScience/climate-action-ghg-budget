@@ -39,9 +39,10 @@ class GHGBudget(BaseOperator[ComputeInput]):
     ) -> List[Artifact]:
         log.info(f'Handling compute request: {params.model_dump()} in context: {resources} in {language.name}')
 
-        allowed_cities = ['Berlin', 'Bonn', 'Demo', 'Hamburg', 'Heidelberg', 'Karlsruhe']
+        cities = gpd.read_file('resources/cities.geojson')
+        allowed_cities = cities['name'].tolist() + ['Demo']
+
         if aoi_properties.name not in allowed_cities:
-            cities = gpd.read_file('resources/cities.geojson')
             matching = cities.loc[cities.contains(aoi)]
             if len(matching) == 1:
                 aoi_properties.name = matching.iloc[0]['name']

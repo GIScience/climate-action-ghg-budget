@@ -1,6 +1,11 @@
 from datetime import timedelta
 from pathlib import Path
 
+import json
+import geopandas as gpd
+import shapely
+
+from climatoology.base.aoi import CoveredByGeomConstraint
 from climatoology.base.i18n import N_
 from climatoology.base.plugin_info import Concern, PluginAuthor, PluginInfo, generate_plugin_info
 from pydantic import HttpUrl
@@ -13,6 +18,15 @@ def get_info() -> PluginInfo:
 
     :return: Info object with information about the plugin.
     """
+    cities = json.loads(shapely.to_geojson(gpd.read_file('resources/cities.geojson').union_all()))
+    aoi_constraints = [
+        [
+            CoveredByGeomConstraint(
+                description='One of the available cities.',
+                geom=cities,
+            ),
+        ]
+    ]
     info = generate_plugin_info(
         name='CO₂ Budget',
         icon=Path('resources/info/icon.jpg'),
@@ -38,6 +52,7 @@ def get_info() -> PluginInfo:
         sources_library=Path('resources/info/sources.bib'),
         demo_input_parameters=ComputeInput(level_of_detail=DetailOption.EXTENDED),
         computation_shelf_life=timedelta(weeks=52),
+        aoi_constraints=aoi_constraints,
     )
 
     return info
