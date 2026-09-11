@@ -7,6 +7,10 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 ## [Unreleased](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/compare/1.4.2...main)
 
+### Changed
+
+- Update climatoology to 7.4.1
+
 ## [1.4.2](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.2) - 2026-09-10
 
 ### Added
