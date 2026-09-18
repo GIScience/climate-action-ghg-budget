@@ -11,6 +11,10 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 - Update climatoology to 7.4.1
 
+### Fixed
+
+- slimmed bloated docker image by using multi-stage build
+
 ## [1.4.2](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.2) - 2026-09-10
 
 ### Added

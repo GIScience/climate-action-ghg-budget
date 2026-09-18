@@ -29,6 +29,9 @@ dependencies = [
 [project.urls]
 repository = "https://gitlab.heigit.org/climate-action/plugins/ghg-budget"
 
+[project.scripts]
+plugin = "ghg_budget.plugin:start"
+
 [tool.poetry.group.test.dependencies]
 pytest = "^9.0.0"
 pytest-cov = "^7.0.0"
