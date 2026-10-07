@@ -194,7 +194,7 @@ def simplify_table(aoi_bisko_budgets: pd.DataFrame) -> pd.DataFrame:
     """
     aoi_bisko_budgets_simple = aoi_bisko_budgets[aoi_bisko_budgets['Probability'] == '83 %']
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple[
-        ['BISKO CO₂-budget now (1000 tons)', 'CO₂-budget consumed (year)']
+        ['Temperature threshold (°C)', 'BISKO CO₂-budget now (1000 tons)', 'CO₂-budget consumed (year)']
     ]
     return aoi_bisko_budgets_simple
 
@@ -214,7 +214,6 @@ def emission_paths(
     :param city_name: Name of the AOI
     :return: pd.DataFrame with projected yearly emissions of the AOI and alternative reduction paths
     """
-    bisko_budget_table.reset_index(inplace=False)
     budget_1point7 = bisko_budget_table.loc[
         (bisko_budget_table['Temperature threshold (°C)'] == 1.7) & (bisko_budget_table['Probability'] == '83 %'),
         'BISKO CO₂-budget 2016 (1000 tons)',
@@ -223,7 +222,7 @@ def emission_paths(
         (bisko_budget_table['Temperature threshold (°C)'] == 2.0) & (bisko_budget_table['Probability'] == '83 %'),
         'BISKO CO₂-budget 2016 (1000 tons)',
     ].values[0]
-    emissions_pledge_year = emission_table.loc[emission_table['Year'] == budget_params.pledge_year, city_name]
+    emissions_pledge_year = emission_table.loc[emission_table['Year'] == budget_params.pledge_year, city_name].iloc[0]
 
     x = sp.symbols('x')
     a, b, c, d = sp.symbols('a b c d')
@@ -491,6 +490,7 @@ def get_simple_table(aoi_bisko_budgets: DataFrame, city_name: str, resources: Co
     aoi_bisko_budgets_simple = aoi_bisko_budgets_simple.map(
         lambda x: f'{x:.1f}'.replace('.', tr('.')) if isinstance(x, float) else x
     )
+    aoi_bisko_budgets_simple.set_index('Temperature threshold (°C)', inplace=True)
     table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, city_name)
     return table_simple_artifact
 

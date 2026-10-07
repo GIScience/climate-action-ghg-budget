@@ -10,11 +10,12 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 ### Changed
 
 - Update climatoology to 7.4.1
+- Update pandas to v3
 
 ### Fixed
 
 - slimmed bloated docker image by using multi-stage build
-- fix: round values in simple table and update URL of Bonn data source
+- fix: add temperature column to simple table, round values in simple table and update URL of Bonn data source
 
 ## [1.4.2](https://gitlab.heigit.org/climate-action/plugins/ghg-budget/-/releases/1.4.2) - 2026-09-10
 

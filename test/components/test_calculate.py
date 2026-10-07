@@ -192,13 +192,14 @@ def test_year_budget_spent_budget_not_spent():
         }
     )
     received = year_budget_spent(aoi_bisko_budgets, emissions_df)
-    pd.testing.assert_frame_equal(received[0], expected)
+    pd.testing.assert_frame_equal(received[0], expected, check_dtype=False)
 
 
 def test_simplify_table():
     aoi_bisko_budgets = pd.DataFrame(
         {
             'Probability': ['67 %', '83 %'],
+            'Temperature threshold (°C)': [1.7, 1.7],
             'BISKO CO₂-budget 2016 (1000 tons)': [1250, 1000],
             'BISKO CO₂-budget now (1000 tons)': [200, -50],
             'CO₂-budget consumed (year)': [2026, 2023],
@@ -207,6 +208,7 @@ def test_simplify_table():
     )
     expected = pd.DataFrame(
         {
+            'Temperature threshold (°C)': [1.7],
             'BISKO CO₂-budget now (1000 tons)': [-50],
             'CO₂-budget consumed (year)': [2023],
         },
