@@ -180,6 +180,7 @@ def build_budget_table_simple_artifact(
 ) -> Artifact:
     latest_column_name = tr('BISKO CO₂-budget {NOW_YEAR} (1000 tons)').format(NOW_YEAR=NOW_YEAR)
     table = table.rename(columns={'BISKO CO₂-budget now (1000 tons)': latest_column_name})
+    table.set_index(latest_column_name, inplace=True)
     table = translate_dataframe(table)
 
     name = tr('{city_name} CO₂ budget').format(city_name=city_name)

@@ -1,14 +1,14 @@
-# Translations template for ghg-budget.
+# Translations template for ghg_budget.
 # Copyright (C) 2026 HeiGIT gGmbH
-# This file is distributed under the same license as the ghg-budget project.
+# This file is distributed under the same license as the ghg_budget project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ghg-budget VERSION\n"
+"Project-Id-Version: ghg_budget VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-05-11 11:38+0200\n"
+"POT-Creation-Date: 2026-10-07 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -306,7 +306,7 @@ msgstr ""
 msgid "is not consumed"
 msgstr ""
 
-#: ghg_budget/components/calculate.py:178 ghg_budget/components/calculate.py:516
+#: ghg_budget/components/calculate.py:178 ghg_budget/components/calculate.py:492 ghg_budget/components/calculate.py:525
 msgid "."
 msgstr ""
 
@@ -397,7 +397,7 @@ msgstr ""
 msgid "Emission reduction (%)"
 msgstr ""
 
-#: ghg_budget/core/info.py:37
+#: ghg_budget/core/info.py:51
 msgid "Calculation of urban CO₂-budgets to limit global warming to specific temperatures."
 msgstr ""
 
@@ -417,7 +417,7 @@ msgstr ""
 msgid "Please choose how detailed you would like the results to be."
 msgstr ""
 
-#: ghg_budget/core/operator_worker.py:51
+#: ghg_budget/core/operator_worker.py:52
 #, python-brace-format
 msgid ""
 "The CO₂-budget-tool can currently only be applied to the following cities in Germany: {allowed_cities}. Please choose"

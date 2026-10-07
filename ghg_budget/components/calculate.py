@@ -482,6 +482,15 @@ def get_simple_table(aoi_bisko_budgets: DataFrame, city_name: str, resources: Co
         'artifact.'
     )
     aoi_bisko_budgets_simple = simplify_table(aoi_bisko_budgets)
+    aoi_bisko_budgets_simple['BISKO CO₂-budget now (1000 tons)'] = aoi_bisko_budgets_simple[
+        'BISKO CO₂-budget now (1000 tons)'
+    ].round(1)
+    aoi_bisko_budgets_simple['CO₂-budget consumed (year)'] = aoi_bisko_budgets_simple[
+        'CO₂-budget consumed (year)'
+    ].apply(lambda x: int(x) if isinstance(x, (float, int)) else x)
+    aoi_bisko_budgets_simple = aoi_bisko_budgets_simple.map(
+        lambda x: f'{x:.1f}'.replace('.', tr('.')) if isinstance(x, float) else x
+    )
     table_simple_artifact = build_budget_table_simple_artifact(aoi_bisko_budgets_simple, resources, city_name)
     return table_simple_artifact
 
