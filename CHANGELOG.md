@@ -11,6 +11,7 @@ and this project mostly adheres to [Semantic Versioning](https://semver.org/spec
 
 - Update climatoology to 7.4.1
 - Update pandas to v3
+- Update CI and dockerfile to simplify and correct poetry installing location
 
 ### Fixed
 
