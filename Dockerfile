@@ -61,4 +61,3 @@ COPY --from=builder --chown=$USER $WD $WD
 ENV PATH="$WD/.venv/bin:$PATH"
 
 ENTRYPOINT ["plugin"]
-CMD ["start"]
